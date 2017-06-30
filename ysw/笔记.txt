@@ -1,0 +1,1024 @@
+GXP相关
+证书相关
+脚本相关
+数据库相关
+
+
+
+脚本相关
+删除文本的首行和最后一行
+sed -i '1d' a.txt
+sed -i '$d' a.txt
+抓包：
+tcpdump -XX -X -n -nn -v -A -i eth0 host 172.32.5.6
+grep FAIL *    查看所有可编辑文件中有FAIL字段的行
+重新发布工程后需要重启gxp服务
+netstat -na查看端口号
+lsof -i tcp:15005 查看端口对应的进程PID
+ps -ef | grep xxxx（PID）  查看进程PID对应的程序情况
+ps -ef | filename	查看文件被那个进程打开
+netstat -nlptu |grep 进程名	查看进程打开的端口号
+df -a  显示所有的挂载分区信息
+find ./ -name sqlca.h  查找文件
+nohup ./server1002 &；然后再使用exit退出当前
+grep -r name *
+find . -name *.c|xargs grep hanshuming  在当前路径下查找所有c文件里面调用了函数名hanshuming的地方
+grep -r hanshuming *|more 在当前路径下所有文件中查找函数名hanshuming的地方
+
+ftp_putfile.sh:
+#!/bin/sh
+ftp -n $1 <<EOF
+user $2 $3
+bin
+put $4 $5
+quit
+EOF
+
+export LANG=zh_CN.gbk;
+cd /home/gaps4/app/xnhyb/excel;
+execute.sh /home/gaps4/file/mid/xnhyb/ test_kjf.txt 1;
+export LANG=C;
+
+execute.sh：
+#txt 2 excel
+#arg0:文本路径,如:/home/user/demo/
+#arg1:文本名称,如:**.txt
+#arg2:转换类型,如:1-代表bkj类型;2-代表kjf类型
+#运行示例:./execute.sh '/home/user/demo/' 'demo.txt' '2'
+if [ "$3" != "" ]
+then 
+	echo "txt 2 excel begin......"
+	java -jar ecltxt.jar $1 $2 $3
+	echo "txt 2 excel ok."
+#excel 2 txt
+#arg0:同上;
+#arg1:同上,后缀为:xls,xlxs
+#运行示例:./execute.sh '/home/user/demo/' 'demo.xls'
+else
+ 	echo "excel 2 txt begin......"
+	java -jar ecltxt.jar $1 $2
+	echo "excel 2 txt ok."
+fi
+
+perl  转码
+my $tmp = encode("gbk",decode("utf-8",$_[0]));
+return $tmp;
+
+数据库相关
+orcal：
+1、配置文件：C:\oracle\product\11.2.0\client_1\network\admin\tnsnames.ora  
+2、环境变量TNS_ADMIN：C:\oracle\product\11.2.0\client_1\network\admin
+
+svn用户名密码：hundsun_luosh  cgnb123
+
+ODBC: C:\Windows\SysWOW64
+
+
+证书相关
+
+给a.txt产生嘻哈值
+openssl dgst -sha1 a.txt；
+
+
+证书转换：
+.pfx转pem编码的证书：
+
+openssl pkcs12 -in D:\certs\pri.pfx -out D:\certs\pri.pem -nodes
+
+der编码的证书转pem编码的证书：
+
+openssl x509 -inform DER -in D:\certs\pub.cer -out d:\certs\pub.pem
+
+（.cer文件能右键记事本正常打开的为pem编码的，记事本打开乱码的为der编码，pem编码的不用转，后面打印内容的命令可以直接对.cer执行）
+
+
+打印pem编码的x509证书的内容：
+
+openssl x509 -in D:\certs\pri.pem -text
+
+
+openssl x509 -in acp_test_enc.cer -out acp_test_enc.pem;
+
+openssl pkcs12 -in 700000000000001_acp.p12 -nodes -out 700000000000001_acp.pem
+openssl rsa -in 700000000000001_acp.pem -out 700000000000001_acp.key
+
+可用：
+提取密钥对
+openssl pkcs12 -in acp_test_sign.pfx -nocerts -nodes -out acp_test_sign.key
+
+从密钥对中提取私钥
+openssl rsa -in acp_test_sign.key -out acp_test_sign_pri.key
+
+从密钥对中提取公钥
+openssl rsa -in acp_test_sign.key -pubout -out acp_test_sign_pub.key
+
+产生嘻哈值
+openssl sha1 -out a.sha1 a.txt
+
+摘要：
+openssl dgst -sha1 -sign 700000000000001_acp.pem -out a.bin a.sha1
+
+签名
+openssl dgst -sha1 -sign 700000000000001_acp.pem -out a.bin a.sha1
+
+验证是否正确
+openssl dgst -sha1 -prverify 700000000000001_acp.pem -signature a.bin a.txt
+
+校验证书
+openssl verify acp_test_enc.pem;        
+
+
+OUTPUT 第三个OCA。
+https://101.231.204.80:5000/gateway/api/queryTrans.do
+
+
+/home/gaps4/cfg/gaps_task.xml
+/home/gaps4/script/
+
+
+
+
+GXP相关：
+应用架构部统一外联平台
+gxpversion  查看gxp版本
+gxp_datasvr 开启gxp的管理台
+ps -u gxpwlut查看gxp进程是否正常关闭
+
+停止gxp后cd到.runtime/目录下rm -rf *
+guard list查看当前系统任务
+
+发布前：
+netstat -na | grep 55555      查看55555发布端口是否打开
+
+发布后：
+startkgxp DEMONODE       运行测试案例DEMONODE
+startgxp       如果配置了环境变量（~/etc/setenv）可以直接这条命令开启
+stopgxp
+
+开发/home/gxpwl >GXP_Console      进入GXP的控制台
+GXP_Console>list all      查看ICA\OCA状态
+GXP_Console>quit       退出
+
+cpm_server l     查看流程引擎状态
+
+GXP回退方式：
+1、利用备份的cfg文件进行回退；
+2、删除不需要的工程，进行重新发布
+
+
+        char str_row[1024+1];
+        fseek(fp,0,SEEK_SET); 
+
+        memset(str_row,0,sizeof(str_row));
+        if( fgets(str_row,sizeof(str_row)-1,fp) == NULL)       
+        {
+            break;
+        }
+         
+        p=str_row;
+        strncpy(khhm,strsep(&p,"|"),sizeof(khhm));
+  			trim(khhm);/*客户号*/
+  			
+  			
+  		 /* 调用逐笔扣款子流程 */ 
+        if ( (iLen = fpub_CallFlow ( lXmlhandle, sSubFlowName)) != MID_SYS_SUCC )     
+        {
+            iLossCount++;
+            memset(sTmp,0,sizeof(sTmp));
+            COMP_SOFTGETXML("/newgm/req/amount", sTmp);
+            dLossAmt = dLossAmt + atof(sTmp);
+            LOG(LM_STD,Fmtmsg("批扣主控:调用逐笔扣款子流程错误[%s]返回值[%d]",sSubFlowName,iLen),"DEBUG");
+            strcpy(jfbz,"2");	/* 标志置为失败 */
+            sprintf(sErrorcount,"%d",atoi(sErrorcount)+1); /* 置失败次数 */
+            LOG(LM_STD,Fmtmsg("\n<<<<<<<<<客户编号[%s]账号[%s]失败,失败次数[%d]>>>>>>>>>\n",khhm,zh,iLossCount),"DEBUG");
+
+        }
+
+COMP_PARACOUNTCHK(1)
+COMP_GETPARSEPARAS(1,sNode,"节点路径")
+xml_DelElement ( lXmlhandle, sNode );
+if ( (iLen = xml_RelSetElement ( lXmlhandle, sTmp, khhm )) == FAIL )
+    /* 存在,返回1; 不存在,返回0 */
+    iParas=xml_RelElementExist(lXmlhandle,sNode);
+    
+    pstrcopy(sDate1Year, sDate1, sizeof(sDate1Year));
+    pstrcopy(sDate1Mon, sDate1+4, sizeof(sDate1Mon));
+    pstrcopy(sDate1Day, sDate1+4+2, sizeof(sDate1Day));    
+    chineseFee( sBuf, eMoney ); 详见该自定义函数
+
+YWTY_HEXTOASC：
+    //获取标签值
+        if(xml_GetElement(lXmlhandle,bufname1,tmpbuf1,size)==FAIL)
+        if(xml_SetElement(lXmlhandle,bufname2,tmpbuf2)==FAIL)
+        len = xml_hextoasc(tmpbuf2,size,tmpbuf1,strlen(tmpbuf1));
+
+DATA_ExpFileToCommbuf：
+  fseek(fp,0L,SEEK_END);
+  len=ftell(fp);
+    fseek(fp,0L,SEEK_SET);
+  fread(sBuffer,len,1,fp);
+  fclose(fp);
+  if ( (iRet = xml_RelSetBinElement ( lXmlhandle, bufname, sBuffer, strlen(sBuffer))) == FAIL ) 把二进制的sBuffer放在bufname节点下
+  if (( len=   xml_RelGetBinElement ( lXmlhandle, bufname, sBuffer, sizeof(sBuffer))) == FAIL ) 获取bufname节点下的二进制的sBuffer
+  
+char *GetSysDate()
+{
+        time_t tm;
+        static char date[11];
+
+        tm = time(NULL);
+        strftime(date, 11, "%Y-%m-%d", localtime(&tm));
+        return date;
+}
+
+char *GetSysTime()
+{
+        time_t tm;
+        static char systime[9];
+
+        tm = time(NULL);
+        strftime(systime, 9, "%H:%M:%S", localtime(&tm));
+        return systime;
+}
+
+int YW_UPPER( const char * sBuf,  char * dBuf)
+{
+
+     if( sBuf[0] == '\0' )
+         return -1;
+
+     while( *sBuf != 0 ){
+         if( *sBuf>=97 && *sBuf<= 122 )
+             *dBuf = *sBuf - 32;
+         else
+             *dBuf = *sBuf;
+         sBuf++;
+         dBuf++;
+     }
+     return 0;
+}
+
+strcat(iSQL,sTmp);
+EXEC SQL PREPARE xwhlsl8 FROM :iSQL;
+EXEC SQL DECLARE xwalsl9 CURSOR WITH HOLD FOR xwhlsl8 ;
+EXEC SQL OPEN xwalsl9;
+EXEC SQL FETCH xwalsl9；
+EXEC SQL CLOSE xwalsl9;
+   
+        /* 调用逐笔扣款子流程 */
+        if ( (iLen = fpub_CallFlow ( lXmlhandle, sSubFlowName)) != MID_SYS_SUCC )
+        
+                /* 构建临表  */
+        EXEC SQL truncate table t_pre_plywmx;
+        EXEC SQL drop table t_pre_plywmx;
+
+        strcpy(sBuffer,"create global temporary table t_pre_plywmx on commit preserve rows as select * from ywty_plywmx where 1=2");
+        EXEC SQL EXECUTE IMMEDIATE :sBuffer;          
+
+#include <iconv.h>        
+int code_convert(char *from_charset, char *to_charset, char *inbuf, size_t inlen,
+        char *outbuf, size_t outlen) {
+    iconv_t cd;
+    char **pin = &inbuf;
+    char **pout = &outbuf;
+
+    cd = iconv_open(to_charset, from_charset);
+    if (cd == 0)
+        return -1;
+    memset(outbuf, 0, outlen);
+    if (iconv(cd, pin, &inlen, pout, &outlen) == -1)
+        return -1;
+    iconv_close(cd);
+    *pout = '\0';
+
+    return 0;
+}
+
+int u2g(char *inbuf, size_t inlen, char *outbuf, size_t outlen) {
+    return code_convert("utf-8", "gbk", inbuf, inlen, outbuf, outlen);
+}
+
+int g2u(char *inbuf, size_t inlen, char *outbuf, size_t outlen) {
+    return code_convert("gbk", "utf-8", inbuf, inlen, outbuf, outlen);
+}
+调用：
+g2u(sxmlnode, strlen(sxmlnode), sOutStr, sizeof(sOutStr));
+
+ret = xml_GetChildElementName(lXmlhandle,src_xml,i+1,key,sizeof(key));
+
+/*asc转换成16进制*/
+int asc2hex(char *in_buf, int in_size, char *out_buf, int out_size)
+{
+        char dir[]={'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        int low;
+        int high;
+        int i, j;
+        i = 0 ;
+        j= 0;
+        memset(out_buf, 0x00, out_size);
+        for(i=0;i<in_size;i++)
+        {
+                low = in_buf[i]&0x0f;
+                high= (in_buf[i]>>4)&0x0f;
+                out_buf[j] = dir[high];
+                out_buf[j+1] = dir[low];
+                j+=2;
+        }
+        // LOG(LM_DEBUG, Fmtmsg("len[%d] asc2hex outbuf[%s]", j, out_buf), "DEBUG")
+        return j;
+}
+
+数据库语句198436xs
+
+逾期利息的利息  再收逾期本金的利息
+最后逾期利息
+
+查明细
+select txday,crdb,txamt,dscptent,tlsrno from xdtlhtr where actno=9012330002341 order by txday
+   
+ 
+ybqt zxcv1234
+cbs_init 01200
+000002
+
+贷款发放 记账就上账
+贷款归还 复核才下账
+ick 6991 test 6993 server7331 tserver7332 wtdk 5566
+
+柜员表 tlrdef
+bbs 刷卡 
+bctl stdflg[8]=0
+tlrdef wkstat=1
+
+create table cc402( bankissueno char(8),            tlsrno 流水号 actno 账号 vocno 存折号
+                    basicissueno char(8),            brno 机构号 tlrno 柜员  hcode 操作码
+                    cisissueno char(8),
+                    hvpscommissueno char(8),
+                    bepscommissueno char(8),
+                    ibpscommissueno char(8));
+宏定义的 不能直接用全局变量 要通过参数的形式传进去
+SQLERRXDJK rtcd rtmsg
+
+简单的很  先看是什么科目 贷款  存放同业  存放上级行款项 什么的就是资产
+如果是负债科目  比如客户的存款  同业存放  其他行存放款项  增加的就记贷方
+
+资产类：增加的记在借方，减少的记在贷方
+负债类：增加的记在贷方，减少的记在借方 
+
+借贷关系是根据资产类科目还是负债类科目来判断怎么记借贷关系的
+
+比如做一个现金出库
+从大库调到柜员
+现金是资产科目
+所以大库减少就记大库是贷方
+柜员尾箱增加就记借方
+C 大库 100 
+D 尾箱 100
+D是借嘛  C是贷
+ 
+
+
+表内科目有借必有贷
+借贷必相等
+余额的发生方只是记账方向
+
+如果是客户去取钱就反过来了  从尾箱拿出来  尾箱减少 记借方  所以是
+D 尾箱 100 
+C 现金 100
+表内和表外是根据资产负债表划分的
+比如开户做一个凭证付出，这个就是表外的
+
+资产和负债都是表内的
+表内科目是用来核算经济业务发生后引起银行资金实际增减变化，并列入资产负债表内进行综合反映的会计科目
+表外科目是用来核算经济业务发生后并未引起银行资金实际增减变化，并且不在资产负债表内反映。主要控制有价单
+证，重要空白凭证等与会计变化要素无关的经济业务。
+
+资产类主要包括现金，存放中央银行款项，拆放同业，贷款，应收利息，固定资产等 
+负债类主要包括客户的存款，同业拆入 向中央银行借款，应付利息，本票等 
+损益类 利息收入/支出 商业银行往来收入/支出 手续费收入/支出 营业外收入/支出
+资产类，成本类 费用类和支出类账户）的增加额记入账户的借方，减少额记入贷方 所以现金出库大库为贷方
+(负债类，收入类和所有权益)的增加额记入账户的贷方，减少额记入借方
+
+商业银行会计学 
+高职高专金融投资专业教材  清华版
+清华大学出版社1
+基本上核心基础内容和前置基本业务都有
+
+与本身的余额方相同，则增加
+储蓄 ：贷方 
+存款 ：借现金      贷存款账号（贷贷 增加）
+取款 ：借存款账号  贷现金
+
+贷款 ：借方 
+放款 ：借贷款账号  借存蓄    （借借 增加）
+还款 ：借存蓄      贷贷款账号
+
+内部帐 iamr
+baldir 1 借方 2 贷方 3 借方可透支 4贷方可透支
+
+
+select （unique/distinct）* from table where brno is (not) null group by 列描述 having 分组条件 order by
+..into temp 临时表名
+
+order by 列名s/列序号s ASC（升 缺省）/DESC（降）用序列号 eg:select a ,b from c order by 1 ;
+group by 有一个原则,就是 select 后面的所有列中,没有使用聚合函数的列,必须出现在 group by 后面
+
+表的别名：在from中定义，但可以在select中使用.
+select t.ex from termdef t
+列的别名：select tt.xe hjb,tt.xe*100 as xe_100 from termdef tt  ( 空格 as)
+
+no between 1 an 100 === no>=1 and no<=100 
+组查询：no (not) in (1,3,5)
+匹配模式：matches/like
+matches ：*任意长度字符串 ?单个字符 \转义符 []某个字符的取值范围 matches '*3816' matches '[A-Z]*'
+大写开头 matches '[AZ]'A或则Z打头的
+like:  %任意长度字符串 _单个字符 \转义符  like '%\%%'包含%的字符串 == like '%&%%' escape '&' &为自定义的转义符
+and or not
+
+外链接
+想要查询出支配表的全部，但where条件在被支配表中不瞒住，被支配表要用outer
+支配表和被支配表的地位不平等,不满足的在支配表中显示为空
+custom 支配表 oder是 被支配表
+select c.customid,o.oderid from custom c,outer order o
+ where c.customid=o.customid ;
+
+select d.duebno,h.xdduebno from dkff d,outer hkjlb h
+where d.duebno=h.xdduebno and d.brno=21301 and d.isday>20131001
+group by d.duebno,h.xdduebno
+having h.xdduebno is null ;
+
+子查询：
+select num from table1 where num=(select no from table2 where no='1009')
+要用（） 子查询可以用 select,delete,update作为where的一部分，但子查询不能用order by
+用in引入的子查询：select ..from ...where num (not) in (select ...from...where...)
+用关系运算符的连接子查询：=,!=,>=  
+select num from table1 where num=(select no from table2 where no='1009')
+这种=子查询的where只能是返回一条，否则出错：即no唯一
+select * from tble1 where price>(select avg(price) from tble2)找出大于平均值的 唯一值
+使用量词的子查询：any some all.any=some。这种形式的子查询的返回结果不必是单值
+表达式 关系运算符 量词 子查询
+x<all(select ...) x小于子查询范围结果的任意值
+=any相当于in
+
+相关子查询：在子查询中引用外层查询的值T.xe
+select xe from termdef T where a>(select min(xe1) from termdef1 where xe1=T.xe)
+并 union （all) select .. union select ... 两个select的查询的列数相等，各列的类型相同
+交 select..where a=100 and b in(exists) （select ...)
+差 select..where a=100 and b not in(exists) (select..)
+
+insert into table values('zhi1','zhi2',18,...);
+insert into table(a1,a2) valuese('zhi1',18);
+insert into table select * from ...
+
+表的唯一性
+select *,min(rowid) row from htest group by name,price,place
+order by name
+into temp tmp1 把唯一的行插入TMP1
+
+select name,price,place from tmp1 into temp tmp2 把row列去除
+
+insert into htest select * from tmp2 插入到原表中（原表要清空）
+
+查询重复项 
+select a.rowid,a.idno from test a,test b where a.idno=b.idno and a.rowid!=b.rowid ;
+延伸 错的 
+select a.rowid id from test a,test b where a.index=b.index and a.rowid!=b.rowid into temp a;
+把满足条件的并且存在重复的rowid找出来
+delete from test where rowid in (select id from a ) ;
+
+当表中有Serial（唯一，递增）类型的列是 插入0，系统自动分配值
+多行插入：用子查询来完成 insert into tble select * from tble1 where
+注意：tble1的列于tble列数相等；子查询不能引入目标表：目标表必须存在：
+
+update table set a1=100,a2=200 where no='037';
+update嵌套子查询：update tble ..set..where ..in (select ....)
+delete from table where..
+drop table name
+
+表的导出
+unload to file select * from table
+表的导入 注意文件的格式 |(缺省值)
+load from file insert into table
+load from 'dir/file' delimiter '自定义分隔符' insert into tble(a1,a3,a5)
+不能自定义：十六进制的符号，\,空格或TAB或换行符
+表的导出
+unload to 'dir/file' delimiter '自定义分隔符' select ..from
+
+EXEC SQL declare lnwtmr_curs1 cursor for
+        select a.*,b.* into :wd_lnwtmr,:wd_lcont 
+        from lnwtmr a,slcont b
+    where a.brno=b.brno and b.lnseqno=a.contno and a.actsts='0' and rstamt<>0. 
+        order by a.actno, a.duebno;
+
+EXEC SQL declare ckmr_1201_cur cursor for select。。。。(for update)（for update 表示可以可以更新待查询表的记录）
+EXEC SQL open ckmr_1201_cur;
+EXEC SQL fetch ckmr_1201_cur;           
+EXEC SQL update gkjkdz set dzbz='2' where current of gkjkdz_cur;(current of cursor_name 更新当前的游标所在的行[记录])
+EXEC SQL close ckmr_1201_cur;
+
+select w.brno,sum(w.je)-sum(a.je),b.brname
+from wang w,atm a,bctl b
+group by w.brno,a.brno,b.brname,b.brno
+having w.brno=a.brno and w.brno=b.brno
+group by having 字句使用的列名必须包含在select列表中，不过having字句使用的列名不一定要包含在group字句中
+having必须紧跟group by中
+having是对组进行限制，where是对行进行限制
+
+group by 中a.brno与sum(a.je)对应
+           b.brno与w.brno=b.brno 对应 承上
+
+alter table xdbzj add bzjjs decimal(16) default 0
+如何试用sql语句给数据表添加一个字段
+通用式： alter table [表名] add [字段名] 字段属性 default 缺省值 default 是可选参数
+增加字段： alter table [表名] add 字段名 smallint default 0 增加数字字段，整型，缺省值为0
+alter table [表名] add 字段名 int default 0 增加数字字段，长整型，缺省值为0
+alter table [表名] add 字段名 single default 0 增加数字字段，单精度型，缺省值为0
+alter table [表名] add 字段名 double default 0 增加数字字段，双精度型，缺省值为0
+alter table [表名] add 字段名 Tinyint default 0 增加数字字段，字节型，缺省值为0 
+
+alter table htestdd add xe2 decimal(12,2) default 50000000
+
+删除字段： alter table [表名] drop 字段名
+修改变长文本型字段的大小：alter table [表名] alter 字段名 varchar(N)
+
+alter table hkjlb modify  hkzh varchar(13) ;
+
+serial类型：类似int 自增 每个表中只能有一个serial类型，当删除一行时，改行的值不能再重新被占用；
+decimal类型：decimal（8,2） 987654.32 可以为整数。
+
+
+外部语句标志
+exec sql select * into :wd_db from bct where no="1000";
+if(sql.sqlcode) sqlerr
+
+显示第一条
+EXEC SQL declare szmx_cur_list cursor for 
+      	  select first 1 * into :wd_csszxx  from csszxx 
+    			where lsh=:lsh and jyrq=:jyrq and szdm=:szdm;
+
+统计种类    			
+EXEC SQL select count(distinct szdm) into :cntsz  from cssmxx 
+         	   	        where lsh=:lsh and jyrq=:jyrq;
+游标的用法和动态执行数据库和指定更新数据库
+        	   	        
+sprintf(sqlstr,"select rowid,* from xdtl where hdate between '%s' and '%s'",sdate,edate);
+EXEC SQL prepare xdtl_id from :sqlstr;
+EXEC SQL declare cur_xdtl cursor for xdtl_id;
+EXEC SQL open cur_xdtl;
+fp=fopen(fname,"w");
+while(1)
+{
+   EXEC SQL fetch cur_xdtl into :rowid,:wd_xdtl;
+   fprintf(fp,"%s|%s\n",trim(wd_xdtl.hdate),trim(wd_xdtl.dlhh));
+   EXEC SQL update xdtl set dzflag='1' where rowid=:rowid;
+}
+EXEC SQL close cur_xdtl;
+fclose(fp);
+
+数据库的数组的下标是从1开始的
+select * from rxhtr where  txday[2]='2'
+gcc
+-o 连接 -c编译
+gcc -c dx.c                    生成的dx.o不能执行 中间文件.o
+gcc -c dx.c -o dx1.o           生成指定的中间文件名dx1.o，
+gcc dx.c                       生成默认的可执行的文件a.out
+gcc -o dx_main dx.c            生成指定文件名的可执行文件dx_main
+gcc -o dx_main1 dx.c dx1.c     生成指定文件名的可执行文件dx_main1
+
+win文件换行符
+回车 ctrl+v ctrl+m
+
+声明变量
+exec sql begin declare section;
+long zbs;
+double zje;
+ecec sql end declare section;
+
+初始化结构体
+memset(&wd_xdt1,'\0',sizeof(wd_xdtl));
+strcpy(wd_xdt1.no,"1000");
+
+插入数据库
+exec sql insert into xdtl values(:wd_xdt1);
+if(sql.sqlcode) sqlerr
+
+create table cc402 (bankcode char(12),
+        bankname char(50),
+	bankcatalog char(2),
+	banktype char(3),
+	pbccode char(12),
+	ccpc char(4),
+	dreccode char(12),
+	agentsettbank char(12),
+	suprlist char(12),
+	debtorcity char(4),
+	syscode char(10),
+	tel char(13),
+	effectdate char(8),
+	expdate char(8),
+	issueno char(8),
+	alttype char(4)); 最后个不要逗号
+创表步骤
+在inlu中创建并定义结构体。wd_xx_area
+在src/test 中写结构体。TXT wd_xx_area.txt
+在src/tsst中运行 awk -f tt2.awk __.txt>biaoming.sql
+最后在数据库中创建表
+zfhhmc
+ps -u ick|grep bbs|grep -v grep|awk '{print "kill -9 " $2}'|sh
+
+增加交易吗
+创建。C 本目录和MAIN下的MAKEFILE加然后MAKE一下 柜面显示菜单（dsksav*  用GREP 交易码查找）
+
+find . -exec grep '张小勇' {} \; -print
+grep -Rl '' *
+工作日期：tlrenv.wkday
+
+修改FORM值
+在/SRC/SHAR_/XX.C  找到六位交易码
+在前后台的/ETC Form*下修改时间值
+cd /bin把后台重启 RUNALL 把DX_ KILL掉 前台再小退
+init 启动 ITERM 为静态选择
+
+
+update bctl set bstats=2 where brno=23301
+
+
+查看目录的大小
+du -sh dir
+df -h/-k
+
+tail: cannot open `+4' for reading: No such file or directory
+版本不兼容，解决办法
+export _POSIX2_VERSION=199209
+
+核心到IC卡系统为XML报文  其余都为send_put
+把数字字符串转化为数字
+sprintf(wd_xdtl.dscptent,"%ld",recv_get_string(varname(optype)));
+strcpy(snd_fname,strrchr(tempnam("/tmp","rpt"),'/')+1);
+strrchr(str,c) 查找一个字符c在另一个字符串str中末次出现的位置（也就是从str的右侧开始查找字符c首次出现的位置），并返回从字符串中的这个位置起，一直到字符串结束的所有字符。如果未能找到指定字符，那么函数将返回NULL。 
+
+strncpy(a+2,b+4,5) 把字符串b的第四字符开始的5个字符赋给a的第二个位置起
+兴业的IP和端口号：/ETC HOSTS SERVICES
+
+ar -rv libdev.a *.so 更行库 
+select * from bctl where brtype[2,2] not in ('1','2','3') 第二位 brtype[2,5] 第2位到第5位
+pormdmanler 生成数据库的头
+批量执行SQL语句SHELL
+dbtest.sh
+
+dbaccess gapsdb32<<!
+--drop htest1
+drop table  htest1;
+--drop htest2
+drop table  htest2;
+create table htest1(a1 char(4),
+                    a2 char(5));
+create table htest2(a3 char(4),
+                    a4 char(4));
+create table ws_src (
+   ws_id                CHAR(20)                                ，
+   src_name             CHAR(80)                        not null,
+   src_obj_name         CHAR(80),
+                        primary key (ws_id, src_name)
+                        constraint PK_WS_SRC
+                     );
+！
+
+linux 自动备份
+crontab -e
+* 23 * * * /home/gaps32/hjb/b.bk
+fen shi ri yue zhou cmd
+0  7  *  *   *    /home/informix/bin/jxpcl.sh > /home/informix/log/jxpcl.log 2>&1;
+                    
+
+    sprintf(sqlstr,"select * from svmr where cdcno='%s'",
+            inv_get_string(varname(cdno)));
+    rtcd=rm_fetch(sqlstr,&wd_svmr,sizeof(wd_svmr)); 把查询的结果插入到wd_svmr中 9400279006100156573
+
+在ybqt  初始化机构号 cbs_init 柜员号216 01500 科目 01100机构 0000001
+表 bctl 查询机构名brno  表 vocdtl  查询凭证类型
+makefile $前为tab键
+
+int （sqlca.sqlerrd[2]）返回insert,update,delete,select into 成功的条数；
+if(sqlca.sqlerrd[2]==0) SQLERR 	;
+
+业务：
+抵押 不动产
+质押 动产或权力（商标权）
+
+函数
+SYS.cdate 获得系统的日期 get_cur_time()获得时间
+%06.6ld  绝对的定长 .6 超过6位按6为输出
+100000.00
+
+XML
+xmlDocPtr doc=NULL;
+xmlNodePtr cur=NULL;
+xmlNodePtr nodeValue,parent;
+
+doc=xmlReadFile(name,"utf-8",XML_PARSE_RECOVER);
+cur=xmlGetRootElement(doc);
+xmlFreeDoc(doc);
+cur/nodeValue=cur->xmlChildrenNode;
+if(nodeValue->type！=XML_ELEMENT_NODE）
+outbuf=(char *)xmlNodeGetContent(cur);
+value=(char *)u2g(outbuf);
+sprintf(tname,"%s",cur->name);
+free(value);
+xmlFree(outbuf);
+cur=cur->next;
+
+strchr(string,c);从string的开始处查询字符C在字符串里面的位置，
+strrchr(string,c);从string的末尾处查询字符C在字符串里面的位置
+
+//   /pub/sys=fjsl
+ strncpy(sXmlData, sXmlBuf,strchr(sXmlBuf, '=') - &sXmlBuf[0]);   取等号前串
+ strcpy(sEnvData, strchr(sXmlBuf, '=') + 1);    取等号后的串
+
+ybsh1234
+ybgaps32
+3.2 生产上的yb131  
+245 备份机 昨天的 server
+41  test sclys
+72 gjj  前台  ybsh 后台    
+2001 0089 NT89 C20111001 00000000000000000
+
+看日志是乱码时:
+LANG=en_GB.437
+
+IP大全
+清算查询
+172.18.3.3 ybzfqs pass
+cd tmp/ftpdata cd 交易日期 grep 卡号 *COM>a 
+vi a 如没有则没找到 如有 把时间和交易笔数和跟踪号（时间前） 记住 把0200 后的3010003打头的不算 
+如为当天日期 cd bin/vi ftp* 
+ftp 到 。。。。 b0564 123456 mget 到临时目录 同上
+
+生产日志备份
+172.16.1.5   baklog  /home/worksrv/log
+生产短信日志
+172.16.3.36  ybdx
+
+172.18.3.2
+172.16.1.5
+172.16.3.35
+172.16.3.36
+172.16.3.41
+172.16.6.38
+172.16.12.72
+172.16.2.252
+172.16.3.105
+172.16.3.108
+172.16.3.162   开发环境-scoqt
+172.16.12.118
+172.18.4.29    yb120--
+172.18.3.50    yb120 yb150 yb160 yxxt hsxe
+172.18.4.157   yb140 五楼的清算中心
+172.18.4.121   yb123 西区的清算中心
+
+jxxt
+172.25.1.110
+端口：
+1526
+1528 informix
+
+sjyz
+灾备机
+172.16.3.243 informix  root123!  root root9001
+
+172.16.30.31  
+
+开发工具：所有代码均自主开发，几乎未使用第三方工具
+支持环境：c,vc,java
+主机：小型机,pc服务器，pc机
+操作系统：AIX,SCO，linux,windows
+数据库：INFORMIX,oracle,sybase,db2,timesten
+中间件：自主开发中间件syt_switch
+
+软件名称:ACIDE32R
+公司名称:内江村镇银行
+用户名称:杨金华
+机器序号:K60KT85268H8
+注 册 号:7AE78A220B43DC77
+
+软件名称:ACIDE32R
+公司名称:内江村镇银行
+用户名称:yswordbop
+机器序号:100118PCK304VKGN79ZJ
+注 册 号:6BD6D04EB5C39F5F
+
+软件名称:ACIDE32R
+公司名称:内江村镇银行
+用户名称:yswordbop
+机器序号:100118PCK304VKGN79ZJ
+注 册 号:6BD6D04EB5C39F5F
+
+软件名称:ACIDE32R
+公司名称:内江村镇银行
+用户名称:daiyf-cib
+机器序号:VB2406843d-fde1000b
+注 册 号:0C69D7D0A8DA328F
+软件名称:ACIDE32R
+公司名称:内江村镇银行
+用户名称:fanx-cib
+机器序号:WD-WXA0A9954251
+注 册 号:D576C878A5526759
+
+单边账：借贷可以不等  登记的作用
+报表：借贷必须相等
+http://172.18.3.129/ OA
+借贷关系
+取钱
+借211  211的余额方为贷方   故借贷方  211减少
+贷现金 现金的余额方位借方  故贷借方  现金减少
+
+
+ed2k://|file|%5B%E7%BA%A2%E5%B8%BD%E4%BC%81%E4%B8%9ALinux.5.6%5D.rhel-server-5.6-i386-dvd.iso|3188559872|adcbbf2a2bfa49b4fcd73d9445352b0e|h=fw2m46jbxoykhxopsiqkiu6njdd6kojp|
+RHEL5.6 安装号 2515dd4e215225dd
+
+小函数：
+
+int access(const char *pathname,int mode)
+
+　　参数：
+
+　　pathname:表示要测试的文件的路径
+
+　　mode:表示测试的模式可能的值有：
+
+　　R_OK:是否具有读权限
+
+　　W_OK:是否具有可写权限
+
+　　X_OK:是否具有可执行权限
+
+　　F_OK:文件是否存在
+
+　　返回值：若测试成功则返回0,否则返回-1
+
+判断字符key是否在PNGAUD中
+if(strchr("PNGAUD",key)==(char *)0)
+return(-1) ;
+
+char *get_agent_fname(char *path_fname)
+{
+    int i;
+    for(i=strlen(path_fname);i>0;--i)
+    {
+        if(path_fname[i]=='/')
+        return path_fname+i+1;
+    }
+    return (char *)0;
+}
+
+FILE *open_print_file()
+{
+    char path_fname[201];
+    char *tstr;
+    memset(snd_fname,0,sizeof(snd_fname));
+    sprintf(path_fname,"%s/snddir",getenv("HOME")) ;
+    tstr=tempnam(path_fname,"rpt"); /*会自动加'/'的 eg:path_fname/rpt* */
+    strcpy(path_fname,tstr);
+    free(tstr);
+    strcpy(snd_fname,get_agent_fname(path_fname));
+    return(fopen(path_fname,"w"));
+}
+
+hundsn
+hjb1361P.
+bzero  
+原型：extern void bzero(void *s, int n);
+用法：#include <string.h>   
+功能：置字节字符串s的前n个字节为零。
+memset  
+原型：
+extern void *memset(void *buffer, int c, int count);
+用法：#include <string.h>   
+功能：把buffer所指内存区域的前count个字节设置成字符c。    
+说明：返回指向buffer的指针。
+setmem  
+原型：
+extern void setmem(void *buf, unsigned int count, char ch);          
+用法：#include <string.h>    
+功能：把buf所指内存区域前count个字节设置成字符ch。    
+说明：返回指向buf的指针
+bcopy和memcpy、bzero和memset、bcmp和memcmp的差别在哪里？
+bcopy、bzero和bcmp是传统BSD的函数，属于POSIX标准；mem*是C90(以及C99)标准的C函数。区别在于，如果你打算把程序弄到一个符合C90/C99，但是不符合POSIX标准的平台时，后者比较有优势。
+
+NetBSD的代码中有很多地方使用mem*(他们更偏爱mem*，以利于移植)，即使内核也是如此，而FreeBSD的内核中则尽量避免使用(希望尽可能避免在内核中出现较多的C函数)。如果你提交代码的话需要注意这些约定。
+
+在memset和bzero初始化数据间，我很多时候选择bzero, memset的一个缺点是第二个参数和第三个参数需要记忆，需要记住哪个是值和哪个是大小（如果不想查手册的话）, 不可以弄错。
+
+bzero()和memset()
+今天用到一个字符数组初始化函数，bzero(),因为比较生疏，于是在查本地的一个C/C++函数库的时候并未见此函数，于是便觉得自己拥有的CHM版的库函数软件包有点山寨了，可是当自己调试程序的时候却发现此函数始终通不过编译。被逼上网查它们的区别,得答案如下：
+
+       C has memset(), the Berkeley UNIX C library has bzero(). They are not
+identical, and bzero() pre dates memset() but is not widely available (since
+it's not part of standard C).
+     在LINUX平台上是支持bzero的，但是其并不在ANSI C中定义，也就是不属于C的库函数.
+	 
+	 全行应对数 3805
+select count(*) from dztjms where  hytlrno is not null and  txday=20141231 and  flag in('1','2','3') and 
+dytlrno is not null
+全行应对余额合计 11331825693.20
+select sum(ye) from dztjye where txday=20141231 and actno in(
+select actno from dztjms where  hytlrno is not null and  txday=20141231 and  flag in('1','2','3') and 
+dytlrno is not null)
+
+城区应对(含育才路和宜宾县) 339  1424922271.06
+select count(*) from dztjms where  hytlrno is not null and  txday=20141231 and  flag in('1','2','3') and 
+dytlrno is not null and brno not in('21301','10301','11301', '12301','13301','17301','19301','22301','21400','21500')
+
+select sum(ye) from dztjye where txday=20141231 and actno in(
+select actno from dztjms where  hytlrno is not null and  txday=20141231 and  flag in('1','2','3') and 
+dytlrno is not null and brno not in('21301','10301','11301', '12301','13301','17301','19301','22301','21400','21500'))
+
+远程控制 teamviewer
+
+--tomcat在linux下死机
+1、在tomcat的conf目下的server.xml grep JreMemoryLeakPreventionListener 在后面添加classesToInitialize="com.informix.jdbc.IfxDriver" 
+<Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" classesToInitialize="com.informix.jdbc.IfxDriver" />
+2、把ifxjdbc.jar放在tomcat的lib目录下。
+
+select  txcd,txday,actno,txamt,avbal,dsent from plnhtr where
+contno=200312570116
+
+
+		<!--
+		<property name="jdbcUrl" value="jdbc:informix-sqli://10.2.0.88:15260/bbs_jxxtdb:informixserver=zjywdb;DB_LOCALE=en_us.819;IFX_USE_STRENC=true;NEWCODESET=gbk,8859-1,819" />
+		
+		<property name="jdbcUrl" value="jdbc:informix-sqli://173.25.1.110:1528/bbs_jxxtdb:informixserver=jxdbs;DB_LOCALE=en_us.819;IFX_USE_STRENC=true;NEWCODESET=gbk,8859-1,819" />
+		-->
+	    <property name="jdbcUrl" value="jdbc:informix-sqli://10.10.10.6:6778/bbs_jxxtdb:informixserver=online7;DB_LOCALE=en_us.819;IFX_USE_STRENC=true;NEWCODESET=gbk,8859-1,819" />
+		  <!-- -->
+		<property name="user" value="informix" />
+		<property name="password" value="qwer1234" />	
+		
+SVN 
+
+
+
+数据库笔记
+第一范式：（1NF）无重复的列-关系数据库的设计就已经满足了。
+第二范式：（2NF）属性完全依赖于主键--如果唯一索引有多个字段，完全即依赖多个字段，不能依赖一部分字段。同时主键只有一个的话就必须满足2NF。
+第三范式：（3NF）属性不依赖于其它非主属性--减少冗余的。table(学号、姓名、系别号、系别名称) 主键学号： 系别名称不应存在，冗余了，系别名称依赖非主属性系别号。
+
+1、include区别
+2、内存泄漏
+3、堆栈溢出
+
+
+
+
+
+
+获取IP
+void func_GetIpAdrr(char *ip)
+{
+   struct hostent *he;
+   char hostname[20];
+
+   memset(hostname,0x00,sizeof(hostname));
+   gethostname(hostname,sizeof(hostname));
+   if((he=gethostbyname(hostname))==NULL)
+         {
+                 ip[0] = '0';
+     }
+
+   memset(ip,0x00,sizeof(ip));
+   sprintf(ip,"%s",inet_ntoa(*((struct in_addr *)he->h_addr)));
+
+   return;
+}
+
+
+        
+映射到银联的地址：
+telnet 172.32.12.244 5000
+
+
+
+
+
+
+
+oracle数据库：
+查询表结构/字段/备注
+select * from all_tables;
+select * from all_tab_columns;
+select * from all_tab_comments;
+
+查询表的大小：
+select sum(bytes)/(1024*1024) as "size(M)" from user_segments where segment_name=upper('&table_name');
+
+查看索引的大小
+select sum(bytes)/(1024*1024) as "size(M)" from user_segments where segment_name=upper('&index_name');
+
+    select t.tablespace_name, round(sum(bytes/(1024*1024)),0) ts_size
+    from dba_tablespaces t, dba_data_files d
+    where t.tablespace_name = d.tablespace_name
+    group by t.tablespace_name;
+
+2、查看表空间物理文件的名称及大小
+
+    select tablespace_name, file_id, file_name,round(bytes/(1024*1024),0) total_space from dba_data_files order by tablespace_name; 
