@@ -1,0 +1,1318 @@
+--notesql
+--noteoracle
+--noteinformix
+--noteshell
+--certabout
+--ESQLabout
+--Makefile
+--GIT--
+
+--notesql
+第一范式：（1NF）无重复的列-关系数据库的设计就已经满足了。
+第二范式：（2NF）属性完全依赖于主键--如果唯一索引有多个字段，完全即依赖多个字段，不能依赖一部分字段。同时主键只有一个的话就必须满足2NF。
+第三范式：（3NF）属性不依赖于其它非主属性--减少冗余的。table(学号、姓名、系别号、系别名称) 主键学号： 系别名称不应存在，冗余了，系别名称依赖非主属性系别号。
+
+select （unique/distinct）* from table where brno is (not) null group by 列描述 having 分组条件 order by
+..into temp 临时表名
+
+order by 列名s/列序号s ASC（升 缺省）/DESC（降）用序列号 eg:select a ,b from c order by 1 ;
+group by 有一个原则,就是 select 后面的所有列中,没有使用聚合函数的列,必须出现在 group by 后面
+
+表的别名：在from中定义，但可以在select中使用.
+select t.ex from termdef t
+列的别名：select tt.xe hjb,tt.xe*100 as xe_100 from termdef tt  ( 空格 as)
+
+no between 1 an 100 === no>=1 and no<=100 
+组查询：no (not) in (1,3,5)
+匹配模式：matches/like
+matches ：*任意长度字符串 ?单个字符 \转义符 []某个字符的取值范围 matches '*3816' matches '[A-Z]*'
+大写开头 matches '[AZ]'A或则Z打头的
+like:  %任意长度字符串 _单个字符 \转义符  like '%\%%'包含%的字符串 == like '%&%%' escape '&' &为自定义的转义符
+and or not
+
+外链接
+想要查询出支配表的全部，但where条件在被支配表中不瞒住，被支配表要用outer
+支配表和被支配表的地位不平等,不满足的在支配表中显示为空
+custom 支配表 oder是 被支配表
+select c.customid,o.oderid from custom c,outer order o
+ where c.customid=o.customid ;
+
+select d.duebno,h.xdduebno from dkff d,outer hkjlb h
+where d.duebno=h.xdduebno and d.brno=21301 and d.isday>20131001
+group by d.duebno,h.xdduebno
+having h.xdduebno is null ;
+
+子查询：
+select num from table1 where num=(select no from table2 where no='1009')
+要用（） 子查询可以用 select,delete,update作为where的一部分，但子查询不能用order by
+用in引入的子查询：select ..from ...where num (not) in (select ...from...where...)
+用关系运算符的连接子查询：=,!=,>=  
+select num from table1 where num=(select no from table2 where no='1009')
+这种=子查询的where只能是返回一条，否则出错：即no唯一
+select * from tble1 where price>(select avg(price) from tble2)找出大于平均值的 唯一值
+使用量词的子查询：any some all.any=some。这种形式的子查询的返回结果不必是单值
+表达式 关系运算符 量词 子查询
+x<all(select ...) x小于子查询范围结果的任意值
+=any相当于in
+
+相关子查询：在子查询中引用外层查询的值T.xe
+select xe from termdef T where a>(select min(xe1) from termdef1 where xe1=T.xe)
+并 union （all) select .. union select ... 两个select的查询的列数相等，各列的类型相同
+交 select..where a=100 and b in(exists) （select ...)
+差 select..where a=100 and b not in(exists) (select..)
+
+insert into table values('zhi1','zhi2',18,...);
+insert into table(a1,a2) valuese('zhi1',18);
+insert into table select * from ...
+
+表的唯一性
+select *,min(rowid) row from htest group by name,price,place
+order by name
+into temp tmp1 把唯一的行插入TMP1
+
+select name,price,place from tmp1 into temp tmp2 把row列去除
+
+insert into htest select * from tmp2 插入到原表中（原表要清空）
+
+查询重复项 
+select a.rowid,a.idno from test a,test b where a.idno=b.idno and a.rowid!=b.rowid ;
+延伸 错的 
+select a.rowid id from test a,test b where a.index=b.index and a.rowid!=b.rowid into temp a;
+把满足条件的并且存在重复的rowid找出来
+delete from test where rowid in (select id from a ) ;
+
+当表中有Serial（唯一，递增）类型的列是 插入0，系统自动分配值
+多行插入：用子查询来完成 insert into tble select * from tble1 where
+注意：tble1的列于tble列数相等；子查询不能引入目标表：目标表必须存在：
+
+update table set a1=100,a2=200 where no='037';
+update嵌套子查询：update tble ..set..where ..in (select ....)
+delete from table where..
+drop table name
+表的导出
+unload to file select * from table
+表的导入 注意文件的格式 |(缺省值)
+load from file insert into table
+load from 'dir/file' delimiter '自定义分隔符' insert into tble(a1,a3,a5)
+不能自定义：十六进制的符号，\,空格或TAB或换行符
+表的导出
+unload to 'dir/file' delimiter '自定义分隔符' select ..from
+
+
+
+select w.brno,sum(w.je)-sum(a.je),b.brname
+from wang w,atm a,bctl b
+group by w.brno,a.brno,b.brname,b.brno
+having w.brno=a.brno and w.brno=b.brno
+group by having 字句使用的列名必须包含在select列表中，不过having字句使用的列名不一定要包含在group字句中
+having必须紧跟group by中
+having是对组进行限制，where是对行进行限制
+
+group by 中a.brno与sum(a.je)对应
+           b.brno与w.brno=b.brno 对应 承上
+
+alter table xdbzj add bzjjs decimal(16) default 0
+如何试用sql语句给数据表添加一个字段
+通用式： alter table [表名] add [字段名] 字段属性 default 缺省值 default 是可选参数
+增加字段： alter table [表名] add 字段名 smallint default 0 增加数字字段，整型，缺省值为0
+alter table [表名] add 字段名 int default 0 增加数字字段，长整型，缺省值为0
+alter table [表名] add 字段名 single default 0 增加数字字段，单精度型，缺省值为0
+alter table [表名] add 字段名 double default 0 增加数字字段，双精度型，缺省值为0
+alter table [表名] add 字段名 Tinyint default 0 增加数字字段，字节型，缺省值为0 
+
+alter table htestdd add xe2 decimal(12,2) default 50000000
+
+删除字段： alter table [表名] drop 字段名
+修改变长文本型字段的大小：alter table [表名] alter 字段名 varchar(N)
+
+alter table hkjlb modify  hkzh varchar(13) ;
+
+serial类型：类似int 自增 每个表中只能有一个serial类型，当删除一行时，改行的值不能再重新被占用；
+decimal类型：decimal（8,2） 987654.32 可以为整数。
+
+
+
+
+--noteoracle
+orcal：
+1、配置文件：C:\oracle\product\11.2.0\client_1\network\admin\tnsnames.ora  
+2、环境变量TNS_ADMIN：C:\oracle\product\11.2.0\client_1\network\admin
+oracle数据库：
+查询表结构/字段/备注
+select * from all_tables;
+select * from all_tab_columns;
+select * from all_tab_comments;
+
+查询表的大小：
+select sum(bytes)/(1024*1024) as "size(M)" from user_segments where segment_name=upper('&table_name');
+
+查看索引的大小
+select?sum(bytes)/(1024*1024)?as?"size(M)"?from user_segments where?segment_name=upper('&index_name');
+
+????select?t.tablespace_name,?round(sum(bytes/(1024*1024)),0)?ts_size
+????from?dba_tablespaces?t,?dba_data_files?d
+????where?t.tablespace_name?=?d.tablespace_name
+????group?by?t.tablespace_name;
+
+2、查看表空间物理文件的名称及大小
+
+????select?tablespace_name,?file_id,?file_name,round(bytes/(1024*1024),0)?total_space from?dba_data_files order?by?tablespace_name; 
+
+
+--noteinformix
+数据库sql
+nohup dbimport -d workdbs bbs_workdb &   恢复--workdbs 数据库空间 有可能不同
+如果数据库版本不对，报错sqlobj  ：%s as .*$/;/g
+revoke all on "server".acdef from "public" as "server";
+revoke all on "server".acdef from "public";
+以下表名超18个字符，在.sql中删除
+dayop_mortgage_debt
+dayop_loan_discount
+dayop_loan_interest
+建索引的SQL也不对，需要替换
+using btree  in workdbs
+
+172.16.3.162 ybzfqs cd sj;delwj.def sjcl
+....
+ontape -s -U bbs_workdb          挂日志
+grant dba to tserver            赋权限
+
+nohup dbexport -ss bbs_workdb& 备份
+
+onstat -g sql              显示sql运距运行状态
+onmode -z SessId 解锁
+onstat -g sql SessId
+
+
+onmonitor
+dbschema -d bbs_workdb -t lxdtl lxdtl.sql 表结构导出
+
+批量执行SQL语句SHELL
+dbtest.sh
+
+dbaccess gapsdb32<<!
+--drop htest1
+drop table  htest1;
+--drop htest2
+drop table  htest2;
+create table htest1(a1 char(4),
+                    a2 char(5));
+create table htest2(a3 char(4),
+                    a4 char(4));
+create table ws_src (
+   ws_id                CHAR(20)                                ，
+   src_name             CHAR(80)                        not null,
+   src_obj_name         CHAR(80),
+                        primary key (ws_id, src_name)
+                        constraint PK_WS_SRC
+                     );
+！
+
+--noteshell
+core文件的分析
+linux、HP-UX使用gdb
+AIX使用dbx
+
+查看动态库的函数linux使用
+objdump -tT libCavium4J.so |grep generateKey
+nm -D libCavium4J.so  |grep generateKey
+
+查看动态库的关联关系
+ldd libtest.so 
+
+删除文本的首行和最后一行
+sed -i '1d' a.txt
+sed -i '$d' a.txt
+抓包：
+tcpdump -XX -X -n -nn -v -A -i eth0 host 172.32.5.6
+grep FAIL *    查看所有可编辑文件中有FAIL字段的行
+重新发布工程后需要重启gxp服务
+netstat -na查看端口号
+lsof -i tcp:15005 查看端口对应的进程PID
+ps -ef | grep xxxx（PID）  查看进程PID对应的程序情况
+ps -ef | filename	查看文件被那个进程打开
+netstat -nlptu |grep 进程名	查看进程打开的端口号
+df -a  显示所有的挂载分区信息
+find ./ -name sqlca.h  查找文件
+nohup ./server1002 &；然后再使用exit退出当前
+grep -r name *
+find . -name *.c|xargs grep hanshuming  在当前路径下查找所有c文件里面调用了函数名hanshuming的地方
+grep -r hanshuming *|more 在当前路径下所有文件中查找函数名hanshuming的地方
+
+ftp_putfile.sh:
+#!/bin/sh
+ftp -n $1 <<EOF
+user $2 $3
+bin
+put $4 $5
+quit
+EOF
+
+
+
+export LANG=zh_CN.gbk;
+cd /home/gaps4/app/xnhyb/excel;
+execute.sh /home/gaps4/file/mid/xnhyb/ test_kjf.txt 1;
+export LANG=C;
+
+execute.sh：
+#txt 2 excel
+#arg0:文本路径,如:/home/user/demo/
+#arg1:文本名称,如:**.txt
+#arg2:转换类型,如:1-代表bkj类型;2-代表kjf类型
+#运行示例:./execute.sh '/home/user/demo/' 'demo.txt' '2'
+if [ "$3" != "" ]
+then 
+	echo "txt 2 excel begin......"
+	java -jar ecltxt.jar $1 $2 $3
+	echo "txt 2 excel ok."
+#excel 2 txt
+#arg0:同上;
+#arg1:同上,后缀为:xls,xlxs
+#运行示例:./execute.sh '/home/user/demo/' 'demo.xls'
+else
+ 	echo "excel 2 txt begin......"
+	java -jar ecltxt.jar $1 $2
+	echo "excel 2 txt ok."
+fi
+
+perl  转码
+my $tmp = encode("gbk",decode("utf-8",$_[0]));
+return $tmp;
+
+gcc
+-o 连接 -c编译
+gcc -c dx.c                    生成的dx.o不能执行 中间文件.o
+gcc -c dx.c -o dx1.o           生成指定的中间文件名dx1.o，
+gcc dx.c                       生成默认的可执行的文件a.out
+gcc -o dx_main dx.c            生成指定文件名的可执行文件dx_main
+gcc -o dx_main1 dx.c dx1.c     生成指定文件名的可执行文件dx_main1
+
+win文件换行符
+回车 ctrl+v ctrl+m
+
+ps -u ick|grep bbs|grep -v grep|awk '{print "kill -9 " $2}'|sh
+find . -exec grep '张小勇' {} \; -print
+grep -Rl '' *
+查看目录的大小
+du -sh dir
+df -h/-k
+
+ar -rv libdev.a *.so 更行库 
+
+linux 自动备份
+crontab -e
+* 23 * * * /home/gaps32/hjb/b.bk
+fen shi ri yue zhou cmd
+0  7  *  *   *    /home/informix/bin/jxpcl.sh > /home/informix/log/jxpcl.log 2>&1;
+
+删除匹配行
+:%g/hjb/d
+
+shell
+排序 sort -r
+重定向  > >> < <<
+
+chown -R tserver:informox etc
+
+命令原本：经常用的命令放在一个文件下，以后输入文件名就可以依次执行
+vi 文件名
+#!/bin/ksh
+#注释
+命令1；命令2；命令3；
+保存退出
+chmod +x 文件名
+运行 文件名
+但只能在当前目录下运行
+也可以在home的.profile中设置
+在.profile中
+alias log="cd ~/log;more err.log"
+~表示home，这样的可以在该用户的所有目录下运行
+也可以把命令原本放在~/bin下
+:%s/[ctrl-v][ctrl-m]//g   删除行尾换行符
+gzip -d *.gz解压
+
+
+\%g\/unload.\*\\\<cacm/d
+%g/unload.*\<
+
+ :20,$s/[a-z]/\U&/g    全部改大写
+ :20,$%s/[A-Z]/\l&/g   全部改小写
+vi.sh
+vi $1 << !
+
+:%g/unload.*\<piah/d
+:\%g\/unload.\*\/\<
+。。。。
+vi命令集
+
+:x
+!
+ps -u ick|grep bbs|grep -v grep|awk '{if($4!="0:00") print "kill -9 " $2}'|sh
+ls -l | wc 统计行数
+
+--ctags插件 可以统计C的函数、变量名和宏定义
+files=`find . -name *.*c`
+for file in $files
+do
+ctags -utf tags $file
+done
+
+which which 查找which命令的位置
+where 0009.ec 查找009.ec的路径名
+
+echo h  hh   hhh
+echo 'h  hh   hh'
+shell通配符
+*
+？单个字节
+[a-c][a,b,c]
+
+命令的替换
+grep 'wc -l myfile' * 搜索file的行数
+ls -F 显示目录
+find . -name *0009.c -print 记得print不要忘了
+copy -i source result 防止重写
+mkdir -p 1/2/3 直接创建 不会因为无父目录2而不能创建目录3
+cat a1 a2 a3 >a 把三个文件的内容复制到a中
+
+head -20 0009.ec 查看前20行
+tail -20 0009.ec 查看后20行
+cat file1|tee file2|more 把file1的内容即重写到file2中又输出（tee）
+
+打包/解包
+
+tar -cvf a.tar ./*  
+tar -xvf a.tar ./ 
+
+tar -czf all.tar.gz *.
+tar -xzf all.tar.gz  or gzip -d *.gz;tar -xvf *.tar
+
+tar -cjf all.tar.bz2 *
+tar -xjf all.tar.bz2 
+
+tar -cZf all.tar.Z *
+tar -xZf all.tar.Z 
+
+find . -name "*.h"|xargs tar -cvf netbank_$today.tar   --查找并打包
+find . -name "*.c"|xargs tar -rvf netbank_$today.tar   --查找并追加到包中
+
+总结 
+1、*.tar 用 tar –xvf 解压 
+2、*.gz 用 gzip -d或者gunzip 解压 
+3、*.tar.gz和*.tgz 用 tar –xzf 解压 
+4、*.bz2 用 bzip2 -d或者用bunzip2 解压 
+5、*.tar.bz2用tar –xjf 解压 
+6、*.Z 用 uncompress 解压 
+7、*.tar.Z 用tar –xZf 解压 
+8、*.rar 用 unrar e解压 
+9、*.zip 用 unzip 解压
+
+Linux上解压为tar -zvxf file.tar.gz，但是这个命令到AIX上不好用。
+goolge了下AIX的解压命令：  gzip -dc file.tar.gz |tar  -xvf -
+tar.gz file format
+o  压缩
+ tar cvf - folder | gzip > filename.tar.gz
+o  解压
+ gunzip -c filename.tar.gz | tar -xvf -
+
+xargs
+file * |cut -d":" -f1 |xargs -t -i mv {} {}.bak
+-i 与{} 搭配 表示匹配全部 -t 为打印
+避开
+使用find查找文件的时候怎么避开某个文件目录比如要在/usr/sam目录下查找不在dir1子目录之内的所有文件
+find /usr/sam -path "/usr/sam/dir1" -prune -o -print 
+, -a 和 -o 都是短路求值，与 shell 的 && 和 || 类似
+如果 -path "/usr/sam" 为真，则求值 -prune , -prune 返回真，
+与逻辑表达式为真；否则不求值 -prune，与逻辑表达式为假。
+如果 -path "/usr/sam" -a -prune 为假，则求值 -print ，-print返回真，
+或逻辑表达式为真；否则不求值 -print，或逻辑表达式为真。
+
+避开多个文件夹
+find /usr/sam \( -path /usr/sam/dir1 -o -path /usr/sam/file1 \) -prune -o -print
+圆括号表示表达式的结合。\ 表示引用，即指示 shell 不对后面的字符作特殊解释，而留给 find 命令去解释其意义。
+
+-type
+f 普通文件 l 符号连接 d 目录 c 字符设备 b 块设备 s 套接字 p Fifo
+访问时间（-atime/天，-amin/分钟）：用户最近一次访问时间。 修改时间（-mtime/天，-mmin/分钟）：文件最后一次修改时间。 变化时间（-ctime/天，-cmin/分钟）：文件数据元（例如权限等）最后一次修改时间。
+
+-size 文件大小
+b —— 块（512字节） c —— 字节 w —— 字（2字节） k —— 千字节 M —— 兆字节 G —— 吉字节(AIX 貌似只能用字节c 1M=1000000c)
+find . -type f -size -10k
+-perm 文件的权限 -perm 777
+-user  用户拥有  -user swyy
+-group
+{} 用于与-exec选项结合使用来匹配所有文件，然后会被替换为相应的文件名。
+找出当前目录下所有root的文件，并把所有权更改为用户tom 
+find .-type f -user root -exec chown tom {} \;
+find $HOME/. -name "*.txt" -ok rm {} \; -ok 需要确认相应的操作(删除)
+
+将30天前的.log文件移动到old目录中 
+find . -type f -mtime +30 -name "*.log" -exec cp {} old \;
+find . -name a.text -exec printf "file:%s\n" {} \; --file:./tmp/a.text
+
+找出比file.log修改时间之后的所有文件
+find . -type f -newer file.log
+
+当前目录及子目录下查找所有以.txt和.pdf结尾的文件
+find . \( -name "*.txt" -o -name "*.pdf" \)
+
+压缩/解压
+compress .z
+uncompress 
+
+查找 显示目录名
+grep -Rl keywords * 当前目录及子目录 linu
+AIX
+find . |xargs grep "int _ncard_lxjs" > a
+
+find . -name "*.c"  -exec grep array /dev/null {} \;
+find . -name "*.ec"  -exec grep "int _ncard_lxjs" {} -H \; -a
+
+标准输出
+linux操作系统中的/var/spool/clientmqueue/目录下存在大量文件。 
+原因分析：系统中有用户开启了cron，而cron中执行的程序有输出内容，输出内容会以邮件形式发给cron的用户，而sendmail没有启动所以就产生了这些文件；
+ 解决办法: 1、 将 里面的命令后面加上> /dev/null 2>&1
+ 
+*  *  *  *  *  *   
+分 时 日 月 周 命令
+
+find $HOME/ftp/ftprcv  -name "*" -mtime +7 -exec rm {} \;
+find $HOME/ftp/ftpsnd  -name "*" -mtime +7 -exec rm {} \;
+
+00 16 * * 1-7 /home/**-log/rmcore > /dev/null 2>&1  屏蔽所有不会发邮件了
+标准输出和错误输出都不显示
+/dev/null 代表空设备文件 
+> 代表重定向到哪里，例如：echo "123" > /home/123.txt 
+1 表示stdout标准输出，系统默认值是1，所以">/dev/null"等同于"1>/dev/null" 
+2 表示stderr标准错误 
+& 表示等同于的意思，2>&1，表示2的输出重定向等同于1 
+那么本文标题的语句： 
+1>/dev/null 首先表示标准输出重定向到空设备文件，也就是不输出任何信息到终端，说白了就是不显示任何信息。 
+2>&1 接着，标准错误输出重定向等同于 标准输出，因为之前标准输出已经重定向到了空设备文件，所以标准错误输出也重定向到空设备文件。
+
+再如
+脚本中看到类似”2>&1″这样的用法，例如“/path/to/prog 2>&1 > /dev/null &”
+0-标准输入流(stdin)，1-标准输出流(stdout)，2-标准错误流 (stderr)。
+”2>&1″的意思就是将stderr重定向至stdout，并一起在屏幕上显示出来。
+如果不加数字，那么默认的重定向动作是针对stdout(1)的，比如”ls -l > result”就等价于”ls -l 1 > result”。
+
+more std.sh
+#!/bin/sh 
+echo “stdout” 
+echo “stderr” >&2 
+
+#std.sh
+stdout
+stderr
+都不屏蔽 显示标准输出和错误输出
+
+#std.sh >/dev/null
+stderr
+屏蔽标准输出 显示错误输出
+
+#std.sh 2>/dev/null
+stdout
+屏蔽错误输出 显示标准输出
+
+#std.sh >/dev/null 2>&1
+都屏蔽 显示为空
+
+
+
+创建符号
+ln -s  /home/ick/src/cardsrc cs
+统计行数l 单词数w 字符数m
+
+ftp
+bin
+本地：lcd put !dir查看本地的内容
+远程：cd pwd  dir mkdir delete prompt 关闭交互模式
+
+
+vi命令
+w 右移一词  $行末 e 词末
+b 左移一词  0行首^
+（句首     { 段首 
+）句末     }段末
+% 全文
+标签和缓冲区
+
+标签：ma-mz 'a-'a
+缓冲区："a-"z 
+文首到当前行拷贝到缓冲区a "ay1G
+
+实现文本间的复制粘贴
+
+把当前行到标签a拷贝到缓冲区b "by'a
+把缓冲区b的内容粘贴到文本 "bp
+
+:e file编辑 :w file保存 :w! file_exist(保存到存在的文件)
+:r file添加 :n filen下一 :e# 返回
+HML 屏幕的上中下 ctrl+u/d/f/b 滚动半屏/全屏
+~ 大小写转换 
+删除匹配行
+:%g/hjb/d
+:g/^s*$/d 删除所有空行
+删除不匹配行
+:g!/^dd/d 删除行首不含字符串'dd'的行 
+:v/^dd/d 同上 （译释：v == g!，就是不匹配！） 
+
+匹配精确的单词
+grep "hjb\>" test
+grep 'hjb\{2,\}' test 至少出现两次
+
+PS1变量为提示符变量
+>重写并完全覆盖 >>重写到后面
+
+awk 结构 {动作}
+awk '{print $1,$2}' aa  打印文件aa的第一和第二列
+格式化输出（printf）awk {print "%10s %6d\n",$1,$3}
+变量 可赋值/计算 如 $1=$1/100 $2="test"
+     NF为当前记录的域的个数 NR为当前记录的记录号
+     $(NF)当前记录的最后一个域  $(NF-1)当前记录的倒数第二个域
+     
+
+lsfs -q 详细的列出文件系统
+在/etc/filesyster 中可以看见每个文件系统的属性
+
+df -k 文件系统的大小
+
+un/mount /文件的挂载点
+删除一个文件系统前要先unmount
+
+fuser -cux /文件系统 查看正在访问文件系统的进程号
+smit ch 命令 有很多关于文件的参数。。。。
+fsck 修复文件系统
+换页空间 交换空间 当系统的内存不够用时 把那些闲置的程序放在交换空间内 腾出内存给系统用
+lsps -a 查看换页空间 状态：激活/不激活 swapon/swapoff
+lsattr -El 设备名 查看设备的属性
+rmdev -l 设备名 把设备设为非激活状态 
+rmdev -dl 设备名 把设备删除
+
+#chmod -R 775 /pmts
+#chown -R pmts:pmts /pmts
+
+查看PAMS进程运行情况
+ps -ef|grep PACOMM_AGENT
+验证端口
+netstat -an|grep 10300
+
+/**编码转换**/
+        memset(sTmp, '\0', sizeof(sTmp));
+        sprintf(sTmp, "iconv -f GBK -t UTF-8 %s > %s", sFileName, sUtfFile);
+        iRc = system(sTmp);
+
+$# 参数的个数 包括$0
+$@ 参数列表 "$1" "$2" 可用在 for in的后面
+$? 上一条命令的exit status
+$$ 当前shell的进程号
+
+#!/bin/sh
+
+if [ $# -ne 1 -a $# -ne 2 -o ! -f "$1" ];then
+    echo "\t<Usage>:bk + filename"
+    echo "\t<Usage>:bk + filename1 filename2"
+    exit 1
+fi
+
+_TEE_=`date +%Y_%m_%d_%T|sed 's;:;;g'`
+
+if [ $# -eq 2 ];then
+    _BAK_FILE="$2"
+else
+    _BAK_FILE="$1.${_TEE_}.bak"
+fi
+
+if [ -f "$_BAK_FILE" ];then
+    echo "\t<ERROR>:FILE[$_BAK_FILE] exsit!"
+    echo "\t<Usage>:bk + filename"
+    echo "\t<Usage>:bk + filename1 filename2"
+    exit
+fi
+cp "$1" "$_BAK_FILE" && echo "O.K!\nsee bak file [$_BAK_FILE]"
+
+
+cc -o 生成可执行的文件{手动}
+cc -c 生成目标文件，需要连接{系统自动}
+gcc .c  a.out
+
+cut
+
+cut命令从文件的每一行剪切字节、字符和字段并将它们写至标准输出。它是以文件的每一行作为处理对象的。  
+ 
+　　命令格式：cut [选项] [范围] 文件。选项用来指定单位(字节、字符还是字段)，范围指定选项的位置。 
+　　常用的选项有：
+　　-b：指定以字节为单位显示选中内容 byte 汉字可能出现乱码 被切成乱码 编码不一样，汉字占得字节数不一样
+　　-c：指定以字符为单位显示选中内容 char 可以显示汉字
+　　-f：指定以字段为单位显示选中内容 filed
+　　-d：指定字段的分界符，默认为制表符 delimiter
+　　其它的选项还有-n（仅和-b选项一起使用）、-s（仅和-f选项一起使用）　
+　　范围表示：
+　　n：第n个字节/字符/字段
+　　n-：从第n个字节/字符/字段到最后一个字节/字符/字段
+　　n-m：从第n个字节/字符/字段到第m个字节/字符/字段，包括m
+　　-m：从行的开头到第m个字节/字符/字段，包括m
+　　-：从行开头到行的最后
+
+cut命令是用来剪下文本文件里的数据，文本文件可以是字段类型或是字符类型。下面给出应用实例：
+cut -d : -f 1,5 /etc/passwd     #-d后面的冒号表示字段之间的分隔符，-f表示取分割后的哪些字段 delimiter                                     #这里取出的是第一个和第五个字段。
+cut -d: -f 3- /etc/passwd       #从第三个字段开始显示，直到最后一个字段。  
+echo "2342.dat.idx"|cut -d'.' -f 2  #date
+这里需要进一步说明的是，使用cut命令还可以剪切以字符数量为标量的部分字符，该功能通过-c选项实现，其不能与-d选项共存。
+cut -c 1-4 /etc/passwd          #取每行的前1-4个字符。
+cut -c-4 /etc/passwd            #取每行的前4个字符。 
+cut -c4- /etc/passwd            #取每行的第4个到最后字符。
+cut -c1,4 /etc/passwd           #取每行的第一个和第四个字符。
+cut -c1-4,5 /etc/passwd        #取每行的1-4和第5个字符。
+
+sort 
+sort 主要是三个命令参数 -n,u,r，h
+ 
+-n 按照数字进行排序，默认是按照字符进行排序的
+ 
+-u 去除相同的字符，这个参数等同于  sort -u < ===== > sort|uniq 
+ 
+-r 就是按照逆序排序，不加这个参数，我们默认时按照升序排的。加上后就是降序。
+ 
+-h 按照人类可识别的逻辑进行排序，例如 内存的大小 1k,2g等
+
+杂
+
+linux修改时间
+date -s "2012-08-09 12:00:00" 
+clock -w  写入CMOS 下次保持同步
+
+常看目录的大小 
+AIX   du -sg dir  du -sg -m *|sort -n
+LINIX du -sh dir
+
+查看自己的虚拟终端号
+who am i
+
+向该服务器的等登录用户广播
+wall message 
+
+
+
+sed
+
+sed的正则表达式元字符
+^ 行首定位 /^love/
+$ 行末定位 /love$/
+. 单个字符 /l..e/
+[^] 匹配不在[]的任意字符 /[^A-KM-Z]ove/
+\(..\) 保存以匹配的字符 s/\(love\)able/\1er/ 用\数字来引用 但最多能有9个标签
+& 保存查找的字符以便在替换串中引用 s/love/**&**/
+\< 词首定位 /\<love/
+\> 词末定位 /love\>/
+x\{m\}   连续m个x /o\{5\}/
+x\{m,\}  至少m个x /o\{5,\}/
+x\{m,n\} m到n个x  /o\{5,10\}/
+
+sed -e 's/^.*://g' ping  把以单个字节开头到：之前的内容替换为空
+sed -n '/内容/p' filename 查找 其中的p为打印行 -n 为取消默认打印 若无 -n eg：
+sed '/内容/p' filename 则打印filename所有的行 并且如果该有含“内容”则打印两行（两次）
+sed -n '/12\/10\/9/p' fname 查找12/10/9 特殊字符要用转义符\ 也可可以自定义分隔符/---\char这样就可以方便些 如
+sed -n '\x12/10/9xp' fname 这样把\用字符想x替代了 就可以不用对/进行转义
+
+定址 sed 'command' fname 若没有地址，则处理所有的行 
+sed '1,3d' fname 删除1到3行
+sed '/hjb/!d' fname 删除所有不含hjb的行
+注意：sed是不具破坏性的，上面的都没有删除fname的内容，它只是把我们命令操作的结果显示到屏幕，并没对文件
+进行真实的操作，若想编辑文件只能先重定向然后mv eg：1,sed '1,3d' fname >temp 2,mv temp fname
+
+替换
+sed 's/find/replace/g' fname
+sed 's/[0-9]$/&.5/' fname 所有以数字结尾的行都把数字加0.5  6->6.5
+sed 's#3#88#g' fname 紧跟着s命令后的字符为分隔符（此处为#默认为/ 在路径和日期中很管用 不用转义/）
+
+指定行 ，不仅是行号（数字）还可以是正则表达式也可为两者的结合
+sed -n '/west/,/east/p' fname 打印west和east的行 若有west无east 则打印west到文件末尾
+sed -n '5,/^west/p' fname 打印第五行到第一个以west开头的行之间的所有行
+sed -n '/west/,/east/s/$/**/p' fname 把west到east的行末替换为**（每行末多了两个**）
+
+多重编辑 -e
+sed -e '1,3d' -e /'s/east/west/' fname 先删除1到3行再进行替换，顺序不同结果不同
+
+读文件 /r 读文件的内容添加到当前文件特定的位置上
+sed '/hjb/r test.c' fname 把fname中凡是出现hjb的行的【后面一行】都添加test.c的内容
+
+写文件 /w 把当前文件的一些行写到另一文件
+sed -n '/hjb/w newfile' fname 把fname中所有包含hjb的行写到新文件中
+
+追加 /a\\ 把追加的内容加到当前文件的特定行的后面 要\或则\\
+sed '/hjb/a\\追加的内容' fname
+
+插入 /i\\ 和追加相似，不过是在当前行的前一行插入内容
+修改 /c\\ 和追加相似，把当前行的内容修改为写该的内容，原文件也要被修改
+
+获取下一行 n 对下一行进行操作
+sed '/hjb/{ n; s/incl/#incl/; }' fname 把含有hjb的下一行的incl用#incl替换
+
+转换 y 一一对应的转换
+sed '1,3y/abc/ABC/' fname 把1到3行的小写abc转为大写 分隔符可以自定义
+
+退出 q
+sed '5q' fname 打印前五行就退出sed命令
+sed '/hjb/{ s/incl/#incl/ ;q; }' fname 只做一次替换
+
+暂存和取用 h和g（覆盖一行）/G（增加一行）
+sed -e '/hjb/{h;d;}' -e '$G' fname 把hjb哪一行剪切到文件的末尾
+sed -e '/hjb/{h;d;}' -e '$g' fname 把hjb哪一行剪切并覆盖文件的末尾行 
+
+暂存和互换 h和x
+sed -e '/hjb/h' -e '/hhjjbb/x' fname  把这两行互换
+
+1. Sed简介  
+2。  
+ 定址  
+可以通过定址来定位你所希望编辑的行，该地址用数字构成，用逗号分隔的两个行数表示以这两行为起止的行的范围（包括行数表示的那两行）。如1，3表示1，2，3行，美元符号($)表示最后一行。范围可以通过数据，正则表达式或者二者结合的方式确定 。  
+  
+ Sed命令  
+调用sed命令有两种形式：  
+*  
+sed [options] 'command' file(s)  
+*  
+sed [options] -f scriptfile file(s)  
+a\  
+在当前行后面加入一行文本。  
+b lable  
+分支到脚本中带有标记的地方，如果分支不存在则分支到脚本的末尾。  
+c\  
+用新的文本改变本行的文本。  
+d  
+从模板块（Pattern space）位置删除行。  
+D  
+删除模板块的第一行。  
+i\  
+在当前行上面插入文本。  
+h  
+拷贝模板块的内容到内存中的缓冲区。  
+H  
+追加模板块的内容到内存中的缓冲区  
+g  
+获得内存缓冲区的内容，并替代当前模板块中的文本。  
+G  
+获得内存缓冲区的内容，并追加到当前模板块文本的后面。  
+l  
+列表不能打印字符的清单。  
+n  
+读取下一个输入行，用下一个命令处理新的行而不是用第一个命令。  
+N  
+追加下一个输入行到模板块后面并在二者间嵌入一个新行，改变当前行号码。  
+p  
+打印模板块的行。  
+P（大写）  
+打印模板块的第一行。  
+q  
+退出Sed。  
+r file  
+从file中读行。  
+t label  
+if分支，从最后一行开始，条件一旦满足或者T，t命令，将导致分支到带有标号的命令处，或者到脚本的末尾。  
+T label  
+错误分支，从最后一行开始，一旦发生错误或者T，t命令，将导致分支到带有标号的命令处，或者到脚本的末尾。  
+w file  
+写并追加模板块到file末尾。  
+W file  
+写并追加模板块的第一行到file末尾。  
+!  
+表示后面的命令对所有没有被选定的行发生作用。  
+s/re/string  
+用string替换正则表达式re。  
+=  
+打印当前行号码。  
+#  
+把注释扩展到下一个换行符以前。  
+以下的是替换标记  
+*  
+g表示行内全面替换。  
+*  
+p表示打印行。  
+*  
+w表示把行写入一个文件。  
+*  
+x表示互换模板块中的文本和缓冲区中的文本。  
+*  
+y表示把一个字符翻译为另外的字符（但是不用于正则表达式）  
+  
+4. 选项  
+-e command, --expression=command  
+允许多台编辑。  
+-h, --help  
+打印帮助，并显示bug列表的地址。  
+-n, --quiet, --silent  
+  
+取消默认输出。  
+-f, --filer=script-file  
+引导sed脚本文件名。  
+-V, --version  
+打印版本和版权信息。  
+  
+ 元字符集^  
+锚定行的开始 如：/^sed/匹配所有以sed开头的行。   
+$  
+锚定行的结束 如：/sed$/匹配所有以sed结尾的行。   
+.  
+匹配一个非换行符的字符 如：/s.d/匹配s后接一个任意字符，然后是d。   
+*  
+匹配零或多个字符 如：/*sed/匹配所有模板是一个或多个空格后紧跟sed的行。  
+[] 
+匹配一个指定范围内的字符，如/[Ss]ed/匹配sed和Sed。  
+[^] 
+匹配一个不在指定范围内的字符，如：/[^A-RT-Z]ed/匹配不包含A-R和T-Z的一个字母开头，紧跟ed的行。  
+\(..\) 
+保存匹配的字符，如s/\(love\)able/\1rs，loveable被替换成lovers。  
+& 
+保存搜索字符用来替换其他字符，如s/love/**&**/，love这成**love**。   
+\<  
+锚定单词的开始，如:/\<love/匹配包含以love开头的单词的行。   
+\>  
+锚定单词的结束，如/love\>/匹配包含以love结尾的单词的行。   
+x\{m\}  
+重复字符x，m次，如：/0\{5\}/匹配包含5个o的行。   
+x\{m,\}  
+重复字符x,至少m次，如：/o\{5,\}/匹配至少有5个o的行。   
+x\{m,n\}  
+重复字符x，至少m次，不多于n次，如：/o\{5,10\}/匹配5--10个o的行。  
+ 实例  
+删除：d命令  
+*  
+$ sed '2d' example-----删除example文件的第二行。  
+*  
+$ sed '2,$d' example-----删除example文件的第二行到末尾所有行。  
+*  
+$ sed '$d' example-----删除example文件的最后一行。  
+*  
+$ sed '/test/'d example-----删除example文件所有包含test的行。  
+替换：s命令  
+*  
+$ sed 's/test/mytest/g' example-----在整行范围内把test替换为mytest。如果没有g标记，则只有每行第一个匹配的test被替换成mytest。  
+*  
+$ sed -n 's/^test/mytest/p' example-----(-n)选项和p标志一起使用表示只打印那些发生替换的行。也就是说，如果某一行开头的test被替换成mytest，就打印它。  
+*  
+0.1localhost。  
+*  
+$ sed -n 's/\(love\)able/\1rs/p' example-----love被标记为1，所有loveable会被替换成lovers，而且替换的行会被打印出来。  
+*  
+$ sed 's#10#100#g' example-----不论什么字符，紧跟着s命令的都被认为是新的分隔符，所以，“#”在这里是分隔符，代替了默认的“/”分隔符。表示把所有10替换成100。  
+选定行的范围：逗号  
+*  
+$ sed -n '/test/,/check/p' example-----所有在模板test和check所确定的范围内的行都被打印。  
+*  
+$ sed -n '5,/^test/p' example-----打印从第五行开始到第一个包含以test开始的行之间的所有行。  
+*  
+$ sed '/test/,/check/s/$/sed test/' example-----对于模板test和west之间的行，每行的末尾用字符串sed test替换。  
+多点编辑：e命令  
+*  
+$ sed -e '1,5d' -e 's/test/check/' example-----(-e)选项允许在同一行里执行多条命令。如例子所示，第一条命令删除1至5行，第二条命令用check替换test。命令的执 行顺序对结果有影响。如果两个命令都是替换命令，那么第一个替换命令将影响第二个替换命令的结果。  
+*  
+$ sed --expression='s/test/check/' --expression='/love/d' example-----一个比-e更好的命令是--expression。它能给sed表达式赋值。  
+从文件读入：r命令  
+*  
+$ sed '/test/r file' example-----file里的内容被读进来，显示在与test匹配的行后面，如果匹配多行，则file的内容将显示在所有匹配行的下面。  
+写入文件：w命令  
+*  
+$ sed -n '/test/w file' example-----在example中所有包含test的行都被写入file里。  
+追加命令：a命令  
+*  
+$ sed '/^test/a\\--->this is a example' example<-----'this is a example'被追加到以test开头的行后面，sed要求命令a后面有一个反斜杠。  
+插入：i命令  
+$ sed '/test/i\\  
+new line  
+-------------------------' example  
+如果test被匹配，则把反斜杠后面的文本插入到匹配行的前面。  
+下一个：n命令  
+*  
+$ sed '/test/{ n; s/aa/bb/; }' example-----如果test被匹配，则移动到匹配行的下一行，替换这一行的aa，变为bb，并打印该行，然后继续。  
+变形：y命令  
+*  
+$ sed '1,10y/abcde/ABCDE/' example-----把1--10行内所有abcde转变为大写，注意，正则表达式元字符不能使用这个命令。  
+退出：q命令  
+*  
+$ sed '10q' example-----打印完第10行后，退出sed。  
+保持和获取：h命令和G命令  
+*  
+$ sed -e '/test/h' -e '$G example-----在sed处理文件的时候，每一行都被保存在一个叫模式空间的临时缓冲区中，除非行被删除或者输出被取消，否则所有被处理的行都将 打印在屏幕上。接着模式空间被清空，并存入新的一行等待处理。在这个例子里，匹配test的行被找到后，将存入模式空间，h命令将其复制并存入一个称为保 持缓存区的特殊缓冲区内。第二条语句的意思是，当到达最后一行后，G命令取出保持缓冲区的行，然后把它放回模式空间中，且追加到现在已经存在于模式空间中 的行的末尾。在这个例子中就是追加到最后一行。简单来说，任何包含test的行都被复制并追加到该文件的末尾。  
+保持和互换：h命令和x命令  
+*  
+$ sed -e '/test/h' -e '/check/x' example -----互换模式空间和保持缓冲区的内容。也就是把包含test与check的行互换。  
+ 脚本  
+Sed脚本是一个sed的命令清单，启动Sed时以-f选项引导脚本文件名。Sed对于脚本中输入的命令非常挑剔，在命令的末尾不能有任何空白或文本，如果在一行中有多个命令，要用分号分隔。以#开头的行为注释行，且不能跨行。
+
+
+awk
+FS:为字段的分隔符默认为空白符可自定义 用选项来改变-F 定义的分隔符要紧跟着-F
+awk -F'|' {'print $1,$2'} sql.txt  分隔符改为|
+awk -F'[ :\t|] '{print $1,$2}' fname 多分隔符用正则表达式 空格，TAB，|
+OFS:为输出【字段】的分隔符 默认为单个空格
+ORS：输出【记录】的分隔符 默认为回车
+RS:  输入记录的分隔符 默认为回车
+
+$0:一行的记录内容
+NF：字段数 定值
+NR:记录号 记录行的行数 自动加1 变值
+
+awk 'pattern' fname
+awk '{action}' fname
+awk 'pattern {action}' fname
+
+awk '/hjb/' fname 查找所在行
+awk '{print NR,$1}' fname 打印出文件的记录号和第一个字段 字段以空白符分隔
+date|awk '{print "yue:" $2 "\nnian:" $6}' 字符串要用"" 特殊字符要转义
+awk 'BEGIN{OFMT="%.2f";print 1.2345678}' 保留两位小数 1.23 但用printf更好
+awk '{printf "%.2f",1.2345678}'  不能显示 要手动敲回车才能显示
+echo "1.234567"|awk '{printf "%.2f\n",$1}' 能直接显示  说明awk不能加常量 要用$表示变量
+awk -f awkfile fname
+143
+
+svn 
+svn co svn://172.16.12.72/ybht/src  导入一个新的版本A
+svn merge --dry-run -r271:HEAD svn://172.16.12.72/src/xd > /tmp/xd.log U-修改 C-冲突 A-增加 G-正常
+把A版本与版本号为271的相比较 --dry-run 预览作用并没用真正的合并 去掉则执行合并
+如果一个文件不要 则执行 svn revert /目录/*.ec 则撤销这个文件
+看版本的变化情况 svn status M-修改 C-冲突 必须手动修改才能编译通过
+svn diff /目录/*.ec 查看具体的修改的那部分
+
+syt:/home/svnserve # svnadmin create doc
+syt:/home/svnserve # cd doc
+syt:/home/svnserve/doc # tar xvf ../co1.tar
+conf/
+conf/svnserve.conf
+conf/passwd
+conf/authz
+syt:/home/svnserve/doc # pwd
+/home/svnserve/doc
+syt:/home/svnserve/doc # cd ..
+syt:/home/svnserve # chmod -R 777 doc
+
+
+查看每个版本的变化情况
+svn log -v svn://172.16.6.72/jxxtht/src|more  
+
+查看当前版本和第6版本的不同之处。
+svn diff -r6  svn://172.16.6.72/jxxtht/src/jxxt/jxxt_fun.ec
+
+cd E:/svn_all/maven_jxxt
+maven
+1, mvn release:branch -DbranchName=1.8.11 -DupdateBranchVersions=true -DupdateWorkingCopyVersions=false  输入1.0.1-SNAPSHOT
+3, mvn release:prepare  输入1.1.0-SNAPSHOT
+4, mvn release:perform
+
+本地war的目录：D:\m2\repository\com\syt\sytjxxt
+私服war的目录：g/2.81/work/nexus/storerige/releases/com/syt/sytjxxt
+C:\Users\yswordbop\workspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\sytjxxt
+
+第一步版本失败：mvn clean
+
+
+
+
+
+oslevel -s 查看UNIX的版本 uname
+dspmqver 查看MQ信息
+lsgroup -f pmts 查看pmts组包含的用户
+lsuser -f mqm 查看mqm用户的账户属性
+
+usermod -G pmts -g pmts pamsagt 把用户pamsagt添加到pmts组（唯一组会覆盖）
+usermod -g pmts pamsagt 把用户pamsagt添加到pmts组（递增组不会覆盖）
+chmod g+w  /pmts/log
+
+chgrp - R book /opt/local /book
+改变/opt/local /book/及其子目录下的所有文件的属组为book。
+
+　　例1：把文件shiyan.c的所有者改为wang。
+　　$ chown wang shiyan.c
+　　例2：把目录/his及其下的所有文件和子目录的属主改成wang，属组改成users。
+　　$ chown -R wang.users /his
+
+下面我们用一个实例来说明硬链接和软链接。
+现在目录下有两个文件，一个名为file1，一个名为file2。
+引用
+$ ls –il
+1052671 -rw-r--r-- 1 Leanx Leanx 0 2010-03-29 13:46 file1
+1052670 -rw-r--r-- 1 Leanx Leanx 0 2007-03-29 13:46 file2
+ 
+首先先做一个file1的硬链接。
+引用
+$ ln file1 file1hard
+$ls –il
+1052671 -rw-r--r-- 2 Leanx Leanx 0 2010-03-29 13:46 file1
+1052670 -rw-r--r-- 1 Leanx Leanx 0 2010-03-29 13:46 file12
+1052671 -rw-r--r-- 2 Leanx Leanx 0 2010-03-29 13:46 file1hard
+ 
+这里我们注意在创建链接前，file1显示的链接数目为1，创建链接后
+1.file1和file1hard的链接数目都变为2。
+2.file1和file1的inode号是一样的，都是1052671。
+3.file1和file1hard显示的文件大小也是一样，都是0B。
+可见进行了ln命令的操作结果：file1和file1hard是同一个文件的两个名字，它们具有同样的索引节点号和文件属性，建立文件file1的硬链接，就是为 file1的文件索引节点在当前目录上建立一个新指针。你可以删除其中任何一个，如rm file1，每次只会删除一个指针，链接数同时减一，只有将所有指向文件内容的指针，也即链接数减为0时，内核才会把文件内容从磁盘上删除。
+尽管硬链接节省空间，也是Linux系统整合文件系统的传统方式，但是存在一些不足之处：
+1.不允许给目录创建硬链接。
+2.不可以在不同文件系统的文件间建立链接。
+接着我们做一个指向file2的软链接，软链接克服了硬链接的不足，没有任何文件系统的限制，任何用户可以创建指向目录的符号链接。因而现在更为广泛使用，它具有更大的灵活性，甚至可以跨越不同机器、不同网络对文件进行链接。
+引用
+$ ln -s file2 file2soft
+$ ls –il
+总用量 0
+1052671 -rw-r--r-- 2 Leanx Leanx 0 2010-03-29 13:34 file1
+1052670 -rw-r--r-- 1 Leanx Leanx 0 2010-03-29 13:35 file2
+1053313 lrwxrwxrwx 1 Leanx Leanx 5 2010-03-29 13:45 file2soft -> file2
+1052671 -rw-r--r-- 2 Leanx Leanx 0 2010-03-29 13:34 file1hard
+ 
+从上面链接后的结果可以看出来软链接与硬链接，区别不仅仅是在概念上，在实现上也是完全不同的。
+区别：
+ 1.硬链接原文件/链接文件公用一个inode号，说明他们是同一个文件，而软链接原文件/链接文件拥有不同的inode号，表明他们是两个不同的文件；
+ 2.在文件属性上软链接明确写出了是链接文件，而硬链接没有写出来，因为在本质上硬链接文件和原文件是完全平等关系；
+ 3.链接数目是不一样的，软链接的链接数目不会增加；
+ 4.文件大小是不一样的，硬链接文件显示的大小是跟原文件是一样的。而这里软链接显示的大小与原文件就不同了，file2大小是0B，而file2soft是5B。
+    总之，建立软链接就是建立了一个新文件。当访问链接文件时，系统就会发现他是个链接文件，它读取链接文件找到真正要访问的文件。
+    当然软链接也有硬链接没有的缺点，因为链接文件包含有原文件的路径信息，所以当原文件从一个目录下移到其他目录中，再访问链接文件，系统就找不到了，而硬链接就没有这个缺陷，你想怎么移就怎么移；还有它要系统分配额外的空间用于建立新的索引节点和保存原文件的路径。
+    
+网络路由信息
+
+netstat -in 查看接口卡的信息
+netstat -rn 查看路由信息
+netstat -an|grep 10300 验证端口
+traceroute 9.80.37.6  追踪路线
+
+
+增加路由
+route add 134.105.0.0 mask 255.255.0.0 134.105.64.1
+意思是：所有需要发往134.105.0.0/16地址段的IP数据包，全部由134.105.64.1路径转发。
+
+通过端口的地址查看服务程序名称
+netstat -Aan|grep 端口XXX
+rmsock adress tcpcb
+
+1、查看服务器硬盘情况：
+Root用户进入：输入：lspv  查看因公情况
+输入：Cfgmgr   加硬盘
+extendvg -f rootvg hdisk6  启动硬盘
+chfs -a size=+150G /home  将硬盘空间分给目录home
+
+重新加载到库？？
+ar -rv libcomm.a *.so
+
+mount remote。
+nfso -p -o nfs_use_reserved_ports=1
+mount -n 10.10.10.30 /app/dcits/share/ /app/dcits/share/
+
+informix 因配置不对导致 oninit启动 报错共享内存
+
+root：ipcs 找出共享内存
+ipcrm -m +共享内存号 删除后再启动
+
+瞬间删除，不用等待	 
+truncate table ifs_rb_tran_hist==delete from ifs_rb_tran_hist where 1=1 ;
+              
+
+--certabout 证书
+给a.txt产生嘻哈值
+openssl dgst -sha1 a.txt；
+
+
+证书转换：
+.pfx转pem编码的证书：
+
+openssl pkcs12 -in D:\certs\pri.pfx -out D:\certs\pri.pem -nodes
+
+der编码的证书转pem编码的证书：
+
+openssl x509 -inform DER -in D:\certs\pub.cer -out d:\certs\pub.pem
+
+（.cer文件能右键记事本正常打开的为pem编码的，记事本打开乱码的为der编码，pem编码的不用转，后面打印内容的命令可以直接对.cer执行）
+
+
+打印pem编码的x509证书的内容：
+
+openssl x509 -in D:\certs\pri.pem -text
+
+
+openssl x509 -in acp_test_enc.cer -out acp_test_enc.pem;
+
+openssl pkcs12 -in 700000000000001_acp.p12 -nodes -out 700000000000001_acp.pem
+openssl rsa -in 700000000000001_acp.pem -out 700000000000001_acp.key
+
+可用：
+提取密钥对
+openssl pkcs12 -in acp_test_sign.pfx -nocerts -nodes -out acp_test_sign.key
+
+从密钥对中提取私钥
+openssl rsa -in acp_test_sign.key -out acp_test_sign_pri.key
+
+从密钥对中提取公钥
+openssl rsa -in acp_test_sign.key -pubout -out acp_test_sign_pub.key
+
+产生嘻哈值
+openssl sha1 -out a.sha1 a.txt
+
+摘要：
+openssl dgst -sha1 -sign 700000000000001_acp.pem -out a.bin a.sha1
+
+签名
+openssl dgst -sha1 -sign 700000000000001_acp.pem -out a.bin a.sha1
+
+验证是否正确
+openssl dgst -sha1 -prverify 700000000000001_acp.pem -signature a.bin a.txt
+
+校验证书
+openssl verify acp_test_enc.pem;   
+
+
+--ESQLabout
+int main()
+{
+    EXEC SQL database bbs_workdb;
+    EXEC SQL begin work;
+    EXEC SQL select * into :SYS from sysman;
+    if(sqlca.sqlcode) SQLERRHJB
+
+    if(kmtz_fun()<0)
+    {
+       EXEC SQL rollback work;
+    }
+    else
+    {
+       printf("ok\n");
+       EXEC SQL commit work;
+    }
+    EXEC SQL close database;
+    return 0;
+}
+EXEC SQL declare lnwtmr_curs1 cursor for
+        select a.*,b.* into :wd_lnwtmr,:wd_lcont 
+        from lnwtmr a,slcont b
+    where a.brno=b.brno and b.lnseqno=a.contno and a.actsts='0' and rstamt<>0. 
+        order by a.actno, a.duebno;
+
+EXEC SQL declare ckmr_1201_cur cursor for select。。。。(for update)（for update 表示可以可以更新待查询表的记录）
+EXEC SQL open ckmr_1201_cur;
+EXEC SQL fetch ckmr_1201_cur;           
+EXEC SQL update gkjkdz set dzbz='2' where current of gkjkdz_cur;(current of cursor_name 更新当前的游标所在的行[记录])
+EXEC SQL close ckmr_1201_cur;
+外部语句标志
+exec sql select * into :wd_db from bct where no="1000";
+if(sql.sqlcode) sqlerr
+
+显示第一条
+EXEC SQL declare szmx_cur_list cursor for 
+      	  select first 1 * into :wd_csszxx  from csszxx 
+    			where lsh=:lsh and jyrq=:jyrq and szdm=:szdm;
+
+统计种类    			
+EXEC SQL select count(distinct szdm) into :cntsz  from cssmxx 
+         	   	        where lsh=:lsh and jyrq=:jyrq;
+游标的用法和动态执行数据库和指定更新数据库
+        	   	        
+sprintf(sqlstr,"select rowid,* from xdtl where hdate between '%s' and '%s'",sdate,edate);
+EXEC SQL prepare xdtl_id from :sqlstr;
+EXEC SQL declare cur_xdtl cursor for xdtl_id;
+EXEC SQL open cur_xdtl;
+fp=fopen(fname,"w");
+while(1)
+{
+   EXEC SQL fetch cur_xdtl into :rowid,:wd_xdtl;
+   fprintf(fp,"%s|%s\n",trim(wd_xdtl.hdate),trim(wd_xdtl.dlhh));
+   EXEC SQL update xdtl set dzflag='1' where rowid=:rowid;
+}
+EXEC SQL close cur_xdtl;
+fclose(fp);
+
+--Makefile----
+-qmkshrobj 编译为动态库
+-qcpluscmt 编译器参数
+-brtl 这个选项仅适用于A1x 4.2及以上版本。它确定使用哪种算法查找由-l选项指定的库。如果-brtl 被指定则能够在运行时连接库。
+
+.c->.o   -I/home/swhx/esw/include  -L/home/swyy/txlib 
+cc  -q64 -g -qmkshrobj -qcpluscmt -brtl -D__DEBUG__ -DNOWHAT=1  -I/home/swhx/esw/include -I/home/swyy/include -I/home/swyy/incl_c  -c flw_tenpay1_payh06_30.c -L/usr/lib -L/home/swhx/esw/lib -L/home/swyy/txlib -lhmu -lswapi -lpubdb -lbase -lcnaps -lpubf -lpubf_ex_hsm -ltenpay1
+
+.o->.so
+cc -q64 -g -qmkshrobj -qcpluscmt -brtl -D__DEBUG__ -DNOWHAT=1  -o flw_tenpay1_payh06_30.so flw_tenpay1_payh06_30.o -L/usr/lib -L/home/swhx/esw/lib -L/home/swyy/
+
+aix64_cc
+--把文件添加到so中--G
+cc  -g -qcpluscmt -brtl -lm -q64 -G delim.c test.so 
+
+（1）静态库
+    假如我们要将源文件test.c编译成静态库，首先，源文件编译成目标文件
+        cc  -c test.c
+    编译成功之后会生成目标文件test.o,然后由目标文件创建成库
+        ar  crs libtest.a  test.o
+    创建好库之后，怎么使用呢，比如我们要在编译main.c是使用test库，
+        cc  -o main main.c -L. -ltest
+（2）动态库
+    创建动态库第一步也是将源文件编译成目标文件，然后用目标文件创建成库-G生产动态库 -h制定看的内部名称 -Kpic 指定目标文件与位置无关
+       --cc  -shared -fPIC  -o libtest.so test.c
+	   cc -G -o libtest.so -h libtest.so -Kpic test.c(新建)
+    使用时与静态库类似
+       cc  -o test test.c -L. libtest.so
+   
+    在使用动态库时，若不指定库文件目录，既不用 -L.,则要设置环境变量LD_LIBRARY_PATH,将其设为当前目录即可。或者将动态库文件拷贝到/usr/lib或/lib中，然后运行ldconfig更新即可，还可以修改/etc/ld.so.conf,将当前目录追加的该文件中
+    pwd >> /etc/ld.so.conf
+然后运行ldconfig命令更新下即可
+
+
+实例：（对库文件路径和库文件集中处理，使用变量）
+PROLIBPATH="/home/ezlink/usr/yk/tool/Log_app/ -llog -llog1"   库文件路径
+cc -o TESTLOG testLog.c -L$PROLIBPATH 		
+
+
+--GIT--
+usr：yswordbop
+mail：yswordbop@163.com
+pswd:huang13
+
+--验证是否连上GIT
+ssh -T git@github.com
+
+第一次提交 :  
+方案一 : 本地创建项目根目录, 然后与远程GitHub关联, 之后的操作一样;
+-- 初始化Git仓库 :Git init ;
+-- 提交改变到缓存 :git commit -m 'description' ;
+-- 本地git仓库关联GitHub仓库 : git remote add origin git@github.com:yswordbop/person.git ;
+-- 提交到GitHub中git push [alias] [branch] : git push -u origin master ;
+
+方案二 : 方案二就是不用关联GitHub仓库, 直接从GitHub冲克隆源码到本地, 项目根目录也不用创建;
+-- 从GitHub上克隆项目到本地 :git clone git@github.com:han1202012/NDKHelloworld.git --depth 1 , 注意克隆的时候直接在仓库根目录即可，depth为克隆深度，1为只克隆最新一次commit的版本，不要历史版本, 不用再创建项目根目录 ;
+-- 添加文件 :git add ./* , 将目录中所有文件添加;
+-- 提交缓存 :git commit -m '提交';
+-- 提交到远程GitHub仓库 : git push -u origin master ;
+之后修改提交 : 
+-- 与GitHub远程仓库同步 :git pull （git fetch+git merge 不安全）或者 ;
+git fetch origin    --获取origin
+git merge origin/master --合并origin/master   0205aab..febd8ed  master     -> origin/master（fetch得到哪些有变化的）
+
+-- 查看文件变更 : git status ;
+-- 提交代码到本地缓存 : git commit -m 'description';
+--提交代码到远程GitHub仓库 :git push ;
+
+.gitignore用法 : 开放模式 注明忽略的文件 直接列出文件名, 保守模式 注明保留的文件 !文件名 ;
+
+Git标签操作 : 轻量级标签, 带注释标签;
+--查看标签 :git tag ;
+--添加标签 : 轻量级标签git tag tagName , 带注释标签git tag -a tagName -m 'description' ;
+--删除标签 :git tag -d tagName ;
+--提交标签到GitHub中 : git push origin --tags ;
+--恢复到标签：git reset --hard XXXXX（打标签时的commit id，可通过git tag/log来查看）
+
+Git分支操作: 创建分支后, 分支操作不会影响master分支, 但是master分支改变会影其它分支;
+--列出分支 :git branch ;
+--切换分支 :git checkout master ;
+--提交分支 : git push origin branchName ;
+--删除分支 : git branch -d branchName , 强制删除分支 git branch -D branchName ;
+--合并分支 : git merge branchName ;
+
+删除远程仓库
+删除远程仓库你可以使用命令：
+git remote rm [别名]
+
+# 添加仓库 origin2
+$ git remote add origin2 git@github.com:tianqixin/runoob-git-test.git
+
+# 删除仓库 origin2
+$ git remote rm origin2
+$ git remote -v
+
+# 克隆项目到本地
+git clone git@github.com:radare/radare2.git
