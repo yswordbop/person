@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="GBK"?>
+<MXML HEAD="true">
+  <FIRSTWORK>
+    <REQ FROM="50001" TO="#sys2" BEGIN="0" LENGTH="0" EXPLAIN="开户机构代码" />
+    <REQ FROM="50001" TO="#sys3" BEGIN="0" LENGTH="0" EXPLAIN="交易机构代码" />
+    <REQ FROM="900015" TO="#sys7" BEGIN="0" LENGTH="0" EXPLAIN="柜员号" />
+    <REQ FROM="20170517" TO="#sys5" BEGIN="0" LENGTH="0" EXPLAIN="平台日期" />
+    <REQ FROM="$trace_no" TO="#sys10" BEGIN="8" LENGTH="4" EXPLAIN="终端号" />
+    <REQ FROM=":tx_code" TO="#businessCode1" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="渠道交易代码" />
+    <REQ FROM=":cd:trace_no" TO="#businessTrace_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="渠道流水号" />
+    <REQ FROM=":uuid" TO="#uuid" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="消息报文号" />
+    <REQ FROM=":sequenceNo" TO="#nb_trace_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="宇信流水号" />
+  </FIRSTWORK> 
+  <LASTWORK>
+    <RES FROM="#businessCode" TO=":tx_code" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="渠道交易代码" />
+    <RES FROM="#businessTrace_no" TO=":cd:trace_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="渠道流水号" />
+    <RES FROM="#hostReturnCode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM="#hostErrorMessage" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+    <RES FROM="#uuid" TO=":uuid" BEGIN="0" LENGTH="0" EXPLAIN="消息报文号" />
+    <!--RES FROM="#sys4" TO=":hostTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心流水号" /-->
+  </LASTWORK>
+  <MAP CODE="gw0018" NEXTTO="accc" FLOW="NULL" DESC="锁卡解卡">
+    <!--REQ FROM="20170517" TO=accc"#sys5" BEGIN="0" LENGTH="0" EXPLAIN="平台日期" /-->
+    <REQ FROM="2050" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:accountNo" TO="#sys31" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:flag" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="操作类型" />
+    <REQ FROM=":cd:flag" TO="#tran_flag" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="操作类型" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+   </MAP>
+  <MAP CODE="gw0019" NEXTTO="accc" FLOW="NULL" DESC="短信开通功能">
+    <REQ FROM="8891" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:mobileNo" TO="#sys25" BEGIN="0" LENGTH="0" EXPLAIN="手机号" />
+    <REQ FROM=":cd:accountNo" TO="#sys37" BEGIN="0" LENGTH="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:flag" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="操作类型" />
+    <REQ FROM=":cd:flag" TO="#tran_flag" BEGIN="0" LENGTH="0" EXPLAIN="0开通 1修改 2注销" />
+    <REQ FROM="2" TO="#sys73" BEGIN="0" LENGTH="0" EXPLAIN="渠道类型" />
+    <REQ FROM=":cd:serviceType" TO="#sys86" BEGIN="0" LENGTH="0" EXPLAIN="服务类型 1001个人 1002对公" />
+    <REQ FROM=":cd:accountType" TO="#sys71" BEGIN="0" LENGTH="0" EXPLAIN="账户类型 1存款 3贷款" />
+    <RES FROM="#sys58" TO=":cd:state" BEGIN="0" LENGTH="0" EXPLAIN="签约状态" />
+    <RES FROM="" TO=":cd:mobileNo" BEGIN="0" LENGTH="0" EXPLAIN="手机号" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+   </MAP>
+</MXML>

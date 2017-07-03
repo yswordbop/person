@@ -1,0 +1,1 @@
+cc -g -qcpluscmt -brtl -I /home/swyy/usr/huang/local/include/libxml2  -L /home/swyy/usr/huang/local/lib -lxml2 -L /lib -liconv $1.c -o test   

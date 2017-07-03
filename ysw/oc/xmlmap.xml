@@ -1,0 +1,1879 @@
+<?xml version="1.0" encoding="GBK"?>
+<!-- 手机银行报文映射配置文件 -->
+<MXML HEAD="true">
+  <FIRSTWORK>
+    <REQ FROM="50001" TO="#sys2" BEGIN="0" LENGTH="0" EXPLAIN="开户机构代码" />
+    <REQ FROM="50001" TO="#sys3" BEGIN="0" LENGTH="0" EXPLAIN="交易机构代码" />
+    <REQ FROM="900015" TO="#sys7" BEGIN="0" LENGTH="0" EXPLAIN="柜员号" />
+    <REQ FROM="20170517" TO="#sys5" BEGIN="0" LENGTH="0" EXPLAIN="平台日期" />
+    <REQ FROM="$trace_no" TO="#sys10" BEGIN="8" LENGTH="4" EXPLAIN="终端号" />
+    <REQ FROM=":tx_code" TO="#businessCode1" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="渠道交易代码" />
+    <REQ FROM=":cd:trace_no" TO="#businessTrace_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="渠道流水号" />
+    <REQ FROM=":uuid" TO="#uuid" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="消息报文号" />
+    <REQ FROM=":sequenceNo" TO="#nb_trace_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="宇信流水号" />
+  </FIRSTWORK> 
+  <LASTWORK>
+    <RES FROM="#businessCode" TO=":tx_code" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="渠道交易代码" />
+    <RES FROM="#businessTrace_no" TO=":cd:trace_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="渠道流水号" />
+    <RES FROM="#hostReturnCode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM="#hostErrorMessage" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+    <RES FROM="#uuid" TO=":uuid" BEGIN="0" LENGTH="0" EXPLAIN="消息报文号" />
+    <!--RES FROM="#sys4" TO=":hostTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心流水号" /-->
+  </LASTWORK>
+  <MAP CODE="gw0018" NEXTTO="accc" FLOW="NULL" DESC="锁卡解卡">
+    <!--REQ FROM="20170517" TO=accc"#sys5" BEGIN="0" LENGTH="0" EXPLAIN="平台日期" /-->
+    <REQ FROM="2050" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:accountNo" TO="#sys31" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:flag" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="操作类型" />
+    <REQ FROM=":cd:flag" TO="#tran_flag" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="操作类型" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+   </MAP>
+  <MAP CODE="gw0019" NEXTTO="accc" FLOW="NULL" DESC="短信开通功能">
+    <REQ FROM="8891" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:mobileNo" TO="#sys25" BEGIN="0" LENGTH="0" EXPLAIN="手机号" />
+    <REQ FROM=":cd:accountNo" TO="#sys37" BEGIN="0" LENGTH="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:flag" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="操作类型" />
+    <REQ FROM=":cd:flag" TO="#tran_flag" BEGIN="0" LENGTH="0" EXPLAIN="0开通 1修改 2注销" />
+    <REQ FROM="2" TO="#sys73" BEGIN="0" LENGTH="0" EXPLAIN="渠道类型" />
+    <REQ FROM=":cd:serviceType" TO="#sys86" BEGIN="0" LENGTH="0" EXPLAIN="服务类型 1001个人 1002对公" />
+    <REQ FROM=":cd:accountType" TO="#sys71" BEGIN="0" LENGTH="0" EXPLAIN="账户类型 1存款 3贷款" />
+    <RES FROM="#sys58" TO=":cd:state" BEGIN="0" LENGTH="0" EXPLAIN="签约状态" />
+    <RES FROM="" TO=":cd:mobileNo" BEGIN="0" LENGTH="0" EXPLAIN="手机号" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+   </MAP>
+  <MAP CODE="gw0020" NEXTTO="accc" FLOW="NULL" DESC="转账详情查询">
+    <REQ FROM="9439" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码"/>
+    <REQ FROM="" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:orderFlowNo" TO="#sys52" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="原转账交易核心流水号" />
+    <REQ FROM=":cd:transferDate" TO="#sys44" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="dfAcno|dfName|dfOpenName|payUse|payAmount|transferDate|transferTime|" FILEBEGIN="0" CONTENTSCONT="50" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+  <MAP CODE="gw0005" NEXTTO="accc" FLOW="NULL" DESC="活期单个账户信息查询">
+    <REQ FROM=":cd:accountNo" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="5" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#pay_accno" TO=":cd:accountNo" BEGIN="0" LENGTH="0" EXPLAIN="账号" />
+    <RES FROM="#sys25" TO=":cd:accountName" BEGIN="0" LENGTH="0" EXPLAIN="账户名" />
+    <RES FROM="#sys25" TO="#customernm" BEGIN="0" LENGTH="0" EXPLAIN="账户名" />
+    <RES FROM="#sys3" TO=":cd:openNode" BEGIN="0" LENGTH="0" EXPLAIN="开户网点" />
+    <RES FROM="#sys27" TO=":cd:openNodeName" BEGIN="0" LENGTH="0" EXPLAIN="开户机构名称" />
+    <RES FROM="#sys44" TO=":cd:openDate" BEGIN="0" LENGTH="0" EXPLAIN="开户日期" />
+    <RES FROM="#sys67" TO=":cd:accountState" BEGIN="0" LENGTH="0" EXPLAIN="账户状态" />
+    <RES FROM="#sys21" TO=":cd:currencyType" BEGIN="0" LENGTH="0" EXPLAIN="币种" />
+    <RES FROM="#sys41" TO=":cd:balance" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="余额" />
+    <RES FROM="#sys42" TO=":cd:balanceAvailable" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="可用余额" />
+    <RES FROM="#sys84" TO=":cd:intRate" BEGIN="0" LENGTH="0" EXPLAIN="利率" />
+    <!--RES FROM="101" TO=":cd:saveType" BEGIN="0" LENGTH="0" EXPLAIN="储种" /-->
+    <RES FROM="#sys28" TO=":cd:customerNo" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <RES FROM="#sys28" TO="#customerid" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="核心客户号" />
+    <RES FROM="#sys70" TO=":cd:accountType" BEGIN="0" LENGTH="0" EXPLAIN="账户类型" />
+    <RES FROM="#sys71" TO=":cd:certType" BEGIN="0" LENGTH="0" EXPLAIN="证件类型" />
+    <RES FROM="#sys72" TO=":cd:attr" BEGIN="0" LENGTH="0" EXPLAIN="介质类型" />
+    <RES FROM="#sys62" TO=":cd:certNo" BEGIN="0" LENGTH="0" EXPLAIN="证件号码" />
+    <RES FROM="#sys62" TO="#certno" BEGIN="0" LENGTH="0" EXPLAIN="证件号码" />
+    <RES FROM="#sys68" TO=":cd:lockstat" BEGIN="0" LENGTH="0" EXPLAIN="锁卡状态" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+   </MAP>
+  <MAP CODE="cb0005" NEXTTO="accc" FLOW="NULL" DESC="活期单个账户信息查询">
+    <REQ FROM=":cd:accountNo" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="5" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys41" TO=":cd:balance" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="余额" />
+    <RES FROM="#sys42" TO=":cd:balanceAvailable" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="可用余额" />
+    <RES FROM="#sys43" TO=":cd:balanceFreeze" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="冻结余额" />
+    <RES FROM="#sys67" TO=":cd:accountState" BEGIN="0" LENGTH="0" EXPLAIN="账户状态" />
+    <!--RES FROM="#sys68" TO=":cd:lockstat" BEGIN="0" LENGTH="0" EXPLAIN="锁卡状态" /-->
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+   </MAP>
+  <MAP CODE="gw0006" NEXTTO="atmlc_2" FLOW="NULL" DESC="客户资产负债查询">
+    <REQ FROM="property" TO="#sw_tx_code" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="10" TO="#next_tx_step" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="2" TO="#chl" BEGIN="0" LENGTH="0" EXPLAIN="APP渠道" />
+    <REQ FROM="0.00" TO="#lcAmt" BEGIN="0" LENGTH="0" EXPLAIN="理财持仓金额" />
+    <REQ FROM="50001" TO=".Content.D0031" BEGIN="0" LENGTH="0" EXPLAIN="机构编码" />
+    <REQ FROM="500024" TO=".Content.D0071" BEGIN="0" LENGTH="0" EXPLAIN="柜员代码" />
+    <REQ FROM="8" TO=".Content.D0039" BEGIN="0" LENGTH="0" EXPLAIN="交易区域代码" />
+    <REQ FROM="FPS_141002" TO=".Content.D0160" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:virtualAcctNo" TO="#sys32" BEGIN="0" LENGTH="0" EXPLAIN="虚拟卡号" />
+    <REQ FROM=":cd:custNo" TO=".Content.D0380" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:custNo" TO="#customerid" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <REQ FROM="20160810" TO=".Content.D0050" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <RES FROM="#lcAmt" TO=":cd:lcAmt" BEGIN="0" LENGTH="0" EXPLAIN="理财持仓金额" />
+    <RES FROM="#sys43" TO=":cd:virtualAmt" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="电子账户余额" />
+    <!--RES FROM="#hostReturnCode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" /-->
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="saveType|currencyType|balance|flag|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+  <MAP CODE="gw8102" NEXTTO="accc" FLOW="NULL" DESC="遂心存账户查询">
+    <!--REQ FROM=":cd:flag" TO="#sys68" BEGIN="0" LENGTH="0" EXPLAIN="1查利息 2查签约" />
+    <REQ FROM="7415" TO="#sys16" BEGIN="0" LENGTH="0" CHECK="#sys68" VALUE="1" EXPLAIN="利息查询"/>
+    <REQ FROM="7416" TO="#sys16" BEGIN="0" LENGTH="0" CHECK="#sys68" VALUE="2" EXPLAIN="签约查询"/>
+    <REQ FROM=":cd:accountNo" TO="#sys30" BEGIN="0" LENGTH="0" CHECK="#sys68" VALUE="1" EXPLAIN="卡号" />
+    <REQ FROM=":cd:accountNo" TO="#sys123" BEGIN="0" LENGTH="0" CHECK="#sys68" VALUE="2" EXPLAIN="卡号" /-->
+    <!--REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" EXPLAIN="卡号" /-->
+    <REQ FROM="7416" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码"/>
+    <REQ FROM=":cd:accountNo" TO="#sys123" BEGIN="0" LENGTH="0" EXPLAIN="卡号" />
+    <RES FROM="#sys27" TO=":cd:AccountName" BEGIN="0" LENGTH="0" EXPLAIN="户名" /> 
+    <RES FROM="#sys27" TO="#customernm" BEGIN="0" LENGTH="0" EXPLAIN="户名" /> 
+    <!--RES FROM="#sys41" TO=":cd:Amt" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="签约金额" />
+    <RES FROM="#sys42" TO=":cd:rate" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="利息" />
+    <RES FROM="#sys69" TO=":cd:SignFlag" BEGIN="0" LENGTH="0" EXPLAIN="1 代表正常签约 *解约" /-->
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="accountNo|signFlag|balance|rate|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+   <MAP CODE="gw6006" NEXTTO="atmlc" FLOW="NULL" DESC="客户风评查询">
+    <REQ FROM="50001" TO=".Content.D0031" BEGIN="0" LENGTH="0" EXPLAIN="机构编码" />
+    <REQ FROM="500024" TO=".Content.D0071" BEGIN="0" LENGTH="0" EXPLAIN="柜员代码" />
+    <REQ FROM="8" TO=".Content.D0039" BEGIN="0" LENGTH="0" EXPLAIN="交易区域代码" />
+    <REQ FROM="20170220" TO=".Content.D0050" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <REQ FROM="FPS_141005" TO=".Content.D0160" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:custNo" TO=".Content.D0380" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:custNo" TO="#customerid" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <RES FROM=".Content.D0120" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=".Content.D0130" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+    <RES FROM=".Content.D0380" TO=":cd:custNo" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <RES FROM=".Content.D0178" TO=":cd:custType" BEGIN="0" LENGTH="0" EXPLAIN="客户类型" />
+    <RES FROM=".Content.D1043" TO=":cd:riskLevel" BEGIN="0" LENGTH="0" EXPLAIN="风评等级" />
+    <RES FROM=".Content.D0580" TO=":cd:assessmentDate" BEGIN="0" LENGTH="0" EXPLAIN="评定日期" />
+    <RES FROM=".Content.D0340" TO=":cd:assessmentOrg" BEGIN="0" LENGTH="0" EXPLAIN="评定机构" />
+    <RES FROM=".Content.D0910" TO=":cd:assessmentperson" BEGIN="0" LENGTH="0" EXPLAIN="评定人号" />
+    <RES FROM=".Content.D0590" TO=":cd:effectiveClosingDate" BEGIN="0" LENGTH="0" EXPLAIN="有效截止日期" />
+    <RES FROM=".Content.D0170" TO=":cd:effectiveMark" BEGIN="0" LENGTH="0" EXPLAIN="有效标志" />
+    <RES FROM=".Content.D0720" TO=":cd:custSerialNo" BEGIN="0" LENGTH="0" EXPLAIN="客户序号" />
+  </MAP>
+  <MAP CODE="gw8003" NEXTTO="accc" FLOW="NULL" DESC="绑定关系模糊查询">
+    <REQ FROM="2803" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:oneClassAccountNo" TO="#sys32" BEGIN="0" LENGTH="0" EXPLAIN="绑定的一类账号" />
+    <REQ FROM=":cd:oneClassAccountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" EXPLAIN="绑定的一类账号" />
+    <REQ FROM=":cd:accountName" TO="#sys25" BEGIN="0" LENGTH="0" EXPLAIN="户名" />
+    <REQ FROM=":cd:accountName" TO="#pay_accname" BEGIN="0" LENGTH="0" EXPLAIN="户名" />
+    <REQ FROM=":cd:certNo" TO="#sys62" BEGIN="0" LENGTH="0" EXPLAIN="证件号码" />
+    <REQ FROM=":cd:certNo" TO="#certno" BEGIN="0" LENGTH="0" EXPLAIN="证件号码" />
+    <REQ FROM=":cd:accountType" TO="#sys68" BEGIN="0" LENGTH="0" EXPLAIN="账户类别" />
+    <REQ FROM=":cd:certType" TO="#sys89" BEGIN="0" LENGTH="0" EXPLAIN="证件类型" />
+    <REQ FROM=":cd:openOrgNo" TO="#sys91" BEGIN="0" LENGTH="0" EXPLAIN="开户机构号" />
+    <REQ FROM=":cd:twoOrthreeClassAccountNo" TO="#sys116" BEGIN="0" LENGTH="0" MAPBEGIN="4" MAPLENGTH="19" EXPLAIN="二三类账号" />
+    <REQ FROM=":cd:twoOrthreeClassAccountNo" TO="#rec_accno" BEGIN="0" LENGTH="0" MAPBEGIN="4" MAPLENGTH="19" EXPLAIN="二三类账号" />
+    <REQ FROM=":cd:boundState" TO="#sys67" BEGIN="0" LENGTH="0" EXPLAIN="绑定状态" />
+    <REQ FROM=":cd:boundCardState" TO="#sys70" BEGIN="0" LENGTH="0" EXPLAIN="绑定卡类型" />
+    <REQ FROM=":cd:operationType" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="操作类型" />
+    <REQ FROM=":cd:operationType" TO="#tran_flag" BEGIN="0" LENGTH="0" EXPLAIN="操作类型" />
+    <RES FROM="#sys67" TO=":cd:flag" BEGIN="0" LENGTH="0" EXPLAIN="本外行标志" /> 
+    <RES FROM="#sys68" TO=":cd:state" BEGIN="0" LENGTH="0" EXPLAIN="状态" /> 
+    <RES FROM="#sys69" TO=":cd:limitFlag2" BEGIN="0" LENGTH="0" EXPLAIN="二类户超限" /> 
+    <RES FROM="#sys71" TO=":cd:limitFlag3" BEGIN="0" LENGTH="0" EXPLAIN="三类户超限" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="accountNo|accountName|openOrg|accountType|boundAccountNo|boundType|boundState|transferLimit|consumptionLimit|boundOrg|boundTeller|boundDate|activationDate|UnbundlingDate|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+  </MAP>
+  <MAP CODE="gw0007" NEXTTO="accc" FLOW="NULL" DESC="账户交易明细查询">
+    <REQ FROM=":cd:custNo" TO="#sys28" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:custNo" TO="#customerid" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:accountNo" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:beginDate" TO="#sys44" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="起始日期" />
+    <REQ FROM=":cd:endDate" TO="#sys45" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="终止日期" />
+    <REQ FROM=":cd:turnPageBeginPos" TO="#sys54" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询起始记录号" />
+    <REQ FROM=":cd:turnPageShowNum" TO="#sys55" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="请求记录数" />
+    <REQ FROM="0" TO="#sys71" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询类型" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="7" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys53" TO=":cd:turnPageTotalNum" BEGIN="0" LENGTH="0" EXPLAIN="时间段内总条数" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="transferDate|transferTime|transferFlowNo|debitCreditCode|transferSum|balance|currencyType|noteMsg|orgName|dfAcno|dfName|txType|" FILEBEGIN="1" CONTENTSCONT="#sys55" EXPLAIN="明细项" />
+  </MAP>
+  <MAP CODE="cb0007" NEXTTO="accc" FLOW="NULL" DESC="账户交易明细查询">
+    <REQ FROM=":cd:custNo" TO="#sys28" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:custNo" TO="#customerid" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:accountNo" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:beginDate" TO="#sys44" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="起始日期" />
+    <REQ FROM=":cd:endDate" TO="#sys45" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="终止日期" />
+    <REQ FROM=":cd:turnPageBeginPos" TO="#sys54" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询起始记录号" />
+    <REQ FROM=":cd:turnPageShowNum" TO="#sys55" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="请求记录数" />
+    <REQ FROM="0" TO="#sys71" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询类型" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="7" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys52" TO=":cd:turnPageTotalNum" BEGIN="0" LENGTH="0" EXPLAIN="时间段内总条数" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="transferDate|transferTime|flag|transferSum|debitCreditCode|balance|noteMsg|dfAcno|recAccountName|recAccountOpenBank|remark|txType|" FILEBEGIN="0" CONTENTSCONT="50" EXPLAIN="明细项" />
+  </MAP>
+   <MAP CODE="gw6004" NEXTTO="atmlc" FLOW="NULL" DESC="客户签约查询">
+    <REQ FROM="2" TO="#chl" BEGIN="0" LENGTH="0" EXPLAIN="APP渠道" />
+    <REQ FROM="00101" TO=".Content.D0031" BEGIN="0" LENGTH="0" EXPLAIN="机构编码" />
+    <REQ FROM="500024" TO=".Content.D0071" BEGIN="0" LENGTH="0" EXPLAIN="柜员代码" />
+    <REQ FROM="8" TO=".Content.D0039" BEGIN="0" LENGTH="0" EXPLAIN="交易区域代码" />
+    <REQ FROM="20170220" TO=".Content.D0050" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <REQ FROM="FPS_141003" TO=".Content.D0160" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:custNo" TO=".Content.D0380" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:custNo" TO="#customerid" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:productId" TO=".Content.D0250" BEGIN="0" LENGTH="0" EXPLAIN="产品ID" />
+    <!--RES FROM=".Content.D0120" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=".Content.D0130" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" /-->
+    <RES FROM=".Content.D0380" TO=":cd:custNo" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <RES FROM=".Content.D0350" TO=":cd:custName" BEGIN="0" LENGTH="0" EXPLAIN="客户姓名" />
+    <RES FROM=".Content.D0860" TO=":cd:certType" BEGIN="0" LENGTH="0" EXPLAIN="证件类型" />
+    <RES FROM=".Content.D0880" TO=":cd:certNo" BEGIN="0" LENGTH="0" EXPLAIN="证件号" />
+    <RES FROM=".Content.D0880" TO="#certno" BEGIN="0" LENGTH="0" EXPLAIN="证件号" />
+    <RES FROM=".Content.D0900" TO=":cd:employeeld" BEGIN="0" LENGTH="0" EXPLAIN="职员编号" />
+    <RES FROM=".Content.D0910" TO=":cd:custManager" BEGIN="0" LENGTH="0" EXPLAIN="客户经理" />
+    <RES FROM=".Content.D107H" TO=":cd:custState" BEGIN="0" LENGTH="0" EXPLAIN="客户关系状态" />
+    <RES FROM=".Content.D1120" TO=":cd:agreementNumber" BEGIN="0" LENGTH="0" EXPLAIN="总协议编号" />
+    <RES FROM=".Content.D0440" TO=":cd:fundAccount" BEGIN="0" LENGTH="0" EXPLAIN="资金账号" />
+    <RES FROM=".Content.D0500" TO=":cd:payAmount" BEGIN="0" LENGTH="0" EXPLAIN="已购买金额" />
+    <RES FROM=".Content.D0510" TO=":cd:intransitAmount" BEGIN="0" LENGTH="0" EXPLAIN="在途金额" />
+    <RES FROM=".Content.D103E" TO=":cd:buyMethod" BEGIN="0" LENGTH="0" EXPLAIN="购买方式" />
+    <RES FROM=".Content.D0410" TO=":cd:financialAccountNo" BEGIN="0" LENGTH="0" EXPLAIN="理财账号" />
+    <RES FROM=".Content.D0940" TO=":cd:opnBr" BEGIN="0" LENGTH="0" EXPLAIN="开户机构" />
+    <RES FROM=".Content.D1079" TO=":cd:custType" BEGIN="0" LENGTH="0" EXPLAIN="客户等级" />
+    <RES FROM=".Content.D1043" TO=":cd:riskLevel" BEGIN="0" LENGTH="0" EXPLAIN="风险等级" />
+    <!--RES FROM=".Content.D0800" TO=":row" BEGIN="0" LENGTH="0" EXPLAIN="附件列数" /-->
+  </MAP>
+  <MAP CODE="gw0004" NEXTTO="accc" FLOW="NULL" DESC="子账户信息查询">
+    <REQ FROM=":cd:accountNo" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:acctSeq" TO="#sys34" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账户子序号" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="4" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+    <RES FROM="#sys25" TO=":cd:accountName" BEGIN="0" LENGTH="0" EXPLAIN="账户名" />
+    <RES FROM="#sys25" TO="customernm" BEGIN="0" LENGTH="0" EXPLAIN="账户名" />
+    <RES FROM="#sys91" TO=":cd:openBranch" BEGIN="0" LENGTH="0" EXPLAIN="开户分行" />
+    <RES FROM="#sys47" TO=":cd:openDate" BEGIN="0" LENGTH="0" EXPLAIN="开户日期" />
+    <RES FROM="#sys48" TO=":cd:turnPageTotalNum" BEGIN="0" LENGTH="0" EXPLAIN="总记录条数" />
+    <RES FROM="#sys67" TO=":cd:accountState" BEGIN="0" LENGTH="0" EXPLAIN="凭证状态" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="subAccountNo|currencyType|currIden|depositType|savePeriod|interestRate|interestBeginDate|interestEndDate|balanceAvailable|balance|state|openDate|openNode|autoTransferDeposit|minOpenAmt" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" /> 
+    </MAP>
+  <MAP CODE="cb0004" NEXTTO="accc" FLOW="NULL" DESC="子账户信息查询">
+    <REQ FROM=":cd:customerNo" TO="#sys28" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="客户号" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="4" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+    <RES FROM="#sys25" TO=":cd:accountName" BEGIN="0" LENGTH="0" EXPLAIN="账户名" />
+    <RES FROM="#sys25" TO="#customernm" BEGIN="0" LENGTH="0" EXPLAIN="账户名" />
+    <RES FROM="#sys91" TO=":cd:openBranch" BEGIN="0" LENGTH="0" EXPLAIN="开户分行" />
+    <RES FROM="#sys47" TO=":cd:openDate" BEGIN="0" LENGTH="0" EXPLAIN="开户日期" />
+    <RES FROM="#sys48" TO=":cd:turnPageTotalNum" BEGIN="0" LENGTH="0" EXPLAIN="总记录条数" />
+    <RES FROM="#sys67" TO=":cd:accountState" BEGIN="0" LENGTH="0" EXPLAIN="凭证状态" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="subAccountNo|currencyType|currIden|depositType|savePeriod|interestRate|interestBeginDate|interestEndDate|balanceAvailable|balance|state|openDate|openNode|autoTransferDeposit" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" /> 
+    </MAP>
+    <MAP CODE="gw6002" NEXTTO="atmlc" FLOW="NULL" DESC="理财账户查询">
+    <REQ FROM="2" TO="#chl" BEGIN="0" LENGTH="0" EXPLAIN="APP渠道" />
+    <REQ FROM="50001" TO=".Content.D0031" BEGIN="0" LENGTH="0" EXPLAIN="机构编码" />
+    <REQ FROM="500024" TO=".Content.D0071" BEGIN="0" LENGTH="0" EXPLAIN="柜员代码" />
+    <REQ FROM="8" TO=".Content.D0039" BEGIN="0" LENGTH="0" EXPLAIN="交易区域代码" />
+    <REQ FROM="FPS_141002" TO=".Content.D0160" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:custNo" TO=".Content.D0380" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:custNo" TO="#customerid" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <REQ FROM="20170220" TO=".Content.D0050" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <!--RES FROM=".Content.D0120" TO=":resultCode" BEGIN="0" LENGTH="0" EXPLAIN="响应码" /> 
+    <RES FROM=".Content.D0130" TO=":result" BEGIN="0" LENGTH="0" EXPLAIN="应答信息" /-->
+    <RES FROM=".Content.D0500" TO=":cd:totalRevenue" BEGIN="0" LENGTH="0" EXPLAIN="总收益" />
+    <RES FROM=".Content.D0400" TO=":cd:financialAccountNo" BEGIN="0" LENGTH="0" EXPLAIN="理财账号" />
+    <RES FROM=".Content.D0380" TO=":cd:custNo" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <RES FROM=".Content.D1078" TO=":cd:custType" BEGIN="0" LENGTH="0" EXPLAIN="客户类型" />
+    <RES FROM=".Content.D1079" TO=":cd:custLevel" BEGIN="0" LENGTH="0" EXPLAIN="客户等级" />
+    <RES FROM=".Content.D1043" TO=":cd:riskLevel" BEGIN="0" LENGTH="0" EXPLAIN="风险等级" />
+    <RES FROM=".Content.D0920" TO=":cd:custManager" BEGIN="0" LENGTH="0" EXPLAIN="客户经理" /-->
+    <!--RES FROM=".Content.D122A" TO=":cd:TotalAmt" BEGIN="0" LENGTH="0" EXPLAIN="在途汇总" />
+    <RES FROM=".Content.D122E" TO=":cd:TotalAmt" BEGIN="0" LENGTH="0" EXPLAIN="持仓汇总" />
+    <RES FROM=".Content.D0120" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=".Content.D0130" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+    <!--RES FROM=".Content.D0800" TO=":row" BEGIN="0" LENGTH="0" EXPLAIN="附件列数" /-->
+    <RES XML=".Table.Rows.row" ROOT=":cd:rows" FROM="Fields.field(0)|Fields.field(1)|Fields.field(2)|Fields.field(3)|Fields.field(4)|Fields.field(5)|Fields.field(6)|Fields.field(7)|Fields.field(8)|Fields.field(9)|Fields.field(10)|Fields.field(11)|Fields.field(12)|Fields.field(13)|" CONTENTS="productName|amt|estimateAmt|estimateDay|openId|productId|productOwnDate|productCode|InvestLimitDate|YqYearRate|StartDate|EndDate|buyAccount|State|" FILEBEGIN="0" CONTENTSCONT=".Table.RowNumber" CHECK=".Content.D0120" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+  <MAP CODE="gw9008" NEXTTO="self" FLOW="NULL" DESC="银联代收结果">
+    <REQ FROM="cups_result" TO="#sw_tx_code" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="10" TO="#next_tx_step" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:traceNo" TO="#traceNo" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:txnType" TO="#txnType" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:txnSubType" TO="#txnSubType" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:bizType" TO="#bizType" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:merId" TO="#merId" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:txnTime" TO="#txnTime" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:respMsg" TO="#respMsg" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:certId" TO="#certId" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:settleAmt" TO="#settleAmt" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:settleCurrencyCode" TO="#settleCurrencyCode" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:settleDate" TO="#settleDate" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:traceTime" TO="#traceTime" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:accessType" TO="#accessType" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:respCode" TO="#respCode" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:queryId" TO="#queryId" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:orderId" TO="#orderId" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:settleAmt" TO="#tx_amt" BEGIN="0" LENGTH="0" AMT="cups" EXPLAIN="Req" />
+    <REQ FROM=":cd:accNo" TO="#accno" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <RES FROM="#errcode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="银联应答码" />
+    <RES FROM="#errcode" TO="#hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="银联应答码" />
+    <RES FROM="#errinfo" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="银联应答消息" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <MAP CODE="gw1021" NEXTTO="cbe_cli_c" FLOW="NULL" FORMAT="false" DESC="查询水费电费">
+    <REQ FROM="C010" TO=":#CBE_CODE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="类型" />
+    <REQ FROM="JSON" TO="#MSG_TYPE" BEGIN="0" LENGTH="0" EXPLAIN="报文类型是JSON" />
+    <REQ FROM=":cd:sdNo" TO=":#DATA_REQ:#JFH" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="水号、电号" />
+    <REQ FROM=":cd:sdFlag" TO=":#DATA_REQ:#SDBZ" BEGIN="0" LENGTH="0" EXPLAIN="水电标志" />
+    <RES FROM=":#DATA_RES:#QFI" TO=":cd:address" BEGIN="0" LENGTH="0" EXPLAIN="地址" />
+    <RES FROM=":#DATA_RES:#CLM" TO=":cd:name" BEGIN="0" LENGTH="0" EXPLAIN="户名" />
+    <RES FROM=":#DATA_RES:#QFM" TO=":cd:sdbalance" BEGIN="0" LENGTH="0" AMT="cbe" EXPLAIN="余额" />
+    <RES FROM=":#DATA_RES:#CLZ" TO=":cd:traceNo" BEGIN="0" LENGTH="0" EXPLAIN="流水号" />
+    <!--为了处理传给电话银行时，查到数据就得返回0000错误码而处理 -->
+    <RES FROM=":#Respcd" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=":#Respcd" TO="#errinfo" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM="0000" TO=":hostReturnCode" CHECK="#errinfo" VALUE="CB06" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=":#Resmsg" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="应答信息" />
+    <RES FROM="" TO=":#Respcd" BEGIN="0" LENGTH="0" EXPLAIN="清空" />
+    <RES FROM="" TO=":#Resmsg" BEGIN="0" LENGTH="0" EXPLAIN="清空" />
+    <RES FROM="" TO=":#DATA_RES" BEGIN="0" LENGTH="0" EXPLAIN="清空" />
+  </MAP>
+  <MAP CODE="gw1022" NEXTTO="cbe_cli_c" FLOW="NULL" FORMAT="false" DESC="缴纳、充值水费电费">
+    <REQ FROM="C011" TO=":#CBE_CODE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="类型" />
+    <REQ FROM="JSON" TO="#MSG_TYPE" BEGIN="0" LENGTH="0" EXPLAIN="报文类型是JSON" />
+    <REQ FROM=":cd:accountNo" TO=":#DATA_REQ:#pay_acno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:password" TO=":#DATA_REQ:#pwd" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="密码" />
+    <REQ FROM="PHON2016040100002306" TO=":#DATA_REQ:#CLZ" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="" />
+    <REQ FROM=":cd:traceNo" TO=":#DATA_REQ:#OLZ" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="流水号" />
+    <REQ FROM=":cd:amt" TO=":#DATA_REQ:#KKA" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="缴费总金额" />
+    <REQ FROM="#sys3" TO=":#DATA_REQ:#tem_brno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="机构号" />
+    <REQ FROM="#sys7" TO=":#DATA_REQ:#tem_tel" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="柜员号" />
+    <RES FROM=":#Respcd" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=":#Resmsg" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="应答信息" />
+    <RES FROM="" TO=":#Respcd" BEGIN="0" LENGTH="0" EXPLAIN="清空" />
+    <RES FROM="" TO=":#Resmsg" BEGIN="0" LENGTH="0" EXPLAIN="清空" />
+    <RES FROM="" TO=":#DATA_RES" BEGIN="0" LENGTH="0" EXPLAIN="清空" />
+  </MAP>
+  <MAP CODE="gw7101" NEXTTO="accc" FLOW="NULL" DESC="幸福存查产品信息">
+    <REQ FROM="8998" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="D" TO="#sys69" BEGIN="0" LENGTH="0" EXPLAIN="查询标志位" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="productBatch|productName|saleBeginDate|saleStopDate|rate|maxOpenAmt|minOpenAmt|increaseAmt|productType|productCode|rateThFlag|totalQuota|leftQuota|duration|durUnit|" FILEBEGIN="0" CONTENTSCONT="999" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+    <!-- 期次|产品描述|发售日期|停售日期|产品利率|最大开户金额|最小开户金额|递增额度|ABC款标志|产品代码|利息退回标志,B款用(区分VIP)|总额度|剩余额度|期限|期限单位 -->
+  </MAP>
+  <MAP CODE="gw7102" NEXTTO="accc" FLOW="NULL" DESC="幸福存查子账户信息">
+    <REQ FROM="2221" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="4" TO="#sys69" BEGIN="0" LENGTH="0" EXPLAIN="查询标志位" />
+    <REQ FROM=":cd:accountNo" TO="#sys37" BEGIN="0" LENGTH="0" EXPLAIN="账号" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="acctSeqn|dealBank|openDate|productBatch|productName|balance|acctState|" FILEBEGIN="0" CONTENTSCONT="999" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+    <!-- 账户序号|交易行|开户日期|产品期次|幸福存产品名称|余额|账户状态| -->
+  </MAP>
+  <MAP CODE="gw7103" NEXTTO="accc" FLOW="NULL" DESC="幸福存产品认购">
+    <!--REQ FROM="20161031" TO="#sys5" BEGIN="0" LENGTH="0" EXPLAIN="平台日期" /-->
+    <REQ FROM="3118" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <!-- REQ FROM="N" TO="#sys15" BEGIN="0" LENGTH="0" MAPBEGIN="122" MAPLENGTH="5"  EXPLAIN="sys13=0的奇怪问题" /-->
+    <REQ FROM=":cd:productBatch" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="期次号" />
+    <REQ FROM=":cd:productCode" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="3"  EXPLAIN="产品代码" />
+    <REQ FROM=":cd:openAmt" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="38" MAPLENGTH="16" EXPLAIN="开户金额" />
+    <REQ FROM=":cd:openAmt" TO="#tx_amt" BEGIN="0" LENGTH="0" EXPLAIN="开户金额" />
+    <REQ FROM=":cd:accountName" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="54" MAPLENGTH="60" EXPLAIN="账户户名" />
+    <REQ FROM=":cd:openAccountNo" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="114" MAPLENGTH="20" EXPLAIN="开户账号" />
+    <REQ FROM="2" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="144" MAPLENGTH="1" EXPLAIN="现转标志/固定位转账" />
+    <REQ FROM=":cd:openAccountNo" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="24" EXPLAIN="开户账号,但是可以修改" />
+    <REQ FROM="1" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="24" MAPLENGTH="197" EXPLAIN="活期账户序号" />
+    <REQ FROM="01" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="221" MAPLENGTH="02" EXPLAIN="币种" />
+    <REQ FROM=":cd:drawAccount" TO="#sys32" BEGIN="0" LENGTH="0"  EXPLAIN="代扣账户" />
+    <REQ FROM=":cd:drawSign" TO="#sys90" BEGIN="0" LENGTH="0" EXPLAIN="代扣签约标志" />
+    <REQ FROM=":cd:passWord" TO="#sys79" BEGIN="0" LENGTH="0" EXPLAIN="密码" />
+    <REQ FROM=":cd:continueAmt" TO="#sys43" BEGIN="0" LENGTH="0" EXPLAIN="续存金额" />
+    <REQ FROM=":cd:rate" TO="#sys85" BEGIN="0" LENGTH="0" EXPLAIN="利率" />
+    <REQ FROM="1" TO="#sys55" BEGIN="0" LENGTH="0"  EXPLAIN="B款默认" />
+    <REQ FROM="M" TO="#sys96" BEGIN="0" LENGTH="0" MAPBEGIN="240" MAPLENGTH="1"  EXPLAIN="B款默认" />
+    <!--REQ FROM=":cd:rateType" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="反息方式" /-->
+    <REQ FROM="2" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="反息方式 先写死" />
+    <REQ FROM=":cd:rateCycle" TO="#sys63" BEGIN="0" LENGTH="0" EXPLAIN="反息周期" />
+    <REQ FROM=":cd:ratingAcct" TO="#sys38" BEGIN="0" LENGTH="0" EXPLAIN="反息账号" />
+    <REQ FROM=":cd:rateThFlag" TO="#sys70" BEGIN="0" LENGTH="0" EXPLAIN="利息退回标志" />  
+    <REQ FROM="0200" TO="#sys65" BEGIN="0" LENGTH="0" EXPLAIN="渠道类型/手机银行网银渠道" />
+    <REQ FROM=":cd:putTel" TO="#sys83" BEGIN="0" LENGTH="0" EXPLAIN="推荐柜员" />
+    <REQ FROM="1" TO="#sys66" BEGIN="0" LENGTH="0" EXPLAIN="卡内开子户标志固定为壹" />
+  </MAP>
+  <MAP CODE="gw7104" NEXTTO="accc" FLOW="NULL" DESC="幸福存账户部提">
+    <REQ FROM="3119" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:outAcct" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="24" EXPLAIN="部提账号" />
+    <REQ FROM=":cd:outAcctSeqn" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="24" MAPLENGTH="4" EXPLAIN="部提账户序号" />
+    <REQ FROM="Y" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="48" MAPLENGTH="1" EXPLAIN="支取密码标志" />
+    <REQ FROM=":cd:passWord" TO="#sys79" BEGIN="0" LENGTH="0" MAPBEGIN="65" MAPLENGTH="16" EXPLAIN="支取密码" />
+    <REQ FROM=":cd:amt" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="128" MAPLENGTH="16" EXPLAIN="交易金额" />
+    <REQ FROM=":cd:amt" TO="#tx_amt" BEGIN="0" LENGTH="0" EXPLAIN="交易金额" />
+    <REQ FROM="01" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="221" MAPLENGTH="02" EXPLAIN="币种" />
+    <REQ FROM="2" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="223" MAPLENGTH="1" EXPLAIN="现转标志" />
+    <REQ FROM=":cd:inAcct" TO="#sys101" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="24" EXPLAIN="转入账号" />
+    <REQ FROM="1" TO="#sys101" BEGIN="0" LENGTH="0" MAPBEGIN="24" MAPLENGTH="1" EXPLAIN="转入账户序号" />
+    <REQ FROM="2" TO="#sys101" BEGIN="0" LENGTH="0" MAPBEGIN="412" MAPLENGTH="1" EXPLAIN="现转标志" />
+  </MAP>
+  <MAP CODE="gw7105" NEXTTO="accc" FLOW="NULL" DESC="幸福存账户销户">
+    <!--REQ FROM="20161031" TO="#sys5" BEGIN="0" LENGTH="0" EXPLAIN="平台日期" /-->
+    <REQ FROM="1218" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="2" TO="#sys93" BEGIN="0" LENGTH="0" EXPLAIN="销户方式/固定位正常销户" />
+    <REQ FROM=":cd:cancelAcctNo" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="24" EXPLAIN="销户账号" />
+    <REQ FROM=":cd:cancelAcctSeqn" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="24" MAPLENGTH="4" EXPLAIN="销户账户序号" >
+    <REQ FROM="Y" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="48" MAPLENGTH="1" EXPLAIN="支取密码标志" />
+    <REQ FROM=":cd:passWord" TO="#sys79" BEGIN="0" LENGTH="0" MAPBEGIN="65" MAPLENGTH="16" EXPLAIN="支取密码" />
+    <REQ FROM=":cd:amt" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="205" MAPLENGTH="16" EXPLAIN="交易金额" />
+    <REQ FROM=":cd:amt" TO="#tx_amt" BEGIN="0" LENGTH="0" EXPLAIN="交易金额" />
+    <REQ FROM="01" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="221" MAPLENGTH="02" EXPLAIN="币种" />
+    <REQ FROM="2" TO="#sys68" BEGIN="0" LENGTH="0"  EXPLAIN="现转标志,固定为转账" />
+    <REQ FROM=":cd:accountName" TO="#sys119" BEGIN="0" LENGTH="0" MAPBEGIN="66" MAPLENGTH="24" EXPLAIN="户名" />
+    <REQ FROM=":cd:inAcctNo" TO="#sys101" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="24" EXPLAIN="转入账号" />
+    <REQ FROM="1" TO="#sys101" BEGIN="0" LENGTH="0" MAPBEGIN="24" MAPLENGTH="4" EXPLAIN="转入账户序号" />
+  </MAP>
+  <MAP CODE="gw7106" NEXTTO="accc" FLOW="NULL" DESC="幸福存查利息">
+    <REQ FROM="TRUE" TO="#yzjy" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="执行原子交易" />
+    <REQ FROM="gw7106" TO="#sw_tx_code" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="10" TO="#next_tx_step" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="8996" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:productCode" TO="#sys23" BEGIN="0" LENGTH="0" EXPLAIN="产品代码" />
+    <REQ FROM=":cd:productBatch" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="期次号" />
+    <REQ FROM=":cd:openAmt" TO="#sys40" BEGIN="0" LENGTH="0" EXPLAIN="金额" />
+    <REQ FROM=":cd:tx_amt1" TO="#sys41" BEGIN="0" LENGTH="0" EXPLAIN="金额1" />
+    <REQ FROM=":cd:beginDate" TO="#sys44" BEGIN="0" LENGTH="0" EXPLAIN="开始日期" />
+    <REQ FROM=":cd:endDate" TO="#sys45" BEGIN="0" LENGTH="0" EXPLAIN="结束日期" />
+    <REQ FROM=":cd:rateCycle" TO="#sys35" BEGIN="0" LENGTH="0" EXPLAIN="存期" />
+    <REQ FROM=":cd:rateType" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="反息方式" />
+    <REQ FROM=":cd:rate" TO="#sys85" BEGIN="0" LENGTH="0" EXPLAIN="利率" />
+    <!--RES FROM="#COL1" TO=":cd:RTATE" BEGIN="0" LENGTH="0" EXPLAIN="执行利率" />
+    <RES FROM="#COL2" TO=":cd:ORI" BEGIN="0" LENGTH="0" EXPLAIN="累计本金" />
+    <RES FROM="#COL3" TO=":cd:JISHU" BEGIN="0" LENGTH="0" EXPLAIN="利息积数" />
+    <RES FROM="#COL4" TO=":cd:TOTAL" BEGIN="0" LENGTH="0" EXPLAIN="本息总额" /-->
+    <RES FROM="#Earn" TO=":cd:EARN" BEGIN="0" LENGTH="0" EXPLAIN="到期收益" />
+  </MAP>
+  <MAP CODE="gw7000" NEXTTO="accc" FLOW="NULL" DESC="幸福存查已发布期次">
+    <REQ FROM="8986" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="20160531" TO="#sys45" BEGIN="0" LENGTH="0" EXPLAIN="时间" />
+    <REQ FROM="3" TO="#sys69" BEGIN="0" LENGTH="0" EXPLAIN="查询标志位" />
+    <!--FILEBEGIN用来确定从附件的第几行开始取 -->
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="productBatch|" FILEBEGIN="0" CONTENTSCONT="999" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+  <!--已开发测试完成 -->
+  <MAP CODE="gw7001" NEXTTO="accc" FLOW="NULL" DESC="幸福存根据产品期次和产品号回显产品信息">
+    <REQ FROM="8986" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="4" TO="#sys69" BEGIN="0" LENGTH="0" EXPLAIN="查询标志位" />
+    <REQ FROM="20160531" TO="#sys45" BEGIN="0" LENGTH="0" EXPLAIN="时间" />
+    <REQ FROM=":cd:productNo" TO="#sys23" BEGIN="0" LENGTH="0" EXPLAIN="产品号" />
+    <REQ FROM=":cd:productBatch" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="产品期次" />
+    <!--RES FROM="#sys12" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" /-->
+    <RES FROM="#sys40" TO=":cd:productDzed" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="产品销售递增额度" />
+    <RES FROM="#sys42" TO=":cd:productXzed" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="产品销售限制额度" />
+    <RES FROM="#sys43" TO=":cd:productZxkhAmt" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="产品最小开户金额" />
+    <RES FROM="#sys69" TO=":cd:buyType" BEGIN="0" LENGTH="0" EXPLAIN="购买类型" />
+    <RES FROM="#sys70" TO=":cd:flag" BEGIN="0" LENGTH="0" EXPLAIN="利息退回标志" />
+  </MAP> 
+  <!--已开发测试完成 -->
+  <MAP CODE="gw7003" NEXTTO="accc" FLOW="NULL" DESC="幸福存查询期次下的发布的产品信息">
+    <REQ FROM="8985" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:productBatch" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="期次号" />
+    <REQ FROM="20160531" TO="#sys45" BEGIN="0" LENGTH="0" EXPLAIN="时间" />
+    <REQ FROM="0200" TO="#sys65" BEGIN="0" LENGTH="0" EXPLAIN="渠道类型/网银渠道" />
+    <REQ FROM=":cd:openNo" TO="#sys91" BEGIN="0" LENGTH="0" EXPLAIN="机构号" />
+    <REQ FROM="0" TO="#sys69" BEGIN="0" LENGTH="0" EXPLAIN="查询标志位" />
+    <REQ FROM="2" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="介质类型固定为卡" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="productBatch|productNo|productName|rate|zxqgAmt|syTotal|" FILEBEGIN="0" CONTENTSCONT="999" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+  <!--已开发测试完成 -->
+  <MAP CODE="gw7004" NEXTTO="accc" FLOW="NULL" DESC="幸福存根据账号回显账户信息">
+    <REQ FROM="9931" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="2" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="介质类型固定位卡" />
+    <REQ FROM="1" TO="#sys69" BEGIN="0" LENGTH="0" EXPLAIN="手机银行专用标志" />
+    <REQ FROM="20160531" TO="#sys45" BEGIN="0" LENGTH="0" EXPLAIN="时间" />
+    <REQ FROM=":cd:cardNo" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="114" MAPLENGTH="20" EXPLAIN="卡号" />
+    <RES FROM="#sys103" TO=":cd:accountName" BEGIN="54" LENGTH="60" MAPBEGIN="54" MAPLENGTH="60" SPACE="accc" EXPLAIN="户名" />
+    <!--RES FROM="#sys12" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" /-->
+    <RES FROM="#sys28" TO=":cd:custNo" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <RES FROM="#sys62" TO=":cd:certNo" BEGIN="0" LENGTH="0" EXPLAIN="证件号" />
+    <RES FROM="#sys71" TO=":cd:certType" BEGIN="0" LENGTH="0" EXPLAIN="证件类型" />
+    <RES FROM="#sys72" TO=":cd:flag" BEGIN="0" LENGTH="0" EXPLAIN="通存通兑标志" />
+    <!--户名有空格 -->
+    <RES FROM="#sys103" TO=":cd:accountName" BEGIN="54" LENGTH="60" MAPBEGIN="54" MAPLENGTH="60" SPACE="accc" EXPLAIN="户名" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="accountXNo|openNo|openDate|productName|amt|accountState|" FILEBEGIN="0" CONTENTSCONT="999" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+    <!--RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="accountXNo|openNo|openDate|productName|amt|accountState|" FILEBEGIN="0" CONTENTSCONT="#sys48" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" /-->
+  </MAP>
+  <MAP CODE="gw7005" NEXTTO="accc" FLOW="NULL" DESC="幸福存根据账号查询客户号">
+    <REQ FROM="8989" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:flag" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="零活期/幸福存代扣签约时必输" />
+    <REQ FROM=":cd:cardNo" TO="#sys37" BEGIN="0" LENGTH="0" EXPLAIN="卡号/幸福存代扣签约时必输" />
+    <!--RES FROM="#sys12" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" /-->
+    <RES FROM="#sys29" TO=":cd:custNo" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+  </MAP>
+  <!--已开发测试完成 -->
+  <MAP CODE="gw7006" NEXTTO="accc" FLOW="NULL" DESC="幸福存根据账号查询账号信息">
+    <REQ FROM="9731" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="20160531" TO="#sys45" BEGIN="0" LENGTH="0" EXPLAIN="时间" />
+    <REQ FROM=":cd:accountNo" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="24" EXPLAIN="代扣账号/幸福存代扣签约时必输" />
+    <RES FROM="#sys12" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM="#sys93" TO=":cd:accountType" BEGIN="0" LENGTH="0" EXPLAIN="账户类型" />
+    <RES FROM="#sys70" TO=":cd:JsType" BEGIN="0" LENGTH="0" EXPLAIN="结算类型" />
+    <!--核心传过来的四位数子域，我们平台解析的时候需要在begin和length写值 -->
+    <RES FROM="#sys102" TO=":cd:pwd" BEGIN="48" LENGTH="1" MAPBEGIN="0" MAPLENGTH="0" EXPLAIN="密码支取" />
+    <RES FROM="#sys102" TO=":cd:certNoZq" BEGIN="81" LENGTH="1" MAPBEGIN="0" MAPLENGTH="0" EXPLAIN="证件支取" />
+    <RES FROM="#sys102" TO=":cd:certNo" BEGIN="82" LENGTH="20" MAPBEGIN="0" MAPLENGTH="0" SPACE="accc" EXPLAIN="证件号码" />
+    <RES FROM="#sys102" TO=":cd:certType" BEGIN="144" LENGTH="1" MAPBEGIN="0" MAPLENGTH="0" EXPLAIN="证件类型" />
+  </MAP>
+  <!--已开发测试完成 -->
+  <MAP CODE="gw7007" NEXTTO="accc" FLOW="NULL" DESC="幸福存密码校验">
+    <REQ FROM="9317" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:cardNo" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="代扣账号/幸福存代扣签约时必输" />
+    <REQ FROM=":cd:pwd" TO="#sys79" BEGIN="0" LENGTH="0" EXPLAIN="账户密码/幸福存代扣签约时必输" />
+    <!--RES FROM="#sys12" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" /-->
+  </MAP>
+  <!--已开发测试完成 -->
+  <MAP CODE="gw7008" NEXTTO="accc" FLOW="NULL" DESC="幸福存产品认购_B款">
+    <REQ FROM="3118" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:productBatch" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="期次号" />
+    <REQ FROM="2XB" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="3"  EXPLAIN="产品代码" />
+    <REQ FROM=":cd:openAmt" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="38" MAPLENGTH="16" EXPLAIN="开户金额" />
+    <REQ FROM=":cd:accountName" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="54" MAPLENGTH="60" EXPLAIN="账户户名" />
+    <REQ FROM=":cd:openAccountNo" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="114" MAPLENGTH="20" EXPLAIN="开户账号" />
+    <REQ FROM="2" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="144" MAPLENGTH="1" EXPLAIN="现转标志/固定位转账" />
+    <REQ FROM=":cd:openAccountNo2" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="24" EXPLAIN="开户账号,但是可以修改" />
+    <REQ FROM="1" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="24" MAPLENGTH="4" EXPLAIN="活期账户序号" />
+    <!--REQ FROM=":cd:continueAmt" TO="#sys43" BEGIN="0" LENGTH="0" EXPLAIN="续存金额" /-->
+    <REQ FROM=":cd:rate" TO="#sys85" BEGIN="0" LENGTH="0" EXPLAIN="利率" />
+    <REQ FROM="1" TO="#sys55" BEGIN="0" LENGTH="0"  EXPLAIN="" />
+    <REQ FROM="M" TO="#sys96" BEGIN="0" LENGTH="0" MAPBEGIN="240" MAPLENGTH="1"  EXPLAIN="" />
+    <REQ FROM=":cd:rateType" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="反息方式" />
+    <REQ FROM=":cd:rateCycle" TO="#sys63" BEGIN="0" LENGTH="0" EXPLAIN="反息周期" />
+    <REQ FROM=":cd:rateNo" TO="#sys38" BEGIN="0" LENGTH="0" EXPLAIN="反息账号" />
+    <REQ FROM=":cd:rateThFlag" TO="#sys70" BEGIN="0" LENGTH="0" EXPLAIN="利息退回标志" />  
+    <REQ FROM="0200" TO="#sys65" BEGIN="0" LENGTH="0" EXPLAIN="渠道类型/手机银行网银渠道" />
+    <REQ FROM=":cd:putTel" TO="#sys92" BEGIN="0" LENGTH="0" EXPLAIN="推荐柜员" />
+    <REQ FROM="1" TO="#sys66" BEGIN="0" LENGTH="0" EXPLAIN="卡内开子户标志固定为壹" />
+    <!--RES FROM="#sys12" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM="#sys13" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="应答消息" /-->
+  </MAP>
+  <!--已开发测试完成 -->
+  <MAP CODE="gw7017" NEXTTO="accc" FLOW="NULL" DESC="幸福存产品认购_A/C款">
+    <REQ FROM="3118" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:productBatch" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="期次号" />
+    <REQ FROM=":cd:productNo" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="3"  EXPLAIN="产品代码" />
+    <REQ FROM=":cd:openAmt" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="38" MAPLENGTH="16" EXPLAIN="开户金额" />
+    <REQ FROM=":cd:accountName" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="54" MAPLENGTH="60" EXPLAIN="账户户名" />
+    <REQ FROM=":cd:openAccountNo" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="114" MAPLENGTH="20" EXPLAIN="开户账号" />
+    <REQ FROM="2" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="144" MAPLENGTH="1" EXPLAIN="现转标志/固定位转账" />
+    <REQ FROM=":cd:openAccountNo2" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="24" EXPLAIN="开户账号/但是可以修改" />
+    <REQ FROM="1" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="24" MAPLENGTH="4" EXPLAIN="活期账户序号" />
+    <REQ FROM=":cd:rate" TO="#sys85" BEGIN="0" LENGTH="0" EXPLAIN="利率" />
+    <REQ FROM=":cd:continueAmt" TO="#sys43" BEGIN="0" LENGTH="0" EXPLAIN="续存金额" />
+    <REQ FROM=":cd:drawAccount" TO="#sys32" BEGIN="0" LENGTH="0"  EXPLAIN="代扣账户" />
+    <REQ FROM=":cd:drawSign" TO="#sys90" BEGIN="0" LENGTH="0" EXPLAIN="代扣签约标志" />
+    <REQ FROM="0200" TO="#sys65" BEGIN="0" LENGTH="0" EXPLAIN="渠道类型/手机银行网银渠道" />
+    <REQ FROM=":cd:putTel" TO="#sys92" BEGIN="0" LENGTH="0" EXPLAIN="推荐柜员" />
+    <REQ FROM="1" TO="#sys66" BEGIN="0" LENGTH="0" EXPLAIN="卡内开子户标志固定为壹" />
+    <!--RES FROM="#sys12" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM="#sys13" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="应答消息" /-->
+  </MAP>
+  <!--已开发测试完成 -->
+  <!--涉及到子域 就不能乱排序 -->	
+  <MAP CODE="gw7009" NEXTTO="accc" FLOW="NULL" DESC="幸福存账户销户">
+    <REQ FROM="1218" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="2" TO="#sys93" BEGIN="0" LENGTH="0" EXPLAIN="销户方式/固定位正常销户" />
+    <REQ FROM=":cd:accountNo" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="24" EXPLAIN="销户账号" />
+    <REQ FROM=":cd:accountXNo" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="24" MAPLENGTH="4" EXPLAIN="销户账户序号" >
+    <REQ FROM=":cd:pwd" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="48" MAPLENGTH="1" EXPLAIN="是否有支取密码" />
+    <REQ FROM=":cd:amt" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="205" MAPLENGTH="16" EXPLAIN="交易金额" />
+    <REQ FROM="2" TO="#sys68" BEGIN="0" LENGTH="0"  EXPLAIN="现转标志,固定为转账" />
+    <REQ FROM=":cd:accountName" TO="#sys119" BEGIN="0" LENGTH="0" MAPBEGIN="66" MAPLENGTH="24" EXPLAIN="户名" />
+    <REQ FROM=":cd:accountNo2" TO="#sys101" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="24" EXPLAIN="转入账号" />
+    <REQ FROM=":cd:accountXNo2" TO="#sys101" BEGIN="0" LENGTH="0" MAPBEGIN="24" MAPLENGTH="4" EXPLAIN="转入账户序号" />
+    <!--REQ FROM="2" TO="#sys101" BEGIN="0" LENGTH="0" MAPBEGIN="152" MAPLENGTH="1" EXPLAIN="现转标志,固定为转账" /-->
+    <!--RES FROM="#sys12" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM="#sys13" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="应答消息" /-->
+  </MAP>
+    <!--这是69域传0的时候  7010和7011这两个交易貌似是一样的-->
+    <!--已开发测试完成 -->
+  <MAP CODE="gw7010" NEXTTO="accc" FLOW="NULL" DESC="幸福存子账户信息查询(零)">
+    <REQ FROM="2224" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="0" TO="#sys69" BEGIN="0" LENGTH="0" EXPLAIN="查询幸福存子账户信息" />
+    <REQ FROM=":cd:accountNo" TO="#sys37" BEGIN="0" LENGTH="0"  EXPLAIN="账号" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="accountXNo|openNo|openDate|productName|amt|accountState|" FILEBEGIN="0" CONTENTSCONT="99" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP> 
+  <!--这是69域传0的时候 -->
+  <!--已开发测试完成 -->
+  <MAP CODE="gw7011" NEXTTO="accc" FLOW="NULL" DESC="幸福存子账户信息查询(零)">
+    <REQ FROM="2224" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="0" TO="#sys69" BEGIN="0" LENGTH="0" EXPLAIN="查询幸福存子账户信息" />
+    <REQ FROM=":cd:accountNo" TO="#sys37" BEGIN="0" LENGTH="0"  EXPLAIN="账号" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="accountXNo|openNo|openDate|productName|amt|AccoutState|" FILEBEGIN="0" CONTENTSCONT="99" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP> 
+  <!--这是69域传1的时候 -->
+   <!--已开发测试完成 -->
+  <MAP CODE="gw7012" NEXTTO="accc" FLOW="NULL" DESC="幸福存子账户信息查询(壹)">
+    <REQ FROM="2224" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="1" TO="#sys69" BEGIN="0" LENGTH="0" EXPLAIN="查询幸福存子账户信息" />
+    <REQ FROM=":cd:accountNo" TO="#sys37" BEGIN="0" LENGTH="0"  EXPLAIN="账号" />
+    <REQ FROM=":cd:accountXNo" TO="#sys34" BEGIN="0" LENGTH="0"  EXPLAIN="账户序号" />
+    <RES FROM="#sys12" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM="#sys24" TO=":cd:productNo" BEGIN="0" LENGTH="0" EXPLAIN="产品号" />
+    <RES FROM="#sys67" TO=":cd:productType" BEGIN="0" LENGTH="0" EXPLAIN="产品类型" />
+  </MAP>
+  <!--开发完成，但是返回的户名26域的时候，平台赋值付错了 -->
+   <!--这是69域传2的时候,67域传值为2，产品类型为幸福存A款时返回 -->
+  <MAP CODE="gw7013" NEXTTO="accc" FLOW="NULL" DESC="幸福存子账户信息查询(贰)">
+    <REQ FROM="2224" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="2" TO="#sys69" BEGIN="0" LENGTH="0" EXPLAIN="查询幸福存子账户信息" />
+    <REQ FROM=":cd:accountNo" TO="#sys37" BEGIN="0" LENGTH="0"  EXPLAIN="账号" />
+    <REQ FROM=":cd:accountXNo" TO="#sys34" BEGIN="0" LENGTH="0"  EXPLAIN="账户序号" />
+    <REQ FROM="2" TO="#sys67" BEGIN="0" LENGTH="0"  EXPLAIN="查询方式" />
+    <!--REQ FROM=":cd:FindWay" TO="#sys67" BEGIN="0" LENGTH="0"  EXPLAIN="查询方式" /-->
+    <REQ FROM=":cd:beginDate" TO="#sys44" BEGIN="0" LENGTH="0"  EXPLAIN="查询开始日期" />
+    <REQ FROM=":cd:endDate" TO="#sys45" BEGIN="0" LENGTH="0"  EXPLAIN="查询结束日期" />
+    <REQ FROM=":cd:state" TO="#sys70" BEGIN="0" LENGTH="0"  EXPLAIN="状态" />
+    <RES FROM="#sys27" TO=":cd:custName" BEGIN="0" LENGTH="0" EXPLAIN="客户名" />
+    <RES FROM="#sys81" TO=":cd:productName" BEGIN="0" LENGTH="0" EXPLAIN="产品名称" />
+    <RES FROM="#sys46" TO=":cd:openDate" BEGIN="0" LENGTH="0" EXPLAIN="开户日期" />
+    <RES FROM="#sys42" TO=":cd:amt" BEGIN="0" LENGTH="0" EXPLAIN="交易金额" />
+    <RES FROM="#sys82" TO=":cd:productBatch" BEGIN="0" LENGTH="0" EXPLAIN="幸福存产品批次号" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="tranDate|tranType|content|PzNo|Jfamt|Dfamt|amt|JxDate|rate|interest|Jztel|telNo|tranNo|DfAccoutNo|DfAccountName|tranTime|" FILEBEGIN="0" CONTENTSCONT="99" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+     <!--69域传值为2,67域传值为2，产品类型为幸福存B款 -->
+     <!--已开发测试完成 -->
+  <MAP CODE="gw7014" NEXTTO="accc" FLOW="NULL" DESC="幸福存子账户信息查询(贰)">
+    <REQ FROM="2224" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="2" TO="#sys69" BEGIN="0" LENGTH="0" EXPLAIN="查询幸福存子账户信息" />
+    <REQ FROM=":cd:accountNo" TO="#sys37" BEGIN="0" LENGTH="0"  EXPLAIN="账号" />
+    <!--REQ FROM=":cd:accountXNo" TO="#sys34" BEGIN="0" LENGTH="0"  EXPLAIN="账户序号" /-->
+    <REQ FROM=":cd:accountXNo" TO="#sys34" BEGIN="0" LENGTH="0"  EXPLAIN="账户序号" />
+    <REQ FROM="2" TO="#sys67" BEGIN="0" LENGTH="0"  EXPLAIN="查询方式" />
+    <!--REQ FROM=":cd:FindWay" TO="#sys67" BEGIN="0" LENGTH="0"  EXPLAIN="查询方式" /-->
+    <REQ FROM=":cd:beginDate" TO="#sys44" BEGIN="0" LENGTH="0"  EXPLAIN="查询开始日期" />
+    <REQ FROM=":cd:endDate" TO="#sys45" BEGIN="0" LENGTH="0"  EXPLAIN="查询结束日期" />
+    <REQ FROM=":cd:state" TO="#sys70" BEGIN="0" LENGTH="0"  EXPLAIN="状态" />
+    <RES FROM="#sys27" TO=":cd:custName" BEGIN="0" LENGTH="0" EXPLAIN="客户名" />
+    <RES FROM="#sys81" TO=":cd:productName" BEGIN="0" LENGTH="0" EXPLAIN="产品名称" />
+    <RES FROM="#sys46" TO=":cd:openDate" BEGIN="0" LENGTH="0" EXPLAIN="开户日期" />
+    <RES FROM="#sys42" TO=":cd:amt" BEGIN="0" LENGTH="0" EXPLAIN="交易金额" />
+    <RES FROM="#sys82" TO=":cd:productBatch" BEGIN="0" LENGTH="0" EXPLAIN="幸福存产品批次号" />
+    <!--FILEBEGIN=1是因为幸福存核心给我们返回数据的时候，多了一行，那一行我们不需要，所以写等于1 ，从第二行开始解析-->
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="tranDate|tranType|content|PzNo|Jfamt|Dfamt|amt|JxDate|rate|interest|Fxrate|Jztel|telNo|tranNo|DfAccoutNo|DfaccountName|tranTime|" FILEBEGIN="0" CONTENTSCONT="99" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP> 
+   <!--69域传值为2,67域传值为3，产品类型为幸福存C款返回附件 -->
+    <!--已开发测试完成 --> 
+  <MAP CODE="gw7015" NEXTTO="accc" FLOW="NULL" DESC="幸福存子账户信息查询(贰)">
+    <REQ FROM="2224" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="2" TO="#sys69" BEGIN="0" LENGTH="0" EXPLAIN="查询幸福存子账户信息" />
+    <REQ FROM=":cd:accountNo" TO="#sys37" BEGIN="0" LENGTH="0"  EXPLAIN="账号" />
+    <REQ FROM=":cd:accountXNo" TO="#sys34" BEGIN="0" LENGTH="0"  EXPLAIN="账户序号" />
+    <!--REQ FROM=":cd:FindWay" TO="#sys67" BEGIN="0" LENGTH="0"  EXPLAIN="查询方式" /-->
+    <REQ FROM="3" TO="#sys67" BEGIN="0" LENGTH="0"  EXPLAIN="查询方式" />
+    <REQ FROM=":cd:beginDate" TO="#sys44" BEGIN="0" LENGTH="0"  EXPLAIN="查询开始日期" />
+    <REQ FROM=":cd:endDate" TO="#sys45" BEGIN="0" LENGTH="0"  EXPLAIN="查询结束日期" />
+    <REQ FROM=":cd:state" TO="#sys70" BEGIN="0" LENGTH="0"  EXPLAIN="状态" />
+    <RES FROM="#sys27" TO=":cd:custName" BEGIN="0" LENGTH="0" EXPLAIN="客户名" />
+    <RES FROM="#sys81" TO=":cd:productName" BEGIN="0" LENGTH="0" EXPLAIN="产品名称" />
+    <RES FROM="#sys46" TO=":cd:openDate" BEGIN="0" LENGTH="0" EXPLAIN="开户日期" />
+    <RES FROM="#sys42" TO=":cd:amt" BEGIN="0" LENGTH="0" EXPLAIN="交易金额" />
+    <RES FROM="#sys82" TO=":cd:productBatch" BEGIN="0" LENGTH="0" EXPLAIN="幸福存产品批次号" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="accountXNo|yxcDate|bqycAmt|Qnum|crDate|state|" FILEBEGIN="0" CONTENTSCONT="99" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+  <!--69域传3返回附件 -->
+   <!--已开发测试完成 -->
+  <MAP CODE="gw7016" NEXTTO="accc" FLOW="NULL" DESC="幸福存子账户信息查询(叁)">
+    <REQ FROM="2224" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="3" TO="#sys69" BEGIN="0" LENGTH="0" EXPLAIN="查询幸福存子账户信息" />
+    <REQ FROM=":cd:accountNo" TO="#sys37" BEGIN="0" LENGTH="0"  EXPLAIN="账号" />
+    <REQ FROM="1" TO="#sys71" BEGIN="0" LENGTH="0"  EXPLAIN="证件类型" />
+    <REQ FROM=":cd:custName" TO="#sys27" BEGIN="0" LENGTH="0"  EXPLAIN="客户名" />
+    <REQ FROM=":cd:certNo" TO="#sys62" BEGIN="0" LENGTH="0"  EXPLAIN="证件号码" />
+    <REQ FROM=":cd:beginDate" TO="#sys44" BEGIN="0" LENGTH="0"  EXPLAIN="查询开始日期" />
+    <REQ FROM=":cd:endDate" TO="#sys45" BEGIN="0" LENGTH="0"  EXPLAIN="查询结束日期" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="account|accountXNo|accountName|openDate|productName|amt|accountState|" FILEBEGIN="0" CONTENTSCONT="99" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP> 
+  <MAP CODE="gw0013" NEXTTO="phone_c" FLOW="NULL" DESC="收款账户归属行查询(银联)">
+    <REQ FROM="1016" TO="#tx_code" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:accountNo" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="主账号/卡号" />
+    <RES FROM="#sys25" TO=":cd:rcvAcctName" BEGIN="0" LENGTH="0" EXPLAIN="账户名" />
+    <RES FROM="#sys91" TO=":cd:rcvAcctSvcr" BEGIN="0" LENGTH="0" EXPLAIN="返回开户行行号" />
+  </MAP>
+  <MAP CODE="gw9001" NEXTTO="cups_ds" FLOW="NULL" DESC="实名认证后台模式（realauth）">
+    <REQ FROM="realauth" TO="#sw_tx_code" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="10" TO="#next_tx_step" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="realauth" TO=".ROOT.HEAD.BSNCODE" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM="xml" TO=".ROOT.HEAD.RESFORMAT" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM="1103" TO=".ROOT.HEAD.CHANNEL" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM="20160101010101" TO=".ROOT.HEAD.REQTIME" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM="1000" TO=".ROOT.HEAD.BANKID" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM=":sequenceNo" TO=".ROOT.HEAD.SEQUENCENO" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM=":cd:accNo" TO=".ROOT.Req.accNo" BEGIN="0" LENGTH="0" EXPLAIN="accNo" />
+    <REQ FROM=":cd:certifTp" TO=".ROOT.Req.customerInfo.row.certifTp" BEGIN="0" LENGTH="0" EXPLAIN="customerInfo" />
+    <REQ FROM=":cd:certifId" TO=".ROOT.Req.customerInfo.row.certifId" BEGIN="0" LENGTH="0" EXPLAIN="customerInfo" />
+    <REQ FROM=":cd:customerNm" TO=".ROOT.Req.customerInfo.row.customerNm" BEGIN="0" LENGTH="0" EXPLAIN="customerInfo" />
+    <REQ FROM=":cd:phoneNo" TO=".ROOT.Req.customerInfo.row.phoneNo" BEGIN="0" LENGTH="0" EXPLAIN="customerInfo" />
+    <RES FROM=".root.Resp.respCode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="银联应答码" />
+    <RES FROM=".root.Resp.respCode" TO="#hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="银联应答码" />
+    <RES FROM=".root.Resp.respMsg" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="银联应答消息" />
+    <RES FROM="#em" TO=":em" BEGIN="0" LENGTH="0" EXPLAIN="银联网关异常描述" />
+    <RES FROM="#ec" TO=":ec" BEGIN="0" LENGTH="0" EXPLAIN="银联网关异常描述" />
+    <RES FROM="银联网关" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <MAP CODE="gw9002" NEXTTO="cups_ds" FLOW="NULL" DESC="银联代收（agentReceive）">
+    <REQ FROM="agentReceive" TO="#sw_tx_code" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="10" TO="#next_tx_step" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="agentReceive" TO=".ROOT.HEAD.BSNCODE" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM="xml" TO=".ROOT.HEAD.RESFORMAT" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM="1103" TO=".ROOT.HEAD.CHANNEL" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM="20160101010101" TO=".ROOT.HEAD.REQTIME" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM="1000" TO=".ROOT.HEAD.BANKID" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM=":sequenceNo" TO=".ROOT.HEAD.SEQUENCENO" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM="156" TO=".ROOT.Req.currencyCode" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:txnAmt" TO=".ROOT.Req.txnAmt" BEGIN="0" LENGTH="0" EXPLAIN="金额" />
+    <REQ FROM=":cd:txnAmt" TO="#tx_amt" BEGIN="0" LENGTH="0" AMT="cups" EXPLAIN="Req" />
+    <REQ FROM=":cd:outAccNo" TO=".ROOT.Req.accNo" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:outAccNo" TO="#pay_accno" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:outAccNo" TO="#outAccNo" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:inAccNo" TO="#inAccNo" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:inAccNo" TO="#rec_accno" BEGIN="0" LENGTH="0" EXPLAIN="Req" />
+    <REQ FROM=":cd:customerNm" TO=".ROOT.Req.customerInfo.row.customerNm" BEGIN="0" LENGTH="0" EXPLAIN="customerInfo" />
+    <REQ FROM=":cd:customerNm" TO="#customernm" BEGIN="0" LENGTH="0" EXPLAIN="customerInfo" />
+    <RES FROM=".root.Resp.queryId" TO=":cd:queryId" BEGIN="0" LENGTH="0" EXPLAIN="queryId" />
+    <RES FROM=".root.Resp.orderId" TO=":orderId" BEGIN="0" LENGTH="0" EXPLAIN="orderId" />
+    <RES FROM=".root.Resp.merId" TO=":merId" BEGIN="0" LENGTH="0" EXPLAIN="merId" />
+    <RES FROM=".root.Resp.respCode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="银联应答码" />
+    <RES FROM=".root.Resp.respCode" TO="#hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="银联应答码" />
+    <RES FROM=".root.Resp.respMsg" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="银联应答消息" />
+    <RES FROM="queryStatus" TO="#sw_tx_code" BEGIN="0" LENGTH="0" EXPLAIN="交易状态查询" />
+    <RES FROM="10" TO="#next_tx_step" BEGIN="0" LENGTH="0" EXPLAIN="交易状态查询" />
+    <RES FROM="#em" TO=":em" BEGIN="0" LENGTH="0" EXPLAIN="银联网关异常描述" />
+    <RES FROM="#ec" TO=":ec" BEGIN="0" LENGTH="0" EXPLAIN="银联网关异常描述" />
+    <RES FROM="银联网关" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <MAP CODE="gw9005" NEXTTO="self" FLOW="NULL" DESC="消费撤销（consumeUndo）">
+    <REQ FROM="consumeUndo" TO="#sw_tx_code" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="10" TO="#next_tx_step" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="consumeUndo" TO=".ROOT.HEAD.BSNCODE" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM="xml" TO=".ROOT.HEAD.RESFORMAT" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM="1103" TO=".ROOT.HEAD.CHANNEL" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM="20160101010101" TO=".ROOT.HEAD.REQTIME" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM="1000" TO=".ROOT.HEAD.BANKID" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM=":sequenceNo" TO=".ROOT.HEAD.SEQUENCENO" BEGIN="0" LENGTH="0" EXPLAIN="头" />
+    <REQ FROM=":cd:orderId" TO=".ROOT.Req.orderId" BEGIN="0" LENGTH="0" EXPLAIN="" />
+    <REQ FROM=":cd:txnTime" TO=".ROOT.Req.txnTime" BEGIN="0" LENGTH="0" EXPLAIN="" />
+    <REQ FROM=":cd:txnAmt" TO=".ROOT.Req.txnAmt" BEGIN="0" LENGTH="0" EXPLAIN="txnAmt" />
+    <REQ FROM=":cd:txnAmt" TO="#txnAmt" BEGIN="0" LENGTH="0" AMT="cups" EXPLAIN="txnAmt" />
+    <REQ FROM="156" TO=".ROOT.Req.currencyCode" BEGIN="0" LENGTH="0" EXPLAIN="币种" />
+    <REQ FROM="透传消息" TO=".ROOT.Req.reqReserved" BEGIN="0" LENGTH="0" EXPLAIN="透传消息" />
+    <REQ FROM=":cd:origQryId" TO=".ROOT.Req.origQryId" BEGIN="0" LENGTH="0" EXPLAIN="原交易标志" />
+    <REQ FROM=":cd:origQryId" TO="#queryid" BEGIN="0" LENGTH="0" EXPLAIN="原交易标志" />
+    <RES FROM=".root.Resp.respCode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="银联应答码" />
+    <RES FROM=".root.Resp.respCode" TO="#hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="银联应答码" />
+    <RES FROM=".root.Resp.respMsg" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="银联应答消息" />
+    <RES FROM="#errinfo" TO=":errinfo" BEGIN="0" LENGTH="0" EXPLAIN="平台应答消息" />
+    <RES FROM="queryStatus" TO="#sw_tx_code" BEGIN="0" LENGTH="0" EXPLAIN="交易状态查询" />
+    <RES FROM="10" TO="#next_tx_step" BEGIN="0" LENGTH="0" EXPLAIN="交易状态查询" />
+    <RES FROM="#em" TO=":em" BEGIN="0" LENGTH="0" EXPLAIN="银联网关异常描述" />
+    <RES FROM="#ec" TO=":ec" BEGIN="0" LENGTH="0" EXPLAIN="银联网关异常描述" />
+    <RES FROM="银联网关" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <!--  查询验证类  -->
+  <MAP CODE="gw0001" NEXTTO="accc" FLOW="NULL" DESC="账户信息查询验证">
+    <REQ FROM=":cd:accountNo" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:certType" TO="#sys68" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="证件类型" />
+    <REQ FROM=":cd:certNo" TO="#sys62" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="证件号码" />
+    <REQ FROM=":cd:password" TO="#sys79" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="银行卡密码" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="1" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:mobileNo" TO="#sys63" BEGIN="0" LENGTH="0" EXPLAIN="客户手机号" />
+    <RES FROM="#sys28" TO=":cd:customerNo" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <RES FROM="#sys70" TO=":cd:accountStat" BEGIN="0" LENGTH="0" EXPLAIN="账户状态" />
+    <RES FROM="#sys71" TO=":cd:accountType" BEGIN="0" LENGTH="0" EXPLAIN="账户类型" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+    </MAP>
+  <MAP CODE="gw0002" NEXTTO="accc" FLOW="NULL" DESC="客户基本信息查询">
+    <REQ FROM=":cd:certType" TO="#sys68" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="证件类型" />
+    <REQ FROM=":cd:certNo" TO="#sys63" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="证件号码" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="2" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys27" TO=":cd:custName" BEGIN="0" LENGTH="0" EXPLAIN="客户姓名" />
+    <RES FROM="#sys28" TO=":cd:coreCustNo" BEGIN="0" LENGTH="0" EXPLAIN="核心客户号" />
+    <RES FROM="#sys25" TO=":cd:address" BEGIN="0" LENGTH="0" EXPLAIN="联系地址" />
+    <RES FROM="#sys58" TO=":cd:zipCode" BEGIN="0" LENGTH="0" EXPLAIN="邮政编码" />
+    <RES FROM="#sys59" TO=":cd:mobile" BEGIN="0" LENGTH="0" EXPLAIN="手机号码" />
+    <RES FROM="#sys60" TO=":cd:telephone" BEGIN="0" LENGTH="0" EXPLAIN="联系电话" />
+    <RES FROM="#sys76" TO=":cd:email" BEGIN="0" LENGTH="0" EXPLAIN="电子邮箱" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <MAP CODE="gw0003" NEXTTO="accc" FLOW="NULL" DESC="查询客户名下所有存款账户信息">
+    <REQ FROM=":cd:certType" TO="#sys68" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="证件类型" />
+    <REQ FROM=":cd:certNo" TO="#sys63" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="证件号码" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="3" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+    <!--<RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="custID|customerName|accountNo|subAcct|openBrchID|openBrchNm|openBrchNmSt|openDt|accountStat|accountType|acctKind|currencyType|cashFlg|bal|avlBal|intrstBgnDt|savePeriod|dueDt|intrstRate|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" /> -->
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="custID|customerName|accountNo|subAcct|openBrchID|openBrchNm|openBrchNmSt|openDt|accountStat|accountType|acctKind|currencyType|cashFlg|bal|avlBal|intrstBgnDt|savePeriod|dueDt|intrstRate|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+  <MAP CODE="gw0008" NEXTTO="accc" FLOW="NULL" DESC="利率查询">
+    <REQ FROM="1" TO="#sys70" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询类型" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="8" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="1" TO="#sys67" BEGIN="0" LENGTH="0" EXPLAIN="个人标志" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="depositType|interestRate|" FILEBEGIN="1" CONTENTSCONT="#sys55" EXPLAIN="明细项" />
+  </MAP>
+  <MAP CODE="cb0013" NEXTTO="accc" FLOW="NULL" DESC="利率查询">
+    <REQ FROM="1" TO="#sys70" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询类型" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="8" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="2" TO="#sys67" BEGIN="0" LENGTH="0" EXPLAIN="对公标志" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="depositType|interestRate|" FILEBEGIN="1" CONTENTSCONT="#sys55" EXPLAIN="明细项" />
+  </MAP>
+  <MAP CODE="gw0009" NEXTTO="accc" FLOW="NULL" DESC="账户验密">
+    <REQ FROM=":cd:accountNo" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="账号" />
+    <REQ FROM=":cd:password" TO="#sys79" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="密码" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="9" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#accountNo" TO=":cd:accountNo" BEGIN="0" LENGTH="0" EXPLAIN="账号" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <MAP CODE="gw0010" NEXTTO="accc" FLOW="NULL" DESC="单笔流水查证">
+    <REQ FROM=":cd:tranDate" TO="#sys44" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易日期" />
+    <REQ FROM=":cd:orderFlowNo" TO="#sys52" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="网银交易流水号" />
+    <REQ FROM=":cd:orderFlowNo" TO="#query_trace_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="网银交易流水号" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="10" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys71" TO=":cd:orderState" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易状态" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <MAP CODE="gw0011" NEXTTO="accc" FLOW="NULL" DESC="转账手续费查询">
+    <REQ FROM=":cd:payAccount" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="转出账号" />
+    <REQ FROM=":cd:recAccount" TO="#sys31" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="转入账号" />
+    <REQ FROM=":cd:payAmount" TO="#sys40" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="转账金额" /> 
+    <REQ FROM=":cd:payType" TO="#sys67" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="转账类型" />   
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="13" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys122" TO=":cd:txFee" BEGIN="0" LENGTH="0" MAPBEGIN="61" AMT="accc" EXPLAIN="转账费用" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <MAP CODE="gw0012" NEXTTO="new_msgc" FLOW="NULL" DESC="发送短信接口">
+    <REQ FROM=":cd:funCode" TO="#phone_num" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="手机号" />
+    <REQ FROM=":cd:funCode" TO="#phoneno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="手机号" />
+    <REQ FROM=":cd:smsContent" TO="#content" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="短信内容" />
+    <REQ FROM=":cd:channel" TO="#channel_type" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="渠道" />
+    <RES FROM="#sys12" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <MAP CODE="gw1001" NEXTTO="accc" FLOW="NULL" DESC="活期转定期">
+    <REQ FROM=":cd:cardNo" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="128" EXPLAIN="活期账号" />
+    <REQ FROM=":cd:cardNo" TO="#pay_accno" BEGIN="0" LENGTH="0"  EXPLAIN="活期账号" />
+    <REQ FROM=":cd:payAmount" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="128" MAPLENGTH="16" AMT="accc" EXPLAIN="转出金额"/>
+    <REQ FROM=":cd:payAmount" TO="#tx_amt" BEGIN="0" LENGTH="0" EXPLAIN="转出金额"/>
+    <REQ FROM=":cd:limitDate" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="165" EXPLAIN="产品代码（期限）" />
+    <REQ FROM=":cd:autoTransferDeposit" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="165" MAPLENGTH="1" EXPLAIN="自动转存标志" />
+    <REQ FROM=":cd:password" TO="#sys79" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="密码" />
+    <REQ FROM="7401" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys71" TO=":cd:orderState" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易状态" />
+    <RES FROM="#sys44" TO=":cd:openDate" BEGIN="0" LENGTH="0" EXPLAIN="起息日" />
+    <RES FROM="#sys45" TO=":cd:endDate" BEGIN="0" LENGTH="0" EXPLAIN="到期日" />
+    <RES FROM="#sys84" TO=":cd:yearRate" BEGIN="0" LENGTH="0" EXPLAIN="年利率" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <MAP CODE="cb1001" NEXTTO="accc" FLOW="NULL" DESC="活期转定期">
+    <REQ FROM=":cd:PayerAcNo" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="128" EXPLAIN="活期账号" />
+    <REQ FROM=":cd:PayerAcNo" TO="#pay_accno" BEGIN="0" LENGTH="0"  EXPLAIN="活期账号" />
+    <REQ FROM=":cd:Amount" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="128" MAPLENGTH="16" AMT="accc" EXPLAIN="转出金额"/>
+    <REQ FROM=":cd:Amount" TO="#tx_amt" BEGIN="0" LENGTH="0" EXPLAIN="转出金额"/>
+    <REQ FROM=":cd:limitDate" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="165" EXPLAIN="产品代码（期限）" />
+    <REQ FROM=":cd:autoTransferDeposit" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="165" MAPLENGTH="1" EXPLAIN="自动转存标志" />
+    <REQ FROM=":cd:password" TO="#sys79" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="密码" />
+    <REQ FROM="7401" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys71" TO=":cd:orderState" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易状态" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <MAP CODE="gw1002" NEXTTO="accc" FLOW="NULL" DESC="定期转活期">
+    <REQ FROM=":cd:cardNo" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="24" EXPLAIN="卡号" />
+    <REQ FROM=":cd:cardNo" TO="#pay_accno" BEGIN="0" LENGTH="0" EXPLAIN="卡号" />
+    <REQ FROM=":cd:subAccountNo" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="24" MAPLENGTH="104" EXPLAIN="子账户序号" />
+    <REQ FROM=":cd:payAmount" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="128" MAPLENGTH="16" AMT="accc" EXPLAIN="转出金额" />
+    <REQ FROM=":cd:payAmount" TO="#tx_amt" BEGIN="0" LENGTH="0" EXPLAIN="转出金额" />
+    <REQ FROM=":cd:actionFlag" TO="#sys67" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="3" EXPLAIN="产品代码（期限）" />
+    <REQ FROM=":cd:password" TO="#sys79" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="密码" />
+    <REQ FROM="7402" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys71" TO=":cd:orderState" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易状态" />
+    <RES FROM="#sys39" TO=":cd:apartDrwAmt" BEGIN="0" LENGTH="0" MAPBEGIN="0" AMT="accc" EXPLAIN="子账户余额" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <MAP CODE="gw1003" NEXTTO="accc" FLOW="NULL" DESC="行内转账">
+    <REQ FROM=":cd:payAccount" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="转出卡号" />
+    <REQ FROM=":cd:payAccount" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="转出账户" />
+    <REQ FROM=":cd:recAccount" TO="#sys31" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户" />
+    <REQ FROM=":cd:recAccount" TO="#rec_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="转入账户" />
+    <REQ FROM=":cd:recAccountName" TO="#sys26" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款方户名" />
+    <REQ FROM=":cd:recAccountName" TO="#rec_accname" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款方户名" />
+    <REQ FROM="20170517" TO="#sys44" BEGIN="0" LENGTH="0" EXPLAIN="平台日期" />
+    <REQ FROM="$trace_no" TO="#sys52" BEGIN="8" LENGTH="4" EXPLAIN="终端号" />
+    <REQ FROM="1" TO="#sys66" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="借贷标志" />
+    <REQ FROM="0" TO="#sys67" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="某种标志" />
+    <REQ FROM="2" TO="#sys68" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="现转标志" />
+    <REQ FROM="1" TO="#sys69" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收费标志" />
+    <REQ FROM="5" TO="#sys70" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="预授权标志" />
+    <REQ FROM=":cd:recAccountName" TO="#sys96" BEGIN="0" LENGTH="0" EXPLAIN="收款方户名" />
+    <REQ FROM=":cd:password" TO="#sys79" BEGIN="0" LENGTH="0" EXPLAIN="密码" />
+    <REQ FROM=":cd:payAmount" TO="#sys40" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="转账金额" />
+    <REQ FROM=":cd:payAmount" TO="#tx_amt" BEGIN="0" LENGTH="0" EXPLAIN="转账金额" />
+    <REQ FROM=":cd:chargeFee" TO="#sys124" BEGIN="0" LENGTH="0" MAPBEGIN="58" MAPLENGTH="16" AMT="accc" EXPLAIN="手续费" />
+    <REQ FROM=":cd:chargeFee" TO="#tx_fee" BEGIN="0" LENGTH="0" EXPLAIN="手续费" />
+    <REQ FROM=":cd:transflag" TO="#transflag" BEGIN="0" LENGTH="0" EXPLAIN="C-次日 S-普通 Y-预约到账" />
+    <REQ FROM="1" TO="#sys48" BEGIN="0" LENGTH="0" CHECK="#transflag" VALUE="C" EXPLAIN="次日到账" />
+    <REQ FROM="SJYY" TO="#sys27" BEGIN="0" LENGTH="0" CHECK="#transflag" VALUE="Y" EXPLAIN="预约转账" />
+    <REQ FROM=":cd:remark" TO="#sys81" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="附言" />
+    <REQ FROM=":cd:remark" TO="#remark" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="附言" />
+    <REQ FROM="7403" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="#chargeFee" TO=":cd:chargeFee" BEGIN="0" LENGTH="0" EXPLAIN="手续费" />
+    <RES FROM="#sys40" TO=":cd:payAmount" BEGIN="0" LENGTH="0" MAPBEGIN="0" AMT="accc" EXPLAIN="转账金额" />
+    <RES FROM="#sys82" TO=":cd:payAccountNoBal" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="付款账户余额" />
+    <!--RES FROM="#sys102" TO=":cd:recAccountName" BEGIN="0" LENGTH="0" MAPBEGIN="145" MAPLENGTH="60" EXPLAIN="收款方户名" /-->
+    <RES FROM="#rec_accname" TO=":cd:recAccountName" BEGIN="0" LENGTH="0" EXPLAIN="收款方户名" />
+    <RES FROM="#sys4" TO=":cd:acctTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <MAP CODE="cb1003" NEXTTO="accc" FLOW="NULL" DESC="行内转账">
+    <REQ FROM="20170517" TO="#sys5" BEGIN="0" LENGTH="0" EXPLAIN="平台日期" />
+    <REQ FROM=":cd:payAccount" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="转出卡号" />
+    <REQ FROM=":cd:payAccount" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="转出账户" />
+    <REQ FROM=":cd:recAccount" TO="#sys31" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户" />
+    <REQ FROM=":cd:recAccount" TO="#rec_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="转入账户" />
+    <REQ FROM=":cd:recAccountName" TO="#sys26" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款方户名" />
+    <REQ FROM=":cd:recAccountName" TO="#rec_accname" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款方户名" />
+    <REQ FROM="20170517" TO="#sys44" BEGIN="0" LENGTH="0" EXPLAIN="平台日期" />
+    <REQ FROM="$trace_no" TO="#sys52" BEGIN="8" LENGTH="4" EXPLAIN="终端号" />
+    <REQ FROM="1" TO="#sys66" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="借贷标志" />
+    <REQ FROM="0" TO="#sys67" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="某种标志" />
+    <REQ FROM="2" TO="#sys68" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="现转标志" />
+    <REQ FROM="1" TO="#sys69" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收费标志" />
+    <REQ FROM="5" TO="#sys70" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="预授权标志" />
+    <REQ FROM=":cd:recAccountName" TO="#sys96" BEGIN="0" LENGTH="0" EXPLAIN="收款方户名" />
+    <REQ FROM=":cd:TRAN_AMT" TO="#sys40" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="转账金额" />
+    <REQ FROM=":cd:TRAN_AMT" TO="#tx_amt" BEGIN="0" LENGTH="0" EXPLAIN="转账金额" />
+    <REQ FROM=":cd:chargeFee" TO="#sys124" BEGIN="0" LENGTH="0" MAPBEGIN="58" MAPLENGTH="16" AMT="accc" EXPLAIN="手续费" />
+    <REQ FROM=":cd:chargeFee" TO="#tx_fee" BEGIN="0" LENGTH="0" EXPLAIN="手续费" />
+    <REQ FROM=":cd:transflag" TO="#transflag" BEGIN="0" LENGTH="0" EXPLAIN="C-次日 S-普通 Y-预约到账" />
+    <REQ FROM="1" TO="#sys48" BEGIN="0" LENGTH="0" CHECK="#transflag" VALUE="C" EXPLAIN="次日到账" />
+    <REQ FROM="SJYY" TO="#sys27" BEGIN="0" LENGTH="0" CHECK="#transflag" VALUE="Y" EXPLAIN="预约到账" />
+    <REQ FROM=":cd:remark" TO="#sys81" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="附言" />
+    <REQ FROM=":cd:remark" TO="#remark" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="附言" />
+    <REQ FROM="7403" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <!--RES FROM="#sys4" TO=":cd:acctTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水" /-->
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <MAP CODE="gw1005" NEXTTO="cnaps_cli" FLOW="NULL" FORMAT="false" DESC="超级网银转账">
+    <REQ FROM="PEBK" TO="#MSG_TYPE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="手机银行标志" />
+    <REQ FROM="7121" TO=":#PTWY_CODE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易码" />
+    <REQ FROM="313662000015" TO=":#hvbrno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="本行清算行号" />
+    <REQ FROM="PEBK" TO=":#sw_tx_code" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="渠道" />
+    <REQ FROM="C200" TO=":#txtpcd" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="业务类型" />
+    <REQ FROM=":cd:payAmount" TO=":#txamt" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易金额" />
+    <REQ FROM=":cd:payAccountName" TO=":#dbtrnm" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款账户名称" />
+    <REQ FROM=":cd:payAccount" TO=":#dbtrid" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款账户" />
+    <REQ FROM=":cd:payAcctSvcrName" TO=":#dbtrissr" BEGIN="0" LENGTH="0" MAPBEGIN="0" AMT="pubf" EXPLAIN="付款行名称" />
+    <REQ FROM="AT00" TO=":#dbtrtype" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款账户类型" />
+    <REQ FROM="313662000015" TO=":#dbtrbrnchid" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款行所属网银系统行号" />
+    <REQ FROM=":cd:rcvAcctSvcr" TO=":#cash_opn_br_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款行所属网银系统行号" />
+    <REQ FROM=":cd:recAccountName" TO=":#cdtrnm" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款户名" />
+    <REQ FROM=":cd:recAccount" TO=":#cdtrid" BEGIN="0" LENGTH="0" EXPLAIN="收款账号" />
+    <REQ FROM="02001" TO=":#ctgypurpcd" BEGIN="0" LENGTH="0" EXPLAIN="业务种类" />
+    <REQ FROM=":cd:remark" TO=":#remark" BEGIN="0" LENGTH="0" EXPLAIN="备注" />
+    <REQ FROM="usage" TO=":#usage" BEGIN="0" LENGTH="0" EXPLAIN="用途" />
+    <REQ FROM="#sys7" TO=":#tel" BEGIN="0" LENGTH="0" EXPLAIN="柜员" />
+    <REQ FROM=":cd:password" TO=":#passwd" BEGIN="0" LENGTH="0" EXPLAIN="密码" />
+    <REQ FROM="" TO=":cd" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN=":cd子域清空" />
+    <RES FROM=":msgid" TO=":cd:msgid" BEGIN="0" LENGTH="0" EXPLAIN="报文标识码" />
+    <RES FROM=":msgid" TO="#cnaps2_trace_no" BEGIN="0" LENGTH="0" EXPLAIN="报文标识码" />
+    <RES FROM=":respcd" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="核心返回码" />
+    <RES FROM=":respcd" TO="#hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="核心返回码" />
+    <!--RES FROM=":rjcode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" CHECK="#hostReturnCode" VALUE="0000" EXPLAIN="返回码" /-->
+    <RES FROM=":rjctinf" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="拒绝信息" />
+    <!--RES FROM="0000" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="返回码" />
+    <RES FROM="交易成功" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="拒绝信息" /-->
+    <RES FROM="" TO=":respcd" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":msgid" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":rjcode" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":rjctinf" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+  </MAP>
+  <MAP CODE="gw0016" NEXTTO="cnaps_cli" FLOW="NULL" FORMAT="false" DESC="超级网银可达查询">
+    <REQ FROM="PEBK" TO="#MSG_TYPE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="手机银行标志" />
+    <REQ FROM="7002" TO=":#PTWY_CODE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易码" />
+    <REQ FROM="PEBK" TO=":#sw_tx_code" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="渠道" />
+    <REQ FROM=":cd:payAmount" TO=":#payAmount" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易金额" />
+    <REQ FROM=":cd:rcvAcctSvcr" TO=":#cash_opn_br_no" BEGIN="0" EXPLAIN="收款行所属网银系统行号" />
+    <REQ FROM="" TO=":cd" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN=":cd子域清空" />
+    <RES FROM=":respcd" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="返回码" />
+    <RES FROM=":rjctinf" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="拒绝信息" />
+    <RES FROM="" TO=":rjctinf" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":respcd" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+  </MAP>
+  <MAP CODE="gw0017" NEXTTO="cnaps_cli" FLOW="NULL" FORMAT="false" DESC="超网查人行清算状态">
+    <REQ FROM="PEBK" TO="#MSG_TYPE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="手机银行标志" />
+    <REQ FROM="7108" TO=":#PTWY_CODE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易码" />
+    <REQ FROM="PEBK" TO=":#sw_tx_code" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="渠道" />
+    <REQ FROM=":cd:cash_opn_br_no" TO=":#cash_opn_br_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款清算行号" />
+    <REQ FROM=":cd:msgid" TO=":#txid" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="报文标识号" />
+    <REQ FROM="" TO=":cd" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN=":cd子域清空" />
+    <RES FROM=":rjcode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="返回码" />
+    <RES FROM=":rjctinf" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="返回错误信息" /> 
+    <RES FROM=":txsts" TO=":cd:state" BEGIN="0" LENGTH="0" EXPLAIN="返回码" /> 
+    <RES FROM="" TO=":respcd" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":dbtrid" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":dbtrnm" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":cdtrid" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":cdtrnm" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":accptncdttm" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":txamt" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":chrgamt" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":txsts" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":rjcode" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":rjctinf" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+  </MAP>
+  <MAP CODE="gw1004" NEXTTO="cnaps_cli" FLOW="NULL" FORMAT="false" DESC="大小额转账" >
+    <REQ FROM="TLBK" TO="#MSG_TYPE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="手机银行标志" />
+    <REQ FROM=":cd:operlevel" TO=":#operlevel" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="大额普通紧急程度" />
+    <REQ FROM=":cd:payAccount" TO=":#pay_ac_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款账号" />
+    <REQ FROM=":cd:payAccount" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款账号" />
+    <REQ FROM=":cd:payAccountName" TO=":#pay_name" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款账户户名" />
+    <REQ FROM=":cd:payAccountName" TO="#pay_accname" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款账户户名" />
+    <REQ FROM=":cd:recAccount" TO=":#cash_ac_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户" />
+    <REQ FROM=":cd:recAccount" TO="#rec_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户" />
+    <REQ FROM=":cd:recAccountName" TO=":#cash_name" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户户名" />
+    <REQ FROM=":cd:recAccountName" TO="#rec_accname" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户户名" />
+    <REQ FROM=":cd:rcvAcctSvcr" TO=":#cash_opn_br_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户开户行号" />
+    <REQ FROM=":cd:rcvAcctSvcr" TO="#rec_bankno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户开户行号" />
+    <REQ FROM=":cd:rcvAcctSvcrName" TO=":#rcvAcctSvcrName" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户开户行名" />
+    <REQ FROM=":cd:rcvAcctSvcrName" TO="#rec_bankname" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户开户行名" />
+    <REQ FROM=":cd:openNode" TO=":#opennode" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款账户开户机构号" />
+    <REQ FROM=":cd:payAmount" TO=":#tx_amt" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款金额" />
+    <REQ FROM=":cd:payAmount" TO="#tx_amt" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款金额" />
+    <REQ FROM=":cd:chargeFee" TO=":#chrg_amt" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="手续费" />
+    <REQ FROM=":cd:chargeFee" TO="#tx_fee" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="手续费" />
+    <REQ FROM="#businessTrace_no" TO=":#orderFlowNo" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="网银流水号" />
+    <REQ FROM=":cd:remark" TO=":#remark" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="附言" />
+    <REQ FROM="900002" TO=":#tel" BEGIN="0" LENGTH="0" EXPLAIN="柜员号" />
+    <REQ FROM=":cd:flag" TO=":#PTWY_CODE" BEGIN="0" LENGTH="0" EXPLAIN="大小额" />
+    <REQ FROM=":cd:transflag" TO=":#transflag" BEGIN="0" LENGTH="0" EXPLAIN="C-次日 S-普通" />
+    <REQ FROM=":cd:transflag" TO="#transflag" BEGIN="0" LENGTH="0" EXPLAIN="C-次日 S-普通" />
+    <REQ FROM="return" TO="#next_sw_node" BEGIN="0" LENGTH="0" CHECK="#transflag" VALUE="C" EXPLAIN="临时封掉次日达" />
+    <REQ FROM="9999" TO="#sys12" BEGIN="0" LENGTH="0" CHECK="#transflag" VALUE="C" EXPLAIN="临时封掉次日达" />
+    <REQ FROM="转账次日达稍后开放" TO="#sys13" BEGIN="0" LENGTH="0" CHECK="#transflag" VALUE="C" EXPLAIN="临时封掉次日达" />
+    <REQ FROM=":cd:password" TO=":#passwd" BEGIN="0" LENGTH="0" EXPLAIN="密码" />
+    <REQ FROM="" TO=":cd" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN=":cd子域清空" />
+    <RES FROM="#accountNo" TO=":cd:accountNo" BEGIN="0" LENGTH="0" EXPLAIN="账号" />
+    <RES FROM="#sys82" TO=":cd:payAccountNoBal" BEGIN="0" LENGTH="0" EXPLAIN="付款账户余额" />
+    <RES FROM=":#swtDate" TO=":cd:payDate" BEGIN="0" LENGTH="0" EXPLAIN="支付系统记账日期" />
+    <RES FROM=":#swtDate" TO="#cnapsDate" BEGIN="0" LENGTH="0" EXPLAIN="支付系统记账日期" />
+    <RES FROM=":#cnapsTraceNo" TO=":cd:payTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="支付系统记账流水号" />
+    <RES FROM=":#cnapsTraceNo" TO="#cnapsTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="支付系统记账流水号" />
+    <RES FROM=":#sysAccountDate" TO=":cd:acctDate" BEGIN="0" LENGTH="0" EXPLAIN="核心记账日期" />
+    <RES FROM=":#sysAccountDate" TO="#acctDate" BEGIN="0" LENGTH="0" EXPLAIN="核心记账日期" />
+    <RES FROM=":#sysTraceNo" TO=":cd:acctTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水" />
+    <RES FROM=":#sysTraceNo" TO="#acctTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水" />
+    <RES FROM=":#acceptTime" TO=":cd:acceptTime" BEGIN="0" LENGTH="0" EXPLAIN="受理时间" />
+    <RES FROM=":#sendTime" TO=":cd:sendTime" BEGIN="0" LENGTH="0" EXPLAIN="发送时间" />
+    <RES FROM=":#responseTime" TO=":cd:responseTime" BEGIN="0" LENGTH="0" EXPLAIN="响应时间" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+    <RES FROM=":#hostReturnCode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=":#hostReturnCode" TO="#hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <!--RES FROM="0000" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" /-->
+    <RES FROM=":#hostErrorMessage" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+    <RES FROM=":#hostErrorMessage" TO="#hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+    <!--RES FROM="交易成功" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" /-->
+    <RES FROM=":#balance" TO=":cd:payAccountNoBalance" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="付款账户余额信息" />
+    <RES FROM="" TO=":#hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码清空" />
+    <RES FROM="" TO=":#hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息清空" />
+    <RES FROM="" TO=":#accountNo" BEGIN="0" LENGTH="0" EXPLAIN="错误信息清空" />
+    <RES FROM="" TO=":#balance" BEGIN="0" LENGTH="0" EXPLAIN="余额信息清空" />
+    <RES FROM="" TO=":#swtDate" BEGIN="0" LENGTH="0" EXPLAIN="支付系统记账日期清空" />
+    <RES FROM="" TO=":#cnapsTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="支付系统记账流水号清空" />
+    <RES FROM="" TO=":#sysAccountDate" BEGIN="0" LENGTH="0" EXPLAIN="核心记账日期清空" />
+    <RES FROM="" TO=":#sysTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水清空" />
+  </MAP>
+  <MAP CODE="cb1004" NEXTTO="cnaps_cli" FLOW="NULL" FORMAT="false" DESC="大小额转账" >
+    <REQ FROM="TLBK" TO="#MSG_TYPE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="手机银行标志" />
+    <REQ FROM=":cd:operlevel" TO=":#operlevel" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="大额普通紧急程度" />
+    <REQ FROM=":cd:payAccount" TO=":#pay_ac_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款账号" />
+    <REQ FROM=":cd:payAccount" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款账号" />
+    <REQ FROM=":cd:payAccountName" TO=":#pay_name" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款账户户名" />
+    <REQ FROM=":cd:payAccountName" TO="#pay_accname" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款账户户名" />
+    <REQ FROM=":cd:recAccount" TO=":#cash_ac_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户" />
+    <REQ FROM=":cd:recAccount" TO="#rec_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户" />
+    <REQ FROM=":cd:recAccountName" TO=":#cash_name" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户户名" />
+    <REQ FROM=":cd:recAccountName" TO="#rec_accname" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户户名" />
+    <REQ FROM=":cd:rcvAcctSvcr" TO=":#cash_opn_br_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户开户行号" />
+    <REQ FROM=":cd:rcvAcctSvcr" TO="#rec_bankno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户开户行号" />
+    <REQ FROM=":cd:rcvAcctSvcrName" TO=":#rcvAcctSvcrName" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户开户行名" />
+    <REQ FROM=":cd:rcvAcctSvcrName" TO="#rec_bankname" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款账户开户行名" />
+    <REQ FROM=":cd:openNode" TO=":#opennode" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款账户开户机构号" />
+    <REQ FROM=":cd:payAmount" TO=":#tx_amt" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款金额" />
+    <REQ FROM=":cd:payAmount" TO="#tx_amt" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="付款金额" />
+    <REQ FROM=":cd:chargeFee" TO=":#chrg_amt" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="手续费" />
+    <REQ FROM=":cd:chargeFee" TO="#tx_fee" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="手续费" />
+    <REQ FROM="#businessTrace_no" TO=":#orderFlowNo" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="网银流水号" />
+    <REQ FROM=":cd:remark" TO=":#remark" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="附言" />
+    <REQ FROM="900015" TO=":#tel" BEGIN="0" LENGTH="0" EXPLAIN="柜员号" />
+    <REQ FROM=":cd:flag" TO=":#PTWY_CODE" BEGIN="0" LENGTH="0" EXPLAIN="大小额" />
+    <REQ FROM=":cd:password" TO=":#passwd" BEGIN="0" LENGTH="0" EXPLAIN="密码" />
+    <REQ FROM="" TO=":cd" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN=":cd子域清空" />
+    <RES FROM="#accountNo" TO=":cd:accountNo" BEGIN="0" LENGTH="0" EXPLAIN="账号" />
+    <RES FROM="#sys82" TO=":cd:payAccountNoBal" BEGIN="0" LENGTH="0" EXPLAIN="付款账户余额" />
+    <RES FROM=":#swtDate" TO=":cd:payDate" BEGIN="0" LENGTH="0" EXPLAIN="支付系统记账日期" />
+    <RES FROM=":#swtDate" TO="#cnapsDate" BEGIN="0" LENGTH="0" EXPLAIN="支付系统记账日期" />
+    <RES FROM=":#cnapsTraceNo" TO=":cd:payTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="支付系统记账流水号" />
+    <RES FROM=":#cnapsTraceNo" TO="#cnapsTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="支付系统记账流水号" />
+    <RES FROM=":#sysAccountDate" TO=":cd:acctDate" BEGIN="0" LENGTH="0" EXPLAIN="核心记账日期" />
+    <RES FROM=":#sysAccountDate" TO="#acctDate" BEGIN="0" LENGTH="0" EXPLAIN="核心记账日期" />
+    <RES FROM=":#sysTraceNo" TO=":cd:acctTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水" />
+    <RES FROM=":#sysTraceNo" TO="#acctTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水" />
+    <RES FROM=":#acceptTime" TO=":cd:acceptTime" BEGIN="0" LENGTH="0" EXPLAIN="受理时间" />
+    <RES FROM=":#sendTime" TO=":cd:sendTime" BEGIN="0" LENGTH="0" EXPLAIN="发送时间" />
+    <RES FROM=":#responseTime" TO=":cd:responseTime" BEGIN="0" LENGTH="0" EXPLAIN="响应时间" />
+    <!--RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /-->
+    <RES FROM=":#hostReturnCode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=":#hostReturnCode" TO="#hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=":#hostErrorMessage" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+    <RES FROM=":#hostErrorMessage" TO="#hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+    <RES FROM=":#balance" TO=":cd:payAccountNoBalance" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="付款账户余额信息" />
+    <RES FROM="" TO=":#hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码清空" />
+    <RES FROM="" TO=":#hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息清空" />
+    <RES FROM="" TO=":#accountNo" BEGIN="0" LENGTH="0" EXPLAIN="错误信息清空" />
+    <RES FROM="" TO=":#balance" BEGIN="0" LENGTH="0" EXPLAIN="余额信息清空" />
+    <RES FROM="" TO=":#swtDate" BEGIN="0" LENGTH="0" EXPLAIN="支付系统记账日期清空" />
+    <RES FROM="" TO=":#cnapsTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="支付系统记账流水号清空" />
+    <RES FROM="" TO=":#sysAccountDate" BEGIN="0" LENGTH="0" EXPLAIN="核心记账日期清空" />
+    <RES FROM="" TO=":#sysTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水清空" />
+  </MAP>
+  <MAP CODE="gw0014" NEXTTO="cnaps_cli" FLOW="NULL" FORMAT="false" DESC="大小额可达查询">
+    <REQ FROM="TLBK" TO="#MSG_TYPE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="手机银行标志" />
+    <REQ FROM="YZ00" TO=":#PTWY_CODE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易码" />
+    <REQ FROM="0" TO=":#operlevel" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="大额普通紧急程度" />
+    <REQ FROM=":cd:flag" TO=":#flag" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="大小额标志" />
+    <REQ FROM=":cd:payAmount" TO=":#payAmount" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易金额" />
+    <REQ FROM=":cd:rcvAcctSvcr" TO=":#recAcctSvcr" BEGIN="0" EXPLAIN="收款行所属网银系统行号" />
+    <REQ FROM="" TO=":cd" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN=":cd子域清空" />
+    <RES FROM=":#hostReturnCode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="返回码" />
+    <!--RES FROM="0000" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" /-->
+    <RES FROM=":#res_tx_code" TO=":cd:ctgypurpcd" BEGIN="0" LENGTH="0" EXPLAIN="交易码返回码" />
+    <RES FROM=":#fjcode" TO=":cd:fjcode" BEGIN="0" LENGTH="0" EXPLAIN="拒绝码" />
+    <RES FROM=":#hostErrorMessage" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="拒绝信息" />
+    <!--RES FROM="交易成功" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" /-->
+    <RES FROM="" TO=":#tx_code" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":#hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":#hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":#respcd" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":#balance" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+  </MAP>
+  <MAP CODE="gw0015" NEXTTO="cnaps_cli" FLOW="NULL" FORMAT="false" DESC="大小额查流水">
+    <REQ FROM="TLBK" TO="#MSG_TYPE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="手机银行标志" />
+    <REQ FROM="ZT00" TO=":#PTWY_CODE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易码" />
+    <REQ FROM=":cd:flag" TO=":#flag" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="大小额标志" />
+    <REQ FROM=":cd:msgid" TO=":#cnapsTraceNo" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="支付系统交易流水" />
+    <REQ FROM=":cd:txDate" TO=":#txDate" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易日期" />
+    <REQ FROM="" TO=":cd" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN=":cd子域清空" />
+    <REQ FROM=":cd:rcvAcctSvcr" TO=":#recAcctSvcr" BEGIN="0" EXPLAIN="收款行所属网银系统行号" />
+    <RES FROM=":#hostReturnCode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="返回码" />
+    <!--RES FROM="0000" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" /-->
+    <RES FROM=":#res_tx_code" TO=":cd:ctgypurpcd" BEGIN="0" LENGTH="0" EXPLAIN="交易码返回码" />
+    <RES FROM=":#fjcode" TO=":cd:fjcode" BEGIN="0" LENGTH="0" EXPLAIN="拒绝码" />
+    <RES FROM=":#PBOCState" TO=":cd:state" BEGIN="0" LENGTH="0" EXPLAIN="清算状态" />
+    <RES FROM=":#hostErrorMessage" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="拒绝信息" />
+    <!--RES FROM="交易成功" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" /-->
+    <RES FROM="" TO=":#balance" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":#tx_code" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":#hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":#respcd" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":#hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":#PBOCState" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+  </MAP>
+  <MAP CODE="gw8004" NEXTTO="cnaps_cli" FLOW="NULL" FORMAT="false" DESC="小额支付查询">
+    <REQ FROM="TLBK" TO="#MSG_TYPE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="手机银行标志" />
+    <REQ FROM="CX00" TO=":#PTWY_CODE" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易码" />
+    <REQ FROM=":cd:sendBankBranch" TO=":#opennode" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="发送网点" />
+    <REQ FROM=":cd:transfereeBankNo" TO=":#cash_opn_br_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="转入方行号" />
+    <REQ FROM=":cd:accountNo" TO=":#ac_no" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询账号" />
+    <REQ FROM=":cd:accountName" TO=":#ac_nm" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询户名" />
+    <REQ FROM=":cd:certNo" TO=":#ctzn_idnb" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="身份证号" />
+    <REQ FROM=":cd:mobile" TO=":#tel" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="电话、电挂" />
+    <REQ FROM="" TO=":cd" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN=":cd子域清空" />
+    <REQ FROM="" TO=":tx_code" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN=":tx_code域清空" />
+    <REQ FROM=":mac" TO="#mac" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN=":mac域" />
+    <REQ FROM="" TO=":mac" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN=":mac域清空" />
+    <REQ FROM=":cd:rcvAcctSvcr" TO=":#recAcctSvcr" BEGIN="0" EXPLAIN="收款行所属网银系统行号" />
+    <RES FROM=":#hostReturnCode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="返回码" />
+    <!--RES FROM="0000" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="返回码" /-->
+    <RES FROM=":#res_tx_code" TO=":cd:ctgypurpcd" BEGIN="0" LENGTH="0" EXPLAIN="交易码返回码" />
+    <RES FROM=":#fjcode" TO=":cd:fjcode" BEGIN="0" LENGTH="0" EXPLAIN="拒绝码" />
+    <RES FROM=":#hostErrorMessage" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="拒绝信息" />
+    <!--RES FROM="交易成功" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="拒绝信息" /-->
+    <RES FROM="#mac" TO=":mac" BEGIN="0" LENGTH="0" EXPLAIN="应答码清空" />
+    <RES FROM="" TO=":#balance" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":#tx_code" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":#hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":#hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+    <RES FROM="" TO=":#respcd" BEGIN="0" LENGTH="0" EXPLAIN="清空域" />
+  </MAP>
+  <MAP CODE="gw8001" NEXTTO="accc" FLOW="NULL" DESC="二类账户开户接口">
+    <REQ FROM="7417" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:phoneNo" TO="#sys26" BEGIN="0" LENGTH="0" EXPLAIN="手机号" />
+    <REQ FROM="Y" TO="#sys68" BEGIN="0" LENGTH="0" EXPLAIN="激活标志" />
+    <REQ FROM="N" TO="#sys115" BEGIN="0" LENGTH="0" MAPBEGIN="0"  MAPLENGTH="1" EXPLAIN="测试空格" />
+    <REQ FROM="Y" TO="#sys115" BEGIN="0" LENGTH="0" MAPBEGIN="1"  MAPLENGTH="17" EXPLAIN="密码支取标志" />
+    <REQ FROM=":cd:password" TO="#sys115" BEGIN="0" LENGTH="0" MAPBEGIN="18"  MAPLENGTH="16" EXPLAIN="电子账户交易密码" />
+    <REQ FROM=":cd:password" TO="#sys79" BEGIN="0" LENGTH="0" EXPLAIN="电子账户交易密码" />
+    <REQ FROM="N" TO="#sys115" BEGIN="0" LENGTH="0" MAPBEGIN="34" MAPLENGTH="1" EXPLAIN="证件支取标志" />
+    <REQ FROM="XN01" TO="#sys116" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="35" EXPLAIN="介质代码" />
+    <REQ FROM=":cd:certType" TO="#sys116" BEGIN="0" LENGTH="0" MAPBEGIN="35" MAPLENGTH="1" EXPLAIN="开户证件类型" />
+    <REQ FROM=":cd:certNo" TO="#sys116" BEGIN="0" LENGTH="0" MAPBEGIN="36" MAPLENGTH="20" EXPLAIN="开户证件号" />
+    <REQ FROM=":cd:certNo" TO="#certno" BEGIN="0" LENGTH="0" MAPBEGIN="36" MAPLENGTH="20" EXPLAIN="开户证件号" />
+    <REQ FROM=":cd:custName" TO="#sys116" BEGIN="0" LENGTH="0" MAPBEGIN="56" MAPLENGTH="60" EXPLAIN="客户名称" />
+    <REQ FROM=":cd:custName" TO="#customernm" BEGIN="0" LENGTH="0" MAPBEGIN="56" MAPLENGTH="60" EXPLAIN="客户名称" />
+    <REQ FROM="101" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="3" EXPLAIN="开户产品代码" />
+    <REQ FROM="01" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="33" MAPLENGTH="2" EXPLAIN="币种" />
+    <REQ FROM="1" TO="#sys71" BEGIN="0" LENGTH="0" EXPLAIN="网银标记" />
+    <REQ FROM=":cd:bindFlag" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="绑定标志" />
+    <REQ FROM=":cd:bindType" TO="#sys70" BEGIN="0" LENGTH="0" EXPLAIN="绑定类型" />
+    <REQ FROM=":cd:bindCardNo" TO="#sys123" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="绑定实体卡号" />
+    <REQ FROM=":cd:limitFlag" TO="#sys93" BEGIN="0" LENGTH="0" EXPLAIN="限额标志" />
+    <REQ FROM=":cd:transLimit" TO="#sys40" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="转账限额" />
+    <REQ FROM=":cd:consumeFlag" TO="#sys41" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="消费缴费限额" />
+    <RES FROM="#sys28" TO=":cd:customerNo" BEGIN="0" LENGTH="0" EXPLAIN="客户号" /> 
+    <RES FROM="#sys91" TO=":cd:opnBr" BEGIN="0" LENGTH="0" EXPLAIN="开户机构" /> 
+    <RES FROM="#sys116" TO=":cd:virtualCardNo" BEGIN="4" LENGTH="19" MAPBEGIN="4"  MAPLENGTH="19" EXPLAIN="虚拟卡号" />
+    <RES FROM="#sys116" TO="#pay_accno" BEGIN="4" LENGTH="19" MAPBEGIN="4"  MAPLENGTH="19" EXPLAIN="虚拟卡号" /> 
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+  </MAP>
+  <MAP CODE="gw8002" NEXTTO="accc" FLOW="NULL" DESC="二类账户绑定一类户or解绑or激活"> 
+    <REQ FROM="2418" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="1" TO="#sys71" BEGIN="0" LENGTH="0" EXPLAIN="网银标记" />
+    <REQ FROM=":cd:accountNo" TO="#sys116" BEGIN="0" LENGTH="0" MAPBEGIN="4" MAPLENGTH="52" EXPLAIN="账号" />
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="4" MAPLENGTH="52" EXPLAIN="账号" />
+    <REQ FROM=":cd:accountName" TO="#sys116" BEGIN="0" LENGTH="0" MAPBEGIN="56" MAPLENGTH="60" EXPLAIN="账号户名" />
+    <REQ FROM=":cd:accountName" TO="#customernm" BEGIN="0" LENGTH="0" MAPBEGIN="56" MAPLENGTH="60" EXPLAIN="账号户名" />
+    <REQ FROM=":cd:operationType" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="操作类型" />
+    <REQ FROM=":cd:cardMajor" TO="#sys32" BEGIN="0" LENGTH="0" EXPLAIN="绑定或解除的一类卡号" />
+    <REQ FROM=":cd:cardType" TO="#sys70" BEGIN="0" LENGTH="0" EXPLAIN="本行外行卡" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="boundAccountNo|bankFlag|accountState|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+    </MAP>
+  <!--MAP CODE="gw9999" NEXTTO="accc" FLOW="NULL" DESC="查询二类账户绑定的一类账户">
+    <REQ FROM="2803" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="5" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="操作类型" />
+    <REQ FROM=":cd:eleAccountNo" TO="#sys116" BEGIN="0" LENGTH="0" MAPBEGIN="4" MAPLENGTH="19" EXPLAIN="二三类账号" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="boundAccountNo|bankFlag|accountState|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+  </MAP-->
+  <MAP CODE="gw8005" NEXTTO="accc" FLOW="NULL" DESC="卡状态校验">
+    <REQ FROM="2803" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:custName" TO="#sys25" BEGIN="0" LENGTH="0" EXPLAIN="户名" />
+    <REQ FROM=":cd:oneClassAccount" TO="#sys32" BEGIN="0" LENGTH="0" EXPLAIN="绑定的一类账号" />
+    <REQ FROM=":cd:certNo" TO="#sys62" BEGIN="0" LENGTH="0" EXPLAIN="证件号码" />
+    <REQ FROM=":cd:boundState" TO="#sys67" BEGIN="0" LENGTH="0" EXPLAIN="绑定状态" />
+    <REQ FROM=":cd:accountState" TO="#sys68" BEGIN="0" LENGTH="0" EXPLAIN="账户类别" />
+    <REQ FROM=":cd:boundCardState" TO="#sys70" BEGIN="0" LENGTH="0" EXPLAIN="绑定卡类型" />
+    <REQ FROM=":cd:operationType" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="操作类型" />
+    <REQ FROM=":cd:certType" TO="#sys89" BEGIN="0" LENGTH="0" EXPLAIN="证件类型" />
+    <REQ FROM=":cd:opn_brno" TO="#sys91" BEGIN="0" LENGTH="0" EXPLAIN="开户机构号" />
+    <REQ FROM="XN01" TO="#sys116" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="4" EXPLAIN="占位填充" />
+    <REQ FROM=":cd:cardNo" TO="#sys116" BEGIN="0" LENGTH="0" MAPBEGIN="4" MAPLENGTH="19" EXPLAIN="二三类账号" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+  </MAP>
+  <MAP CODE="gw8101" NEXTTO="accc" FLOW="NULL" DESC="短信服务、遂心存短信服务开通和关闭">
+    <REQ FROM="9326" TO="#sys16" BEGIN="0"LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:accountNo" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="卡号" />
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" EXPLAIN="卡号" />
+    <REQ FROM=":cd:flag" TO="#sys21"  BEGIN="0" LENGTH="0" EXPLAIN="关闭标志位" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+  </MAP>
+  <!--MAP CODE="gw8103" NEXTTO="accc" FLOW="NULL" DESC="遂心存签约查询">
+    <REQ FROM="7416" TO="#sys16" BEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:accountNo" TO="#sys123" BEGIN="0" LENGTH="0" EXPLAIN="卡号" />
+    <REQ FROM="2" TO="#sys68" BEGIN="0" LENGTH="0" EXPLAIN="签约查询" />
+    <RES FROM="#sys27" TO=":cd:AccountName" BEGIN="0" LENGTH="0" EXPLAIN="户名" />
+    <RES FROM="#sys41" TO=":cd:Amt" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="签约金额" />
+    <RES FROM="#sys42" TO=":cd:rate" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="利息" />
+    <RES FROM="#sys69" TO=":cd:SignFlag" BEGIN="0" LENGTH="0" EXPLAIN="1 代表正常签约" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="accountNo|signFlag|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" /-->
+  </MAP>
+  <MAP CODE="gw8201" NEXTTO="accc" FLOW="NULL" DESC="遂心贷放款">
+    <REQ FROM="7405" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:terminalType" TO="#sys72" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="终端类型" />
+    <REQ FROM=":cd:contractNumber" TO="#sys63" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="合同号" />
+    <REQ FROM=":cd:loanUse" TO="#sys27" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="贷款用途" />
+    <REQ FROM=":cd:depositAccountNo" TO="#sys32" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="存款账号" />
+    <REQ FROM=":cd:applyLoanAmount" TO="#sys39" BEGIN="0" LENGTH="0" MAPBEGIN="0" AMT="accc" EXPLAIN="申请放款金额" />
+    <REQ FROM=":cd:transferFee" TO="#sys40" BEGIN="0" LENGTH="0" MAPBEGIN="0" AMT="accc" EXPLAIN="手续费" />
+    <RES FROM="#sys4" TO=":cd:hostTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心流水号" /> 
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+  </MAP>
+  <MAP CODE="gw8202" NEXTTO="accc" FLOW="NULL" DESC="遂心贷还款">
+    <REQ FROM="7406" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="2" TO="#sys66" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="现转标志" />
+    <REQ FROM=":cd:terminalType" TO="#sys72" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="终端类型" />
+    <REQ FROM=":cd:returnAmount" TO="#sys39" BEGIN="0" LENGTH="0" MAPBEGIN="0" AMT="accc" EXPLAIN="还本金额" />
+    <REQ FROM=":cd:repaymentAccountNo" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="24" EXPLAIN="还款账号" />
+    <REQ FROM="0001" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="24" MAPLENGTH="4" EXPLAIN="存款卡序号" />
+    <REQ FROM=":cd:password" TO="#sys79" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="密码" />
+    <REQ FROM=":cd:loanAccountNo" TO="#sys108" BEGIN="0" LENGTH="0" MAPBEGIN="0" MAPLENGTH="24" EXPLAIN="贷款账号" />
+    <REQ FROM="0001" TO="#sys108" BEGIN="0" LENGTH="0" MAPBEGIN="24" MAPLENGTH="4" EXPLAIN="贷款卡序号" />
+    <RES FROM="#sys4" TO=":cd:hostTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心流水号" /> 
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+  <MAP CODE="gw8203" NEXTTO="accc" FLOW="NULL" DESC="遂心贷授信信息查询">
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="14" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="" TO="#sys67" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="操作类型" />
+    <REQ FROM="4" TO="#sys68" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询类型" />
+    <REQ FROM=":cd:accountNo" TO="#sys37" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="卡号" />
+    <REQ FROM=":cd:customerNo" TO="#sys28" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:pageNum" TO="#sys50" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询页数" />
+    <REQ FROM=":cd:pageLines" TO="#sys51" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="每页查询条数" />
+    <REQ FROM=":cd:startNum" TO="#sys52" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="开始记录数" />
+    <REQ FROM=":cd:termType" TO="#sys72" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="终端类型" />
+    <RES FROM="#sys39" TO=":cd:fee" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="发放单笔贷款手续费" /> 
+    <RES FROM="#sys42" TO=":cd:qidianAmt" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="单笔贷款起点金额" /> 
+    <RES FROM="#sys43" TO=":cd:increaseAmt" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="单笔贷款起点金额递增值" /> 
+    <RES FROM="#sys48" TO=":cd:totalConts" BEGIN="0" LENGTH="0" EXPLAIN="总记录条数" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="creditOrgNo|contractNumber|custNo|approvalDate|expireDate|productNo|creditQuota|usedQuota|surplusQuota|contractRate|state|loanType|repaymentMethod|InterestWay|repaymentAccountNo|depositAccountNo|floatWay|floatRate|" FILEBEGIN="0" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+  <MAP CODE="gw8204" NEXTTO="accc" FLOW="NULL" DESC="遂心贷查询(授信明细）">
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="14" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="1" TO="#sys68" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="操作类型" />
+    <REQ FROM="1" TO="#sys71" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询类型" />
+    <REQ FROM=":cd:accountNo" TO="#sys37" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="卡号" />
+    <REQ FROM=":cd:customerNo" TO="#sys28" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:pageNum" TO="#sys50" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询页数" />
+    <REQ FROM=":cd:pageLines" TO="#sys51" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="每页查询条数" />
+    <REQ FROM="1" TO="#sys52" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="开始记录数" />
+    <REQ FROM=":cd:termType" TO="#sys72" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="终端类型" />
+    <RES FROM="#sys39" TO=":cd:issuingSingleLoanTransferFee" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="发放单笔贷款手续费" /> 
+    <RES FROM="#sys42" TO=":cd:singleLoanBeginAmount" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="单笔贷款起点金额" /> 
+    <RES FROM="#sys43" TO=":cd:singleLoanBeginAmountIncreamentalValue" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="单笔贷款起点金额递增值" /> 
+    <RES FROM="#sys48" TO=":cd:totalRecordsNumber" BEGIN="0" LENGTH="0" EXPLAIN="总记录条数" /> 
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="contractNumber|creditAmount|usedAmount|contractRate|approvalDate|dueDate|protocolState|operateTime|" FILEBEGIN="0" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+  <MAP CODE="gw8205" NEXTTO="accc" FLOW="NULL" DESC="遂心贷查询(贷款明细）">
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="14" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="2" TO="#sys68" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="操作类型" />
+    <REQ FROM="2" TO="#sys71" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询类型" />
+    <REQ FROM=":cd:accountNo" TO="#sys37" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="卡号" />
+    <REQ FROM=":cd:customerNo" TO="#sys28" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:pageNum" TO="#sys50" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询页数" />
+    <REQ FROM=":cd:pageLines" TO="#sys51" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="每页查询条数" />
+    <REQ FROM="1" TO="#sys52" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="开始记录数" />
+    <REQ FROM=":cd:termType" TO="#sys72" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="终端类型" />
+    <RES FROM="#sys39" TO=":cd:fee" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="发放单笔贷款手续费" /> 
+    <RES FROM="#sys42" TO=":cd:qidianAmt" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="单笔贷款起点金额" /> 
+    <RES FROM="#sys43" TO=":cd:increaseAmt" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="单笔贷款起点金额递增值" /> 
+    <RES FROM="#sys48" TO=":cd:totalConts" BEGIN="0" LENGTH="0" EXPLAIN="总记录条数" /> 
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="loanAccountNo|loanAmount|balance|rate|beginDate|dueDate|accountState|InterestWay|repaymentMethod|debtNo|contractNumber|repaymentAccountNo|leftInterest|accountName|" FILEBEGIN="0" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+  <MAP CODE="gw8206" NEXTTO="accc" FLOW="NULL" DESC="遂心贷查询（查贷款分户）">
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="14" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="" TO="#sys68" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="操作类型" />
+    <REQ FROM="3" TO="#sys71" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询类型" />
+    <REQ FROM=":cd:accountNo" TO="#sys37" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="卡号" />
+    <REQ FROM=":cd:customerNo" TO="#sys28" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:pageNum" TO="#sys50" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询页数" />
+    <REQ FROM=":cd:pageLines" TO="#sys51" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="每页查询条数" />
+    <REQ FROM=":cd:termType" TO="#sys72" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="终端类型" />
+    <RES FROM="#sys39" TO=":cd:fee" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="发放单笔贷款手续费" /> 
+    <RES FROM="#sys42" TO=":cd:qidianAmt" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="单笔贷款起点金额" /> 
+    <RES FROM="#sys43" TO=":cd:increaseAmt" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="单笔贷款起点金额递增值" /> 
+    <RES FROM="#sys48" TO=":cd:totalConts" BEGIN="0" LENGTH="0" EXPLAIN="总记录条数" /> 
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="loanNo|accountName|loanAmount|balance|debtNo|beginDate|dueDate|accountState|" FILEBEGIN="0" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+  <MAP CODE="gw8207" NEXTTO="sxdc" FLOW="NULL" DESC="遂心贷客户意向登记">
+    <REQ FROM="#sys5" TO="#tx_date" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <REQ FROM="$time" TO="#tx_time" BEGIN="4" LENGTH="6" EXPLAIN="交易时间" />
+    <REQ FROM=":cd:custNo" TO="#customerNo" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:custName" TO="#customerName" BEGIN="0" LENGTH="0" EXPLAIN="客户名称" />
+    <REQ FROM=":cd:certNo" TO="#certNo" BEGIN="0" LENGTH="0" EXPLAIN="身份证号" />
+    <REQ FROM=":cd:mobileNo" TO="#phone" BEGIN="0" LENGTH="0" EXPLAIN="联系方式" />
+    <REQ FROM=":cd:address" TO="#location" BEGIN="0" LENGTH="0" EXPLAIN="常驻地址" />
+    <REQ FROM=":cd:applyBranch" TO="#applyBranch" BEGIN="0" LENGTH="0" EXPLAIN="申请机构" />
+    <RES FROM="#returnCode" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="核心流水号" />
+    <RES FROM="成功" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" CHECK="#returnCode" VALUE="0000" EXPLAIN="错误信息" />
+    <RES FROM="该客户还有未处理的意向申请" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" CHECK="#returnCode" VALUE="0001" EXPLAIN="错误信息" />
+    <RES FROM="报文格式不正确" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" CHECK="#returnCode" VALUE="0002" EXPLAIN="错误信息" />
+    <RES FROM="其他错误" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" CHECK="#returnCode" VALUE="9999" EXPLAIN="错误信息" />
+  </MAP>
+    <MAP CODE="gw2001" NEXTTO="accc" FLOW="NULL" DESC="贷款信息查询">
+    <REQ FROM=":cd:ID_TYPE" TO="#sys68" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="证件类型" />
+    <REQ FROM=":cd:ID_NO" TO="#sys62" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="证件号码" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="11" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys40" TO=":cd:payAmount" BEGIN="0" LENGTH="0" MAPBEGIN="0" AMT="accc" EXPLAIN="转账金额" />
+    <RES FROM="#sys82" TO=":cd:payAccountNoBal" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="付款账户余额" />
+    <RES FROM="#sys26" TO=":cd:recAccountName" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款方户名" />
+    <RES FROM="#sys126" TO=":cd:acctTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="LOAN_NO|CHI_NAM|AI_RECVL_GL|LNPA_DESC|ORIG_PRCP|OS_PRCP|LOAN_TNR|BASE_RATE|ACTV_DT|RC_STAT|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" CHECK="#sys71" VALUE="1" EXPLAIN="明细项" />
+  </MAP>
+    <MAP CODE="cb2001" NEXTTO="accc" FLOW="NULL" DESC="贷款信息查询">
+    <REQ FROM=":cd:ID_TYPE" TO="#sys68" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="证件类型" />
+    <REQ FROM=":cd:ID_NO" TO="#sys62" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="证件号码" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="11" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys40" TO=":cd:payAmount" BEGIN="0" LENGTH="0" MAPBEGIN="0" AMT="accc" EXPLAIN="转账金额" />
+    <RES FROM="#sys82" TO=":cd:payAccountNoBal" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="付款账户余额" />
+    <RES FROM="#sys26" TO=":cd:recAccountName" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款方户名" />
+    <RES FROM="#sys126" TO=":cd:acctTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="LOAN_NO|CHI_NAM|AI_RECVL_GL|LNPA_DESC|ORIG_PRCP|OS_PRCP|LOAN_TNR|BASE_RATE|ACTV_DT|RC_STAT|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" CHECK="#sys71" VALUE="1" EXPLAIN="明细项" />
+  </MAP>
+    <MAP CODE="gw2002" NEXTTO="accc" FLOW="NULL" DESC="贷款明细查询">
+    <REQ FROM=":cd:LOAN_NO" TO="#sys37" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="贷款合同号" />
+    <REQ FROM=":cd:ACCT_NO" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="贷款账号" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="12" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys40" TO=":cd:payAmount" BEGIN="0" LENGTH="0" MAPBEGIN="0" AMT="accc" EXPLAIN="转账金额" />
+    <RES FROM="#sys82" TO=":cd:payAccountNoBal" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="付款账户余额" />
+    <RES FROM="#sys26" TO=":cd:recAccountName" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款方户名" />
+    <RES FROM="#sys126" TO=":cd:acctTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="CHI_NAM|ID_TYP|ID_NO|LOAN_NO|LNPA_TYP_DESC|GL_CDE|ACCT_NO|CCY_DESC|APPL_LOAN_AMT|ORIG_PRCP|OS_PRCP|SETL_PDP|SETL_PDI|SETL_ODI|SETL_PRCP|SETL_INT|DRAWDOWN_ACCT_NO|PAYM_ACCT_NO|ACTV_DT|LAST_DUE_DT|RATE_NO|RATE_BASE|RATE_MODE|SPRD|INT_ADJ_PCT|OD_INT_ADJ_PRT|OD_INT_RATE|RAT_CHG_OPT|RATE_ADJ_CYCLE|FST_PAYM_DT|NSTM_FREQ_NUM|REPAYM_TYP|GRACE_TYP|OD_GRACE_PERD|ACCT_STAT_CDE|ACCT_STAT|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+    <MAP CODE="cb2002" NEXTTO="accc" FLOW="NULL" DESC="贷款明细查询">
+    <REQ FROM=":cd:LOAN_NO" TO="#sys37" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="贷款合同号" />
+    <REQ FROM=":cd:ACCT_NO" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="贷款账号" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="12" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys40" TO=":cd:payAmount" BEGIN="0" LENGTH="0" MAPBEGIN="0" AMT="accc" EXPLAIN="转账金额" />
+    <RES FROM="#sys82" TO=":cd:payAccountNoBal" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="付款账户余额" />
+    <RES FROM="#sys26" TO=":cd:recAccountName" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款方户名" />
+    <RES FROM="#sys126" TO=":cd:acctTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="CHI_NAM|ID_TYP|ID_NO|LOAN_NO|LNPA_TYP_DESC|GL_CDE|ACCT_NO|CCY_DESC|APPL_LOAN_AMT|ORIG_PRCP|OS_PRCP|SETL_PDP|SETL_PDI|SETL_ODI|SETL_PRCP|SETL_INT|DRAWDOWN_ACCT_NO|PAYM_ACCT_NO|ACTV_DT|LAST_DUE_DT|RATE_NO|RATE_BASE|RATE_MODE|SPRD|INT_ADJ_PCT|OD_INT_ADJ_PRT|OD_INT_RATE|RAT_CHG_OPT|RATE_ADJ_CYCLE|FST_PAYM_DT|NSTM_FREQ_NUM|REPAYM_TYP|GRACE_TYP|OD_GRACE_PERD|ACCT_STAT_CDE|ACCT_STAT|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+    <MAP CODE="gw2003" NEXTTO="accc" FLOW="NULL" DESC="还款历史查询">
+    <REQ FROM=":cd:loanNo" TO="#sys62" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="贷款合同号" />
+    <REQ FROM=":cd:bgnDt" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="起始日期" />
+    <REQ FROM=":cd:endDt" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="终止日期" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=" " TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys40" TO=":cd:payAmount" BEGIN="0" LENGTH="0" MAPBEGIN="0" AMT="accc" EXPLAIN="转账金额" />
+    <RES FROM="#sys82" TO=":cd:payAccountNoBal" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="付款账户余额" />
+    <RES FROM="#sys26" TO=":cd:recAccountName" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款方户名" />
+    <RES FROM="#sys126" TO=":cd:acctTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="customerNo|accountType|accountStat|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+    <MAP CODE="gw2004" NEXTTO="accc" FLOW="NULL" DESC="贷款还款计划查询">
+    <REQ FROM=":cd:LOAN_NO" TO="#sys38" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="贷款账号" />
+    <!--REQ FROM=":cd:turnPageBeginPos" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="翻页起始位置" />
+    <REQ FROM=":cd:turnPageShowNum" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="每页显示数量" /-->
+    <REQ FROM="7418" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys40" TO=":cd:payAmount" BEGIN="0" LENGTH="0" MAPBEGIN="0" AMT="accc" EXPLAIN="转账金额" />
+    <RES FROM="#sys82" TO=":cd:payAccountNoBal" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="付款账户余额" />
+    <RES FROM="#sys26" TO=":cd:recAccountName" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款方户名" />
+    <RES FROM="#sys126" TO=":cd:acctTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="customerNo|accountType|accountStat|" FILEBEGIN="1" CONTENTSCONT="50" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+    <MAP CODE="cb2004" NEXTTO="accc" FLOW="NULL" DESC="贷款还款计划查询">
+    <REQ FROM=":cd:LOAN_NO" TO="#sys38" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="贷款账号" />
+    <!--REQ FROM=":cd:turnPageBeginPos" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="翻页起始位置" />
+    <REQ FROM=":cd:turnPageShowNum" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="每页显示数量" /-->
+    <REQ FROM="7418" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="#sys40" TO=":cd:payAmount" BEGIN="0" LENGTH="0" MAPBEGIN="0" AMT="accc" EXPLAIN="转账金额" />
+    <RES FROM="#sys82" TO=":cd:payAccountNoBal" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="付款账户余额" />
+    <RES FROM="#sys26" TO=":cd:recAccountName" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="收款方户名" />
+    <RES FROM="#sys126" TO=":cd:acctTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="customerNo|accountType|accountStat|" FILEBEGIN="1" CONTENTSCONT="50" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+    <MAP CODE="gw8305" NEXTTO="accc" FLOW="NULL" DESC="大额存单短查询">
+    <REQ FROM="7408" TO="#sys16" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM="5" TO="#sys69" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询类型" />
+    <REQ FROM=":cd:accountNo" TO="#sys31" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="卡号" /> 
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="卡号" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="depositPeriod|productCode|depositName|depositAccountNo|accountSeNo|depositAccountName|depositDue|depositBalance|documentType|documentNo|documentName|rateType|depositInterestDate|depositState|transferFlsg|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+    <MAP CODE="gw8306" NEXTTO="accc" FLOW="NULL" DESC="大额存单查询（产品信息）">
+    <REQ FROM="7407" TO="#sys16" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:depositPeriod" TO="#sys63" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="期次号" />
+    <REQ FROM="1" TO="#sys69" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询类型" />
+    <RES FROM="#sys126" TO=":cd:acctTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心记账流水" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="issuePeriod|productName|payInterestMethod|subscriptionBeginDate|subscriptionEndDate|totalAnnualSaleAmount|surplusAnnualSaleAmount|totalCurrentSaleAmount|surplusCurrentSaleAmount|issueState|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+  </MAP>
+    <MAP CODE="gw8307" NEXTTO="accc" FLOW="NULL" DESC="大额存单查询（卡号关联的大额存单）">
+    <REQ FROM="7407" TO="#sys16" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM="2" TO="#sys69" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询类型" />
+    <REQ FROM=":cd:relationCardNo" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="关联卡号" />
+    <REQ FROM=":cd:relationCardNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="关联卡号" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="depositNo|accountName|accountSeNo|depositPeriod|depositName|payInterestmethod|payInterestCycle|rate|openDate|notesNo|denomination|accountState|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+  </MAP>
+    <MAP CODE="gw8308" NEXTTO="accc" FLOW="NULL" DESC="大额存单查询（交易明细）">
+    <REQ FROM="7407" TO="#sys16" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM="3" TO="#sys69" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="查询类型" />
+    <REQ FROM=":cd:cardNo" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="卡号" />
+    <REQ FROM=":cd:cardNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="卡号" />
+    <REQ FROM=":cd:beginDate" TO="#sys44" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="起始日期" />
+    <REQ FROM=":cd:endDate" TO="#sys45" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="终止日期" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="accountNo|accountSeNo|transferDate|transferTime|remark|transferAmount|balance|current|increaseOrDecrease|documentNo|openBank|operator|reviewOfficer|authorizer|tellerWater|waterCount|detailCount|documentType|dfAccountNo|dfAccountName|dfBankNo|dfBankName|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+    <MAP CODE="gw8301" NEXTTO="accc" FLOW="NULL" DESC="大额可转让存单认购">
+    <REQ FROM="7409" TO="#sys16" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:phoneNumber" TO="#sys38" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="电话号码" />
+    <REQ FROM=":cd:phoneNumber" TO="#phoneno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="电话号码" />
+    <REQ FROM=":cd:depositPeriod" TO="#sys63" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="存单期次" />
+    <REQ FROM=":cd:accountNo" TO="#sys32" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="卡号" />
+    <REQ FROM=":cd:accountNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="卡号" />
+    <REQ FROM=":cd:certType" TO="#sys116" BEGIN="0" LENGTH="0" MAPBEGIN="35" MAPLENGTH="1" EXPLAIN="开户证件类型" />
+    <REQ FROM=":cd:certNo" TO="#sys116" BEGIN="0" LENGTH="0" MAPBEGIN="36" MAPLENGTH="20" EXPLAIN="开户证件号" />
+    <REQ FROM=":cd:certNo" TO="#certno" BEGIN="0" LENGTH="0" MAPBEGIN="36" MAPLENGTH="20" EXPLAIN="开户证件号" />
+    <REQ FROM=":cd:amount" TO="#sys40" BEGIN="0" LENGTH="0" AMT="accc" EXPLAIN="认购金额" />
+    <REQ FROM=":cd:password" TO="#sys79" BEGIN="0" LENGTH="0" EXPLAIN="密码" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+   </MAP>
+    <MAP CODE="gw8302" NEXTTO="accc" FLOW="NULL" DESC="大额可转让存单提前支取">
+    <REQ FROM="7410" TO="#sys16" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:accountNo" TO="#sys32" BEGIN="0" LENGTH="0" MAPLENGTH="24" EXPLAIN="关联卡号" />
+    <REQ FROM=":cd:depositNo" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="大额存单号" />
+    <REQ FROM=":cd:certNo" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="82" MAPLENGTH="62" EXPLAIN="证件号" />
+    <REQ FROM=":cd:certType" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="144" MAPLENGTH="1" EXPLAIN="证件类型" />
+    <REQ FROM=":cd:depositPeriod" TO="#sys63" BEGIN="0" LENGTH="0" MAPLENGTH="24" EXPLAIN="期次号" />
+    <REQ FROM=":cd:amount" TO="#sys40" BEGIN="0" LENGTH="0" MAPLENGTH="24" EXPLAIN="金额" />
+    <REQ FROM=":cd:password" TO="#sys79" BEGIN="0" LENGTH="0" MAPLENGTH="24" EXPLAIN="密码" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+   </MAP>
+    <MAP CODE="gw8303" NEXTTO="accc" FLOW="NULL" DESC="大额可转让存单转让">
+    <REQ FROM="7411" TO="#sys16" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:oriAccountNo" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="原持有人关联卡号" />
+    <REQ FROM=":cd:depositNo" TO="#sys32" BEGIN="0" LENGTH="0" EXPLAIN="大额存单号" />
+    <REQ FROM=":cd:newAccountNo" TO="#sys33" BEGIN="0" LENGTH="0" EXPLAIN="新持有人关联卡号" />
+    <REQ FROM=":0001" TO="#sys34" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="卡账户序号" />
+    <REQ FROM=":0001" TO="#sys35" BEGIN="0" LENGTH="0" EXPLAIN="大额存单账户序号" />
+    <REQ FROM=":cd:newPhone" TO="#sys38" BEGIN="0" LENGTH="0" EXPLAIN="新持有人电话" />
+    <REQ FROM=":cd:amount" TO="#sys103" BEGIN="0" LENGTH="0" MAPBEGIN="38" MAPLENGTH="16" AMT="accc" EXPLAIN="金额" />
+    <REQ FROM=":cd:newCertType" TO="#sys116" BEGIN="0" LENGTH="0" MAPBEGIN="35" MAPLENGTH="1" EXPLAIN="新持有人证件类型" />
+    <REQ FROM=":cd:newCertNo" TO="#sys116" BEGIN="0" LENGTH="0" MAPBEGIN="36" MAPLENGTH="20" EXPLAIN="新持有人证件号" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+   </MAP>
+    <MAP CODE="gw8304" NEXTTO="accc" FLOW="NULL" DESC="大额可转让存单销户">
+    <REQ FROM="7412" TO="#sys16" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM="4" TO="#sys69" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="操作类型" />
+    <REQ FROM=":cd:accountNo" TO="#sys32" BEGIN="0" LENGTH="0" MAPLENGTH="24" EXPLAIN="关联卡号" />
+    <REQ FROM=":cd:depositNo" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="大额存单号" />
+    <REQ FROM=":cd:certNo" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="82" MAPLENGTH="46" EXPLAIN="证件号" />
+    <REQ FROM=":cd:certNo" TO="#certno" BEGIN="0" LENGTH="0" MAPBEGIN="82" MAPLENGTH="46" EXPLAIN="证件号" />
+    <REQ FROM=":cd:depositBalance" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="128" MAPLENGTH="16" EXPLAIN="账户剩余金额" />
+    <REQ FROM=":cd:certType" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="144" MAPLENGTH="1" EXPLAIN="证件类型" />
+    <REQ FROM=":cd:custName" TO="#sys102" BEGIN="0" LENGTH="0" MAPBEGIN="145" MAPLENGTH="60" EXPLAIN="户名" />
+    <REQ FROM=":cd:custName" TO="#customernm" BEGIN="0" LENGTH="0" MAPBEGIN="145" MAPLENGTH="60" EXPLAIN="户名" />
+    <REQ FROM=":cd:depositPeriod" TO="#sys63" BEGIN="0" LENGTH="0" MAPLENGTH="24" EXPLAIN="期次号" />
+    <REQ FROM=":cd:password" TO="#sys79" BEGIN="0" LENGTH="0" MAPLENGTH="24" EXPLAIN="密码" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+   </MAP>
+   <MAP CODE="gw8083" NEXTTO="accc" FLOW="NULL" DESC="存贷通查询收益明细">
+    <REQ FROM="7413" TO="#sys16" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:beginDate" TO="#sys28" BEGIN="0" LENGTH="0" EXPLAIN="收益日上限" />
+    <REQ FROM=":cd:endDate" TO="#sys29" BEGIN="0" LENGTH="0" EXPLAIN="收益日下限" />
+    <REQ FROM="11" TO="#sys22" BEGIN="0" LENGTH="0" EXPLAIN="操作类型" />
+    <REQ FROM=":cd:loanAccountNo" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="贷款账号" />
+    <REQ FROM="2" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="终端类型" />
+    <RES FROM="#sys28" TO=":cd:custNo" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <RES FROM="#sys62" TO=":cd:certNo" BEGIN="0" LENGTH="0" EXPLAIN="证件号" />
+    <RES FROM="#sys67" TO=":cd:certType" BEGIN="0" LENGTH="0" EXPLAIN="证件类型" />
+    <RES FROM="#sys45" TO=":cd:loanOpneDate" BEGIN="0" LENGTH="0" EXPLAIN="贷款开户日期" />
+    <RES FROM="#sys37" TO=":cd:agreementNo" BEGIN="0" LENGTH="0" EXPLAIN="协议号" />
+    <RES FROM="#sys21" TO=":cd:agreementState" BEGIN="0" LENGTH="0" EXPLAIN="协议状态" />
+    <RES FROM="#sys43" TO=":cd:totalReceive" BEGIN="0" LENGTH="0" EXPLAIN="总收益" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="inDate|balMajor|balMinor|beginAmount|rate|inCome|inState|inAccount|inAccountDate|traceNo|remark|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+    <MAP CODE="gw8084" NEXTTO="accc" FLOW="NULL" DESC="存贷通查询签约明细">
+    <REQ FROM="7413" TO="#sys16" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:beginDate" TO="#sys28" BEGIN="0" LENGTH="0" EXPLAIN="贷款到期日" />
+    <REQ FROM=":cd:endDate" TO="#sys29" BEGIN="0" LENGTH="0" EXPLAIN="贷款到期日" />
+    <REQ FROM="00" TO="#sys22" BEGIN="0" LENGTH="0" EXPLAIN="操作类型" />
+    <REQ FROM=":cd:loanAccountNo" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="贷款账号" />
+    <REQ FROM="2" TO="#sys72" BEGIN="0" LENGTH="0" EXPLAIN="终端类型" />
+    <RES FROM="#sys28" TO=":cd:custNo" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <RES FROM="#sys62" TO=":cd:certNo" BEGIN="0" LENGTH="0" EXPLAIN="证件号" />
+    <RES FROM="#sys67" TO=":cd:certType" BEGIN="0" LENGTH="0" EXPLAIN="证件类型" />
+    <RES FROM="#sys45" TO=":cd:loanOpneDate" BEGIN="0" LENGTH="0" EXPLAIN="贷款开户日期" />
+    <RES FROM="#sys37" TO=":cd:agreementNo" BEGIN="0" LENGTH="0" EXPLAIN="协议号" />
+    <RES FROM="#sys21" TO=":cd:agreementState" BEGIN="0" LENGTH="0" EXPLAIN="协议状态" />
+    <RES FROM="#sys43" TO=":cd:totalReceive" BEGIN="0" LENGTH="0" EXPLAIN="总收益" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="loanAccount|loanCustName|beginDate|endDate|MajorAccount|MinorAccount|minorName|dealState|operTeller|dueDate|brNo|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+    <MAP CODE="gw8085" NEXTTO="accc" FLOW="NULL" DESC="存贷通维护">
+    <REQ FROM="7414" TO="#sys16" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:operateType" TO="#sys21" BEGIN="0" LENGTH="0" EXPLAIN="操作类型" />
+    <REQ FROM=":cd:agreementNo" TO="#sys37" BEGIN="0" LENGTH="0" EXPLAIN="协议号" />
+    <REQ FROM=":cd:loanAccountNo" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="贷款账号" />
+    <REQ FROM=":cd:MajorAccount" TO="#sys31" BEGIN="0" LENGTH="0" EXPLAIN="关联主账号" />
+    <REQ FROM=":cd:MinorAccount" TO="#sys32" BEGIN="0" LENGTH="0" EXPLAIN="关联子账号" />
+    <REQ FROM=":cd:loanDueDate" TO="#sys44" BEGIN="0" LENGTH="0" EXPLAIN="贷款到期日" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+   </MAP>
+    <MAP CODE="gw4001" NEXTTO="accc" FLOW="NULL" DESC="账户挂失解挂">
+    <!--REQ FROM="20161031" TO="#sys5" BEGIN="0" LENGTH="0" EXPLAIN="平台日期" /-->
+    <REQ FROM=":cd:funCode" TO="#sys67" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="【1】挂失【2】解挂" />
+    <REQ FROM=":cd:LostFlag" TO="#sys68" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="挂失标志" />
+    <REQ FROM=":cd:cardNo" TO="#sys30" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="卡（折）号" />
+    <REQ FROM=":cd:cardNo" TO="#pay_accno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="卡（折）号" />
+    <REQ FROM=":cd:certType" TO="#sys69" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="证件类型" />
+    <REQ FROM=":cd:certNo" TO="#sys62" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="证件号码" />
+    <REQ FROM=":cd:certNo" TO="#certno" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="证件号码" />
+    <REQ FROM=":cd:clientName" TO="#sys25" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="客户姓名" />
+    <REQ FROM=":cd:clientName" TO="#customernm" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="客户姓名" />
+    <REQ FROM=":cd:password" TO="#sys79" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="密码" />
+    <REQ FROM="7404" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" /> 
+    <RES FILE="#sys3|#sys10|" ROOT=":cd:rows" CONTENTS="customerNo|accountType|accountStat|" FILEBEGIN="1" CONTENTSCONT="#sys55" CHECK="#sys12" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+   <MAP CODE="gw5001" NEXTTO="accc" FLOW="NULL" DESC="查询最小凭证号">
+    <REQ FROM="7430" TO="#sys16" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:docType" TO="#sys24" BEGIN="0" LENGTH="0" EXPLAIN="凭证类型" />
+    <REQ FROM=":cd:userId" TO="#sys60" BEGIN="0" LENGTH="0" EXPLAIN="柜员号" />
+    <RES FROM="#sys58" TO=":cd:VoucherNo" BEGIN="0" LENGTH="0" EXPLAIN="最小凭证号" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+   <MAP CODE="gw5003" NEXTTO="accc" FLOW="NULL" DESC="凭证出售">
+    <REQ FROM="1719" TO="#sys16" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:userId" TO="#sys60" BEGIN="0" LENGTH="0" EXPLAIN="柜员号" />
+    <REQ FROM=":cd:clientNo" TO="#sys28" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:docType" TO="#sys89" BEGIN="0" LENGTH="0" EXPLAIN="凭证类型" />
+    <REQ FROM=":cd:startNo" TO="#sys58" BEGIN="0" LENGTH="0" EXPLAIN="凭证起始号码" />
+    <REQ FROM=":cd:endNo" TO="#sys59" BEGIN="0" LENGTH="0" EXPLAIN="凭证终止号码" />
+    <REQ FROM=":cd:sum" TO="#sys52" BEGIN="0" LENGTH="0" EXPLAIN="数量" />
+    <RES FROM="#sys4" TO=":cd:hostTraceNo" BEGIN="0" LENGTH="0" EXPLAIN="核心流水号" />
+    <RES FROM="核心系统" TO=":msgReturnFrom" BEGIN="0" LENGTH="0" EXPLAIN="应答返回系统" />
+  </MAP>
+    <MAP CODE="gw6001" NEXTTO="atmlc" FLOW="NULL" DESC="理财产品查询">
+    <REQ FROM="2" TO="#chl" BEGIN="0" LENGTH="0" EXPLAIN="APP渠道" />
+    <REQ FROM="50001" TO=".Content.D0031" BEGIN="0" LENGTH="0" EXPLAIN="机构编码" />
+    <REQ FROM="500024" TO=".Content.D0071" BEGIN="0" LENGTH="0" EXPLAIN="柜员代码" />
+    <REQ FROM="8" TO=".Content.D0039" BEGIN="0" LENGTH="0" EXPLAIN="交易区域代码" />
+    <REQ FROM="FPS_141001" TO=".Content.D0160" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="20170220" TO=".Content.D0050" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <RES FROM="遂宁银行" TO="#STRRM" BEGIN="0" LENGTH="0" EXPLAIN="字符串过滤" />
+    <RES FROM=".Content.D0120" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=".Content.D0130" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+    <!--RES FROM=".Content.D0800" TO=":row" BEGIN="0" LENGTH="0" EXPLAIN="附件列数" /-->
+    <RES XML=".Table.Rows.row" ROOT=":cd:rows" FROM="Fields.field(0)|Fields.field(1)|Fields.field(2)|Fields.field(3)|Fields.field(4)|Fields.field(5)|Fields.field(6)|Fields.field(7)|Fields.field(8)|Fields.field(9)|Fields.field(10)|Fields.field(11)|Fields.field(12)|Fields.field(13)|Fields.field(14)|Fields.field(15)|Fields.field(16)|Fields.field(17)|Fields.field(18)|Fields.field(19)|Fields.field(20)|Fields.field(21)|Fields.field(22)|Fields.field(23)|" CONTENTS="productCode|productBatch|productId|productName|profitType|registerNo|raiseterPeriod|saleTime|productCurrtype|profitCurrtype|endDate|interestDate|profitDay|amtLimit|increaseLimit|busType|dayLimit|prdType|rate|duration|riskLevel|saleAmt|leftAmt|flag|" FILEBEGIN="0" CONTENTSCONT=".Table.RowNumber" CHECK=".Content.D0120" VALUE="0000" EXPLAIN="明细项" />
+  </MAP> 
+    <MAP CODE="gw6304" NEXTTO="accc" FLOW="NULL" DESC="验密、理财产品购买">
+    <REQ FROM=":cd:password" TO="#sys79" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="密码" />
+    <REQ FROM=":cd:accountNo" TO="#sys30" BEGIN="0" LENGTH="0" EXPLAIN="资金账号" />
+    <REQ FROM="7400" TO="#sys16" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="9" TO="#sys53" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="lcpurchase" TO="#sw_tx_code" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="10" TO="#next_tx_step" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="900015" TO="#sys7" BEGIN="0" LENGTH="0" EXPLAIN="柜员号" />
+
+    <REQ FROM="2" TO="#chl" BEGIN="0" LENGTH="0" EXPLAIN="APP渠道" />
+    <REQ FROM="50001" TO=".Content.D0031" BEGIN="0" LENGTH="0" EXPLAIN="机构编码" />
+    <REQ FROM="500024" TO=".Content.D0071" BEGIN="0" LENGTH="0" EXPLAIN="柜员代码" />
+    <REQ FROM="8" TO=".Content.D0039" BEGIN="0" LENGTH="0" EXPLAIN="交易区域代码" />
+    <REQ FROM="FPS_053002" TO=".Content.D0160" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="20170220" TO=".Content.D0050" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <REQ FROM="2" TO=".Content.D0710" BEGIN="0" LENGTH="0" EXPLAIN="资金账户类型" />
+    <REQ FROM="1" TO=".Content.D0460" BEGIN="0" LENGTH="0" EXPLAIN="资金账户序号" />
+    <REQ FROM=":cd:accountNo" TO=".Content.D0440" BEGIN="0" LENGTH="0" EXPLAIN="资金账号" />
+    <REQ FROM=":cd:amt" TO=".Content.D0510" BEGIN="0" LENGTH="0" EXPLAIN="交易金额" />
+    <REQ FROM=":cd:financialAccountNo" TO=".Content.D0410" BEGIN="0" LENGTH="0" EXPLAIN="理财账号" />
+    <REQ FROM="1" TO=".Content.D101A" BEGIN="0" LENGTH="0" EXPLAIN="理财账户类型" />
+    <REQ FROM=":cd:custNo" TO=".Content.D0380" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:openId" TO=".Content.D0940" BEGIN="0" LENGTH="0" EXPLAIN="开户机构" />
+    <REQ FROM="1" TO=".Content.D1078" BEGIN="0" LENGTH="0" EXPLAIN="客户类型" />
+    <REQ FROM=":cd:custLevel" TO=".Content.D1079" BEGIN="0" LENGTH="0" EXPLAIN="客户等级" />
+    <REQ FROM=":cd:riskLevel" TO=".Content.D1043" BEGIN="0" LENGTH="0" EXPLAIN="风险等级" />
+    <REQ FROM=":cd:custManager" TO=".Content.D0920" BEGIN="0" LENGTH="0" EXPLAIN="客户经理" />
+    <REQ FROM=":cd:productCode" TO=".Content.D0230" BEGIN="0" LENGTH="0" EXPLAIN="产品代码" />
+    <REQ FROM=":cd:productBatch" TO=".Content.D0270" BEGIN="0" LENGTH="0" EXPLAIN="产品期次" />
+    <REQ FROM="2" TO=".Content.D0280" BEGIN="0" LENGTH="0" EXPLAIN="办理渠道" />
+    <REQ FROM=":cd:payMethod" TO=".Content.D1221" BEGIN="0" LENGTH="0" EXPLAIN="费用支付方式" />
+    <REQ FROM=":cd:productCurrtype" TO=".Content.D0210" BEGIN="0" LENGTH="0" EXPLAIN="产品币种" />
+    <REQ FROM=":cd:profitCurrtype" TO=".Content.D123G" BEGIN="0" LENGTH="0" EXPLAIN="收益币种" />
+    <REQ FROM=":cd:currtype" TO=".Content.D0220" BEGIN="0" LENGTH="0" EXPLAIN="交易币种" />
+    <REQ FROM=":cd:paymentDate" TO=".Content.D1067" BEGIN="0" LENGTH="0" EXPLAIN="兑付日期" />
+    <REQ FROM=":cd:interestDate" TO=".Content.D107G" BEGIN="0" LENGTH="0" EXPLAIN="起息日期" />
+    <REQ FROM=":cd:profitDay" TO=".Content.D0870" BEGIN="0" LENGTH="0" EXPLAIN="基本天数" />
+    <REQ FROM=":cd:busMethod" TO=".Content.D103E" BEGIN="0" LENGTH="0" EXPLAIN="购买方式" />
+    <REQ FROM="0.000000" TO=".Content.D1110" BEGIN="0" LENGTH="0" EXPLAIN="优惠费率" />
+    <REQ FROM=":cd:busType" TO=".Content.D103H" BEGIN="0" LENGTH="0" EXPLAIN="业务类型" />
+
+    <RES FROM=".Content.D0120" TO=":cd:D0120" BEGIN="0" LENGTH="0" EXPLAIN="交易流水" />
+    <RES FROM=".Content.D0130" TO=":cd:D0130" BEGIN="0" LENGTH="0" EXPLAIN="交易流水" />
+    <RES FROM=".Content.D0040" TO=":cd:serialNumber" BEGIN="0" LENGTH="0" EXPLAIN="交易流水" />
+    <!--RES FROM=".Content.D0800" TO=":cd:row" BEGIN="0" LENGTH="0" EXPLAIN="附件列数" /-->
+    <RES XML=".Table.Rows.row" ROOT=":cd:rows" FROM="Fields.field(0)|Fields.field(1)|Fields.field(2)|Fields.field(3)|" CONTENTS="productID|productTatol|productYiTatol|productSyTatol|" FILEBEGIN="0"
+ CONTENTSCONT=".Table.RowNumber" CHECK=".Content.D0120" VALUE="0000" EXPLAIN="明细项" />
+  </MAP>
+    <MAP CODE="gw6003" NEXTTO="atmlc" FLOW="NULL" DESC="理财产品购买">
+    <REQ FROM="2" TO="#chl" BEGIN="0" LENGTH="0" EXPLAIN="APP渠道" />
+    <REQ FROM="50001" TO=".Content.D0031" BEGIN="0" LENGTH="0" EXPLAIN="机构编码" />
+    <REQ FROM="500024" TO=".Content.D0071" BEGIN="0" LENGTH="0" EXPLAIN="柜员代码" />
+    <REQ FROM="8" TO=".Content.D0039" BEGIN="0" LENGTH="0" EXPLAIN="交易区域代码" />
+    <REQ FROM="FPS_053002" TO=".Content.D0160" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="20170220" TO=".Content.D0050" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <REQ FROM="2" TO=".Content.D0710" BEGIN="0" LENGTH="0" EXPLAIN="资金账户类型" />
+    <REQ FROM="1" TO=".Content.D0460" BEGIN="0" LENGTH="0" EXPLAIN="资金账户序号" />
+    <REQ FROM=":cd:accountNo" TO=".Content.D0440" BEGIN="0" LENGTH="0" EXPLAIN="资金账号" />
+    <REQ FROM=":cd:amt" TO=".Content.D0510" BEGIN="0" LENGTH="0" EXPLAIN="交易金额" />
+    <REQ FROM=":cd:amt" TO="#tx_amt" BEGIN="0" LENGTH="0" EXPLAIN="交易金额" />
+    <REQ FROM=":cd:financialAccountNo" TO=".Content.D0410" BEGIN="0" LENGTH="0" EXPLAIN="理财账号" />
+    <REQ FROM="1" TO=".Content.D101A" BEGIN="0" LENGTH="0" EXPLAIN="理财账户类型" />
+    <REQ FROM=":cd:custNo" TO=".Content.D0380" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:openId" TO=".Content.D0940" BEGIN="0" LENGTH="0" EXPLAIN="开户机构" />
+    <REQ FROM="1" TO=".Content.D1078" BEGIN="0" LENGTH="0" EXPLAIN="客户类型" />
+    <REQ FROM=":cd:custLevel" TO=".Content.D1079" BEGIN="0" LENGTH="0" EXPLAIN="客户等级" />
+    <REQ FROM=":cd:riskLevel" TO=".Content.D1043" BEGIN="0" LENGTH="0" EXPLAIN="风险等级" />
+    <REQ FROM=":cd:custManager" TO=".Content.D0920" BEGIN="0" LENGTH="0" EXPLAIN="客户经理" />
+    <REQ FROM=":cd:productCode" TO=".Content.D0230" BEGIN="0" LENGTH="0" EXPLAIN="产品代码" />
+    <REQ FROM=":cd:productBatch" TO=".Content.D0270" BEGIN="0" LENGTH="0" EXPLAIN="产品期次" />
+    <REQ FROM="2" TO=".Content.D0280" BEGIN="0" LENGTH="0" EXPLAIN="办理渠道" />
+    <REQ FROM=":cd:payMethod" TO=".Content.D1221" BEGIN="0" LENGTH="0" EXPLAIN="费用支付方式" />
+    <REQ FROM=":cd:productCurrtype" TO=".Content.D0210" BEGIN="0" LENGTH="0" EXPLAIN="产品币种" />
+    <REQ FROM=":cd:profitCurrtype" TO=".Content.D123G" BEGIN="0" LENGTH="0" EXPLAIN="收益币种" />
+    <REQ FROM=":cd:currtype" TO=".Content.D0220" BEGIN="0" LENGTH="0" EXPLAIN="交易币种" />
+    <REQ FROM=":cd:paymentDate" TO=".Content.D1067" BEGIN="0" LENGTH="0" EXPLAIN="兑付日期" />
+    <REQ FROM=":cd:interestDate" TO=".Content.D107G" BEGIN="0" LENGTH="0" EXPLAIN="起息日期" />
+    <REQ FROM=":cd:profitDay" TO=".Content.D0870" BEGIN="0" LENGTH="0" EXPLAIN="基本天数" />
+    <REQ FROM=":cd:busMethod" TO=".Content.D103E" BEGIN="0" LENGTH="0" EXPLAIN="购买方式" />
+    <REQ FROM="0.000000" TO=".Content.D1110" BEGIN="0" LENGTH="0" EXPLAIN="优惠费率" />
+    <REQ FROM=":cd:busType" TO=".Content.D103H" BEGIN="0" LENGTH="0" EXPLAIN="业务类型" />
+    <RES FROM=".Content.D0120" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=".Content.D0130" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+    <RES FROM=".Content.D0040" TO=":cd:serialNumber" BEGIN="0" LENGTH="0" EXPLAIN="交易流水" />
+    <!--RES FROM=".Content.D0800" TO=":cd:row" BEGIN="0" LENGTH="0" EXPLAIN="附件列数" /-->
+    <RES XML=".Table.Rows.row" ROOT=":cd:rows" FROM="Fields.field(0)|Fields.field(1)|Fields.field(2)|Fields.field(3)|" CONTENTS="productID|productTatol|productYiTatol|productSyTatol|" FILEBEGIN="0" CONTENTSCONT=".Table.RowNumber" CHECK=".Content.D0120" VALUE="0000" EXPLAIN="明细项" />
+  </MAP> 
+   <MAP CODE="gw6005" NEXTTO="atmlc" FLOW="NULL" DESC="客户签约">
+    <REQ FROM="2" TO="#chl" BEGIN="0" LENGTH="0" EXPLAIN="APP渠道" />
+    <REQ FROM="50001" TO=".Content.D0031" BEGIN="0" LENGTH="0" EXPLAIN="机构编码" />
+    <REQ FROM="500024" TO=".Content.D0071" BEGIN="0" LENGTH="0" EXPLAIN="柜员代码" />
+    <REQ FROM="8" TO=".Content.D0039" BEGIN="0" LENGTH="0" EXPLAIN="交易区域代码" />
+    <REQ FROM="20170220" TO=".Content.D0050" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <REQ FROM="FPS_141004" TO=".Content.D0160" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:certType" TO=".Content.D0860" BEGIN="0" LENGTH="0" EXPLAIN="客户证件类型" />
+    <REQ FROM=":cd:certNo" TO=".Content.D0880" BEGIN="0" LENGTH="0" EXPLAIN="客户证件号" />
+    <REQ FROM="500024" TO=".Content.D0910" BEGIN="0" LENGTH="0" EXPLAIN="客户经理" />
+    <REQ FROM="1" TO=".Content.D1079" BEGIN="0" LENGTH="0" EXPLAIN="客户等级" />
+    <REQ FROM=":cd:custName" TO=".Content.D0350" BEGIN="0" LENGTH="0" EXPLAIN="客户证姓名" />
+    <REQ FROM=":cd:custNo" TO=".Content.D0380" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <REQ FROM="1" TO=".Content.D1210" BEGIN="0" LENGTH="0" EXPLAIN="产品类别/自营理财产品1" />
+    <REQ FROM=":cd:ccy" TO=".Content.D0210" BEGIN="0" LENGTH="0" EXPLAIN="币种" /> 
+    <REQ FROM="2" TO=".Content.D0710" BEGIN="0" LENGTH="0" EXPLAIN="资金账户类型" />
+    <REQ FROM=":cd:accountNo" TO=".Content.D0440" BEGIN="0" LENGTH="0" EXPLAIN="资金账户账号" />
+    <REQ FROM=":cd:accountSubNo" TO=".Content.D0960" BEGIN="0" LENGTH="0" EXPLAIN="资金分账号" />
+    <REQ FROM=":cd:sex" TO=".Content.D0700" BEGIN="0" LENGTH="0" EXPLAIN="性别" />
+    <REQ FROM=":cd:monthlyIncome" TO=".Content.D0500" BEGIN="0" LENGTH="0" EXPLAIN="月收入" />
+    <REQ FROM=":cd:address" TO=".Content.D1025" BEGIN="0" LENGTH="0" EXPLAIN="联系地址" />
+    <RES FROM=".Content.D0120" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=".Content.D0130" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+    <RES FROM=".Content.D0380" TO=":cd:custNo" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <RES FROM=".Content.D0610" TO=":cd:signDate" BEGIN="0" LENGTH="0" EXPLAIN="签约日期" />
+    <RES FROM=".Content.D107H" TO=":cd:custState" BEGIN="0" LENGTH="0" EXPLAIN="客户关系状态" />
+    <RES FROM=".Content.D0400" TO=":cd:financialAccountNo" BEGIN="0" LENGTH="0" EXPLAIN="理财账户序号" />
+    <RES FROM=".Content.D0720" TO=":cd:accountState" BEGIN="0" LENGTH="0" EXPLAIN="账户状态" />
+  </MAP>
+   <MAP CODE="gw6007" NEXTTO="atmlc" FLOW="NULL" DESC="风评修改">
+    <REQ FROM="2" TO="#chl" BEGIN="0" LENGTH="0" EXPLAIN="APP渠道" />
+    <REQ FROM="50001" TO=".Content.D0031" BEGIN="0" LENGTH="0" EXPLAIN="机构编码" />
+    <REQ FROM="500024" TO=".Content.D0071" BEGIN="0" LENGTH="0" EXPLAIN="柜员代码" />
+    <REQ FROM="8" TO=".Content.D0039" BEGIN="0" LENGTH="0" EXPLAIN="交易区域代码" />
+    <REQ FROM="20170220" TO=".Content.D0050" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <REQ FROM="FPS_024506" TO=".Content.D0160" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:custNo" TO=".Content.D0380" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />
+    <REQ FROM=":cd:riskLevel" TO=".Content.D1043" BEGIN="0" LENGTH="0" EXPLAIN="风评等级" />
+    <REQ FROM=":cd:custType" TO=".Content.D1078" BEGIN="0" LENGTH="0" EXPLAIN="客户类型" />
+    <REQ FROM=":cd:assessmentDate" TO=".Content.D0580" BEGIN="0" LENGTH="0" EXPLAIN="评定日期" />
+    <REQ FROM=":cd:assessmentOrg" TO=".Content.D0340" BEGIN="0" LENGTH="0" EXPLAIN="评定机构" />
+    <REQ FROM=":cd:assessmentPerson" TO=".Content.D0910" BEGIN="0" LENGTH="0" EXPLAIN="评定人" />
+    <REQ FROM=":cd:effectiveClosingDate" TO=".Content.D0590" BEGIN="0" LENGTH="0" EXPLAIN="有效截止日期" />
+    <RES FROM=".Content.D0120" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=".Content.D0130" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+  </MAP>
+   <MAP CODE="gw6008" NEXTTO="atmlc" FLOW="NULL" DESC="查询可撤销交易">
+    <REQ FROM="2" TO="#chl" BEGIN="0" LENGTH="0" EXPLAIN="APP渠道" />
+    <REQ FROM="50001" TO=".Content.D0031" BEGIN="0" LENGTH="0" EXPLAIN="机构编码" />
+    <REQ FROM="20170220" TO=".Content.D0050" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <REQ FROM="500024" TO=".Content.D0071" BEGIN="0" LENGTH="0" EXPLAIN="柜员代码" />
+    <REQ FROM="8" TO=".Content.D0039" BEGIN="0" LENGTH="0" EXPLAIN="交易区域代码" />
+    <REQ FROM="FPS_141006" TO=".Content.D0160" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:custNo" TO=".Content.D0380" BEGIN="0" LENGTH="0" EXPLAIN="客户号" />  
+    <REQ FROM=":cd:flag" TO=".Content.D0690" BEGIN="0" LENGTH="0" EXPLAIN="标识位" /> 
+    <REQ FROM=":cd:businessType" TO=".Content.D103F" BEGIN="0" LENGTH="0" EXPLAIN="业务行为" /> 
+    <RES FROM=".Content.D0120" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=".Content.D0130" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+    <!--RES FROM=".Content.D0800" TO=":row" BEGIN="0" LENGTH="0" EXPLAIN="附件列数" /-->
+    <RES XML=".Table.Rows.row" ROOT=":cd:rows" FROM="Fields.field(0)|Fields.field(1)|Fields.field(2)|Fields.field(3)|Fields.field(4)|Fields.field(5)|Fields.field(6)|Fields.field(7)|Fields.field(8)|Fields.field(9)|Fields.field(10)|Fields.field(11)|Fields.field(12)|Fields.field(13)|Fields.field(14)|Fields.field(15)|Fields.field(16)|Fields.field(17)|Fields.field(18)|Fields.field(19)|Fields.field(20)|Fields.field(21)|Fields.field(22)|Fields.field(23)|Fields.field(24)|Fields.field(25)|Fields.field(26)|Fields.field(27)|Fields.field(28)|Fields.field(29)|Fields.field(30)|Fields.field(31)|Fields.field(32)|Fields.field(33)|Fields.field(34)|Fields.field(35)|Fields.field(36)|Fields.field(37)|Fields.field(38)|Fields.field(39)|Fields.field(40)|Fields.field(41)|Fields.field(42)|Fields.field(43)|Fields.field(44)|Fields.field(45)|Fields.field(46)|Fields.field(47)|Fields.field(48)|Fields.field(49)|Fields.field(50)|" CONTENTS="productCode|productName|productBatch|tranID|tranIdName|trandate|trantime|tranceNo|telNo|telName|tranFAmt|tranAmt|financialAccountNo|financialAccountNo2|businessAct|QSflag|state|accountNo|AmtMethod|Amt|productId|tranum|busMethod|AppealMethod|incomeMethod|profitCurrtype|profitAmt|tranCurrtype|tranway|accountType|capAccSequ|ZKrate|chargeCurrtype|PZType|PZno|custManager|content|CxOriBusinessAct|CxOriTrandate|CxOriTranceNo|CxOriTranum|channel|telTranceNo|FundsFreeflag|YiprofitAmt|NoprofitAmt|custNo|openId|WTdate|prdType|" FILEBEGIN="0" CONTENTSCONT=".Table.RowNumber" CHECK=".Content.D0120" VALUE="0000" EXPLAIN="明细项" />
+   </MAP>
+  <MAP CODE="gw6009" NEXTTO="atmlc" FLOW="NULL" DESC="费用查询">
+    <REQ FROM="2" TO="#chl" BEGIN="0" LENGTH="0" EXPLAIN="APP渠道" />
+    <REQ FROM="50001" TO=".Content.D0031" BEGIN="0" LENGTH="0" EXPLAIN="机构编码" />
+    <REQ FROM="500024" TO=".Content.D0071" BEGIN="0" LENGTH="0" EXPLAIN="柜员代码" />
+    <REQ FROM="8" TO=".Content.D0039" BEGIN="0" LENGTH="0" EXPLAIN="交易区域代码" />
+    <REQ FROM="FPS_057102" TO=".Content.D0160" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="20170220" TO=".Content.D0050" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <REQ FROM=":cd:productCode" TO=".Content.D0230" BEGIN="0" LENGTH="0" EXPLAIN="产品代码" />
+    <REQ FROM=":cd:productId" TO=".Content.D0250" BEGIN="0" LENGTH="0" EXPLAIN="产品ID" />
+    <REQ FROM=":cd:productBatch" TO=".Content.D0270" BEGIN="0" LENGTH="0" EXPLAIN="产品期次" />
+    <REQ FROM=":cd:transferAmt" TO=".Content.D0500" BEGIN="0" LENGTH="0" EXPLAIN="交易金额" />
+    <REQ FROM=":cd:busyType" TO=".Content.D103H" BEGIN="0" LENGTH="0" EXPLAIN="业务行为" />
+    <REQ FROM=":cd:custType" TO=".Content.D1078" BEGIN="0" LENGTH="0" EXPLAIN="客户类型" />
+    <RES FROM=".Content.D0120" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=".Content.D0130" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+    <!--RES FROM=".Content.D0800" TO=":row" BEGIN="0" LENGTH="0" EXPLAIN="附件列数" /-->
+    <RES XML=".Table.Rows.row" ROOT=":cd:rows" FROM="Fields.field(0)|Fields.field(1)|Fields.field(2)|Fields.field(3)|Fields.field(4)|Fields.field(5)|Fields.field(6)|Fields.field(7)|Fields.field(8)|Fields.field(9)|Fields.field(10)|Fields.field(11)|" CONTENTS="FeeName|Chargetime|Amt|ChargeStandard|ChargeRatio|ChargeAmt|YhStandard|YhRatio|YhAmt|SsAmt|YhmYhRatio|YhqChargeAmt|" FILEBEGIN="0" CONTENTSCONT=".Table.RowNumber" CHECK=".Content.D0120" VALUE="0000" EXPLAIN="明细项" />
+   </MAP>
+   <MAP CODE="gw6010" NEXTTO="atmlc" FLOW="NULL" DESC="撤销接口">
+    <REQ FROM="2" TO="#chl" BEGIN="0" LENGTH="0" EXPLAIN="APP渠道" />
+    <REQ FROM="50001" TO=".Content.D0031" BEGIN="0" LENGTH="0" EXPLAIN="机构编码" />
+    <REQ FROM="500024" TO=".Content.D0071" BEGIN="0" LENGTH="0" EXPLAIN="柜员代码" />
+    <REQ FROM="8" TO=".Content.D0039" BEGIN="0" LENGTH="0" EXPLAIN="交易区域代码" />
+    <REQ FROM="FPS_057000" TO=".Content.D0160" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="20170220" TO=".Content.D0050" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <REQ FROM=":cd:businessAct" TO=".Content.D0580" BEGIN="0" LENGTH="0" EXPLAIN="原业务行为" />
+    <REQ FROM=":cd:trandate" TO=".Content.D0590" BEGIN="0" LENGTH="0" EXPLAIN="交易日期" />
+    <REQ FROM=":cd:financialAccountNo" TO=".Content.D0400" BEGIN="0" LENGTH="0" EXPLAIN="理财账号" />
+    <REQ FROM=":cd:tranceNo" TO=".Content.D1268" BEGIN="0" LENGTH="0" EXPLAIN="交易流水号" />
+    <REQ FROM=":cd:tranum" TO=".Content.D0170" BEGIN="0" LENGTH="0" EXPLAIN="交易笔次" /> 
+    <REQ FROM=":cd:productId" TO=".Content.D0250" BEGIN="0" LENGTH="0" EXPLAIN="产品ID" />
+    <REQ FROM="1" TO=".Content.D0860" BEGIN="0" LENGTH="0" EXPLAIN="证件类型" />
+    <REQ FROM=":cd:certNo" TO=".Content.D0880" BEGIN="0" LENGTH="0" EXPLAIN="证件号码" />
+    <REQ FROM=":cd:custName" TO=".Content.D0350" BEGIN="0" LENGTH="0" EXPLAIN="客户姓名" />
+    <REQ FROM="1" TO=".Content.D1078" BEGIN="0" LENGTH="0" EXPLAIN="客户类型" />
+    <REQ FROM="7" TO=".Content.D103H" BEGIN="0" LENGTH="0" EXPLAIN="业务行为" />
+    <REQ FROM="cancel_z" TO=".Content.D1180" BEGIN="0" LENGTH="0" EXPLAIN="标识位" />
+    <REQ FROM="APP客户撤单申请" TO=".Content.D1240" BEGIN="0" LENGTH="0" EXPLAIN="内容" />
+    <RES FROM=".Content.D0700" TO=":cd:flag" BEGIN="0" LENGTH="0" EXPLAIN="标志" />
+    <RES FROM=".Content.D0120" TO=":hostReturnCode" BEGIN="0" LENGTH="0" EXPLAIN="应答码" />
+    <RES FROM=".Content.D0130" TO=":hostErrorMessage" BEGIN="0" LENGTH="0" EXPLAIN="错误信息" />
+  </MAP>
+  <MAP CODE="gw3004" NEXTTO="accc" FLOW="NULL" DESC="批量转账">
+    <REQ FROM="TRUE" TO="#yzjy" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="执行原子交易" />
+    <REQ FROM="gw3004" TO="#sw_tx_code" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="10" TO="#next_tx_step" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="1" TO="#flag" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:payAccount" TO="#payAccount" BEGIN="0" LENGTH="0" EXPLAIN="付款账号" />
+    <REQ FROM=":cd:filePathName" TO="#filePathName" BEGIN="0" LENGTH="0" EXPLAIN="文件路径" />
+    <REQ FROM=":cd:totalNumber" TO="#totalNumber" BEGIN="0" LENGTH="0" EXPLAIN="总笔数" />
+    <REQ FROM=":cd:totalAmount" TO="#totalAmount" BEGIN="0" LENGTH="0" EXPLAIN="总金额" />
+    <REQ FROM=":cd:batchNo" TO="#batchNo" BEGIN="0" LENGTH="0" EXPLAIN="批次号" />
+    <REQ FROM=":cd:password" TO="#sys79" BEGIN="0" LENGTH="0" EXPLAIN="密码" />
+    <REQ FROM=":cd:checkOption" TO="#checkOption" BEGIN="0" LENGTH="0" EXPLAIN="检查标志" />
+    <RES FROM="#batchNo" TO=":cd:batchNo" BEGIN="0" LENGTH="0" EXPLAIN="批次号" />
+    <RES FROM="#sftpFilePath" TO=":cd:filePathName" BEGIN="0" LENGTH="0" EXPLAIN="SFTP文件路径" />
+   </MAP>
+  <MAP CODE="gw3006" NEXTTO="return" FLOW="NULL" DESC="批量转账结果查询">
+    <REQ FROM="TRUE" TO="#yzjy" BEGIN="0" LENGTH="0" MAPBEGIN="0" EXPLAIN="执行原子交易" />
+    <REQ FROM="gw3006" TO="#sw_tx_code" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM="10" TO="#next_tx_step" BEGIN="0" LENGTH="0" EXPLAIN="交易代码" />
+    <REQ FROM=":cd:batchNo" TO="#batchNo" BEGIN="0" LENGTH="0" EXPLAIN="批次号" />
+    <RES FROM="#batchNo" TO=":cd:batchNo" BEGIN="0" LENGTH="0" EXPLAIN="批次号" />
+    <RES FROM="#sftpFilePath" TO=":cd:filePathName" BEGIN="0" LENGTH="0" EXPLAIN="SFTP文件路径" />
+   </MAP>
+</MXML>
